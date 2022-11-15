@@ -8,7 +8,7 @@ import Payment from '../pages/Payment/Payment';
 import POICreation from '../pages/POICreation/POICreation';
 import POIDetails from '../pages/POIDetails/POIDetails';
 import Profil from '../pages/Profil/Profil';
-import TownsCreation from '../pages/TownsCreation/TownsCreation';
+import TownCreation from '../pages/TownCreation/TownCreation';
 
 const Main = () => {
   return (
@@ -21,7 +21,7 @@ const Main = () => {
         <Route path="/point-of-interest/creation" element={<POICreation />} />
         <Route path="/point-of-interest/:id" element={<POIDetails />} />
         <Route path="/profil/:id" element={<Profil />} />
-        <Route path="/towns/creation" element={<TownsCreation />} />
+        <Route path="/town/creation" element={<TownCreation />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </main>
