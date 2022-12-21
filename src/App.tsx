@@ -1,16 +1,14 @@
-import React from 'react';
-import './styles/App.css';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import Main from './components/Main';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Dashboard } from './layouts/dashboard';
+import { Auth } from './layouts/auth';
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <Main />
-      <Footer />
-    </div>
+    <Routes>
+      <Route path="/dashboard/*" element={<Dashboard />} />
+      <Route path="/auth/*" element={<Auth />} />
+      <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+    </Routes>
   );
 }
 

@@ -2,8 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
-import './styles/index.css';
 import App from './App';
+import { MaterialTailwindControllerProvider } from './context/index';
+import { ThemeProvider } from '@material-tailwind/react';
+import './styles/index.css';
 
 const client = new ApolloClient({
   uri: 'http://localhost:5000',
@@ -16,9 +18,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
+      <ThemeProvider>
+        <MaterialTailwindControllerProvider>
+          <App />
+        </MaterialTailwindControllerProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
