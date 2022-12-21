@@ -26,7 +26,7 @@ import { statisticsChartsData } from '../../data/statistics-charts-data';
 import { projectsTableData } from '../../data/projects-table-data';
 import { ordersOverviewData } from '../../data/orders-overview-data';
 
-export function Home() {
+export function DashboardHome() {
   return (
     <div className="mt-12">
       <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4 ">
@@ -254,4 +254,4 @@ export function Home() {
   );
 }
 
-export default Home;
+export default DashboardHome;

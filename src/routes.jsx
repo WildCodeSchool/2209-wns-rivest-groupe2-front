@@ -6,7 +6,7 @@ import {
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
 } from '@heroicons/react/24/solid';
-import { Home } from './pages/dashboard/home';
+import { DashboardHome } from './pages/dashboard/home';
 import { Profile } from './pages/dashboard/profile';
 import { Tables } from './pages/dashboard/tables';
 import { Notifications } from './pages/dashboard/notifications';
@@ -25,7 +25,7 @@ export const routes = [
         icon: <HomeIcon {...icon} />,
         name: 'dashboard',
         path: '/home',
-        element: <Home />,
+        element: <DashboardHome />,
       },
       {
         icon: <UserCircleIcon {...icon} />,
