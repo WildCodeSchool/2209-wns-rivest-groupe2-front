@@ -24,7 +24,7 @@ const App = () => (
         <Route path="/payment" element={<Payment />} />
         <Route path="/point-of-interest/list" element={<POIList />} />
         <Route path="/point-of-interest/creation" element={<POICreation />} />
-        <Route path="/point-of-interest/:id" element={<POIDetails />} />
+        <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
         <Route path="/profil/:id" element={<Profil />} />
         <Route path="/town/creation" element={<TownCreation />} />
         <Route path="*" element={<NotFound />} />
