@@ -1,30 +1,27 @@
 import { useState } from 'react';
-import localisationPointer from '../../asset/img/localisation.png';
 import MapModule from '../../components/MapModule';
 
 const POIList = () => {
-  const [userLocation, setUserLocation] = useState([0, 0]);
-
-  const handleLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((p) => {
-        setUserLocation([p.coords.latitude, p.coords.longitude]);
-      });
-    }
-  };
   return (
-    <>
-      <div className="mapContainer">
-        <div>
-          <img
-            onClick={handleLocation}
-            src={localisationPointer}
-            alt="pointer localisation"
-          />
-        </div>
+    <div>
+      <div className="flex justify-evenly">
+        <p>Résultats</p>
+        <button>Ajouter votre lieu</button>
+        <select name="Filtre" id="">
+          <option value="Filtre">Filtre</option>
+        </select>
+        <select name="Filtre" id="">
+          <option value="Filtre">Filtre</option>
+        </select>
+        <select name="Filtre" id="">
+          <option value="Filtre">Filtre</option>
+        </select>
+        <button>Tous les filtres</button>
+      </div>
+      <div>
         <MapModule />
       </div>
-    </>
+    </div>
   );
 };
 

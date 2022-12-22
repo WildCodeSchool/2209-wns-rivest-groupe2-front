@@ -1,5 +1,6 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import icon from '../asset/img/vector.png';
 
 const getActiveLinkStyle = ({ isActive }: { isActive: boolean }) => ({
   color: isActive ? 'grey' : 'black',
@@ -11,7 +12,7 @@ const Navbar = () => {
       <ul>
         <li>
           <NavLink to="/" style={getActiveLinkStyle}>
-            <p>Home</p>
+            <img src={icon} alt="icon site" />
           </NavLink>
         </li>
         <li>
