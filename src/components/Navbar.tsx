@@ -8,7 +8,7 @@ const getActiveLinkStyle = ({ isActive }: { isActive: boolean }) => ({
 
 const Navbar = () => {
   return (
-    <nav>
+    <nav className="border-b-2">
       <ul className="flex justify-between items-center m-5">
         <li>
           <NavLink to="/" style={getActiveLinkStyle}>
@@ -19,13 +19,12 @@ const Navbar = () => {
           name="cities"
           id="cities"
           className="bg-white p-[4px] pl-[15px] mt-2 border-2 rounded-xl w-[300px]"
+          defaultValue="Paris"
         >
           <option value="City" disabled>
             City
           </option>
-          <option value="Paris" selected>
-            Paris
-          </option>
+          <option value="Paris">Paris</option>
           <option value="Lyon">Lyon</option>
           <option value="Marseille">Marseille</option>
           <option value="Bordeaux">Bordeaux</option>
