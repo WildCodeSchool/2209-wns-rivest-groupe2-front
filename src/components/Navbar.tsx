@@ -18,7 +18,7 @@ const Navbar = () => {
         <select
           name="cities"
           id="cities"
-          className="bg-white p-[4px] pl-[15px] mt-2 border border-2 rounded-xl w-[300px]"
+          className="bg-white p-[4px] pl-[15px] mt-2 border-2 rounded-xl w-[300px]"
         >
           <option value="City" disabled>
             City
@@ -35,12 +35,12 @@ const Navbar = () => {
         <div className="flex">
           <li className="pr-5">
             <NavLink to="/signin" style={getActiveLinkStyle}>
-              <p>Sign In</p>
+              <p>Connexion</p>
             </NavLink>
           </li>
           <li>
             <NavLink to="/signup" style={getActiveLinkStyle}>
-              <p>Sign Up</p>
+              <p>Inscription</p>
             </NavLink>
           </li>
         </div>

@@ -15,16 +15,16 @@ const POIList = () => {
     <div className="mt-5">
       <div className="flex justify-between mx-5">
         <strong className="py-[5px] pl-[80px]">
-          {count} result{count > 1 ? 's' : ''} of{' '}
-          {poiData[0].type.toUpperCase()} in {city.toUpperCase()}
+          {count} résultat{count > 1 ? 's' : ''} de{' '}
+          {poiData[0].type.toUpperCase()} à {city.toUpperCase()}
         </strong>
-        <button className="px-[15px] py-[4px] mt-2 border border-2 rounded-xl">
-          Add your place
+        <button className="px-[15px] py-[4px] mt-2 border-2 rounded-xl">
+          Ajouter votre lieu
         </button>
         <select
           name="cities"
           id="cities"
-          className="bg-white px-[15px] py-[4px] mt-2 border border-2 rounded-xl"
+          className="bg-white px-[15px] py-[4px] mt-2 border-2 rounded-xl"
         >
           <option value="City">{city}</option>
           <option value="Paris">Paris</option>
@@ -37,15 +37,15 @@ const POIList = () => {
         <select
           name="categories"
           id="categories"
-          className="bg-white px-[15px] py-[4px] mr-[80px] mt-2 border border-2 rounded-xl"
+          className="bg-white px-[15px] py-[4px] mr-[80px] mt-2 border-2 rounded-xl"
         >
           <option value="Category">{poiData[0].type}</option>
           <option value="restaurant">Restaurant</option>
           <option value="fast-food">Fast-Food</option>
           <option value="bar">Bar</option>
-          <option value="surch">Surch</option>
+          <option value="surch">Eglise</option>
           <option value="hotel">Hotel</option>
-          <option value="museum">Museum</option>
+          <option value="museum">Musée</option>
         </select>
       </div>
       <div className="flex">
