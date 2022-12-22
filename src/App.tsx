@@ -16,8 +16,9 @@ import DashboardHome from './pages/dashboard/home';
 const App = () => (
   <>
     <Routes>
+      <Route path="/" element={<Home />} />
       <Route path="/" element={<BaseLayout />}>
-        <Route path="/" element={<Home />} />
+      
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/payment" element={<Payment />} />
