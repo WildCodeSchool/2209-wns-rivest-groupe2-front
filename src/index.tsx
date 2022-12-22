@@ -20,7 +20,9 @@ root.render(
     <BrowserRouter>
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
-          <App />
+          <ApolloProvider client={client}>
+            <App />
+          </ApolloProvider>
         </MaterialTailwindControllerProvider>
       </ThemeProvider>
     </BrowserRouter>
