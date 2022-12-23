@@ -1,24 +1,35 @@
-
-// import image from "../Home/img/paris-map.png";
+import image from '../../asset/img/map.png';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <>
-    <div className="w-full flex items-center">
-    {/* <div className="bg-cover bg-center" style={{ backgroundImage: `url(${image})` }}> */}
-    <div className="box-border flex items-center h-32 w-32 p-4 border-4 shadow-2xl">
-        <select className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600">
-            <option>Paris</option>
-            <option>Lyon</option>
-            <option>Bordeaux</option>
-            <option>Marseille</option>
+    <div className="relative">
+      <div
+        className="w-full bg-cover bg-no-repeat bg-center opacity-25 h-screen overscroll-none relative"
+        style={{ backgroundImage: `url(${image})` }}
+      ></div>
+      <div className="flex flex-col justify-center items-center bg-white h-28 w-60 p-4 rounded-lg shadow-2xl absolute mx-auto top-0 bottom-0 my-auto left-0 right-0 z-2">
+        <div className="order-first decoration-solid pb-2">
+          Choissez votre ville
+        </div>
+        <select
+          id="select a city"
+          onChange={() =>
+            (document.location = 'http://localhost:3000/point-of-interest/list')
+          }
+          className="w-full content-center p-2.5 text-gray-500 bg-transparent border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600"
+        >
+          <option value="ville">Ville</option>
+          <option value="Paris">Paris</option>
+          <option value="Lyon">Lyon</option>
+          <option value="Marseille">Marseille</option>
+          <option value="Bordeaux">Bordeaux</option>
+          <option value="Bordeaux">Bordeaux</option>
+          <option value="Toulouse">Toulouse</option>
         </select>
+      </div>
     </div>
-    {/* </div> */}
-    </div>
-    </>
-);
-
+  );
 };
 
 export default Home;
