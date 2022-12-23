@@ -16,13 +16,13 @@ const POIList = () => {
   return (
     <div className="mt-5">
       <div className="flex justify-between mx-5">
-        <strong className="py-[5px] pl-[80px]">
+        <strong className="py-[5px] pl-[80px]" id="results-number">
           {count} résultat{count > 1 ? 's' : ''} de{' '}
           {poiData[0].type.toUpperCase()} à {city.toUpperCase()}
         </strong>
         <button
           className="px-[15px] py-[4px] mt-2 border-2 rounded-xl"
-          onClick={() => setOpenModalAddPlace(true)}
+          onClick={() => setOpenModalAddPlace(!openModalAddPlace)}
         >
           Ajouter votre lieu
         </button>
@@ -543,7 +543,10 @@ const POIList = () => {
               </form>
             </div>
           ) : (
-            <ul className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto">
+            <ul
+              id="poi-list"
+              className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+            >
               {poiData.map((poi) => (
                 <Link
                   key={poi.id}

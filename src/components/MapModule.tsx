@@ -19,6 +19,7 @@ const MapModule = () => {
         height: '100%',
         margin: '30px 20px',
       }}
+      id="map-container"
     >
       <MapComponent />
       <TileLayer
@@ -26,16 +27,18 @@ const MapModule = () => {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
       {poiData.map((poi) => (
-        <Marker key={poi.id} position={poi.coordinates}>
-          <Popup>
-            <PopUpMap
-              name={poi.name}
-              address={poi.address}
-              pictureUrl={poi.pictureUrl}
-              id={poi.id}
-            />
-          </Popup>
-        </Marker>
+        <div className="map-marker">
+          <Marker key={poi.id} position={poi.coordinates}>
+            <Popup>
+              <PopUpMap
+                name={poi.name}
+                address={poi.address}
+                pictureUrl={poi.pictureUrl}
+                id={poi.id}
+              />
+            </Popup>
+          </Marker>
+        </div>
       ))}
     </MapContainer>
   );
