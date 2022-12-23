@@ -13,6 +13,7 @@ const Home = () => {
           Choissez votre ville
         </div>
         <select
+          id="select a city"
           onChange={() =>
             (document.location = 'http://localhost:3000/point-of-interest/list')
           }
