@@ -13,14 +13,19 @@ import Auth from './layouts/auth';
 import BaseLayout from './layouts/baseLayout';
 import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
+import Test from './pages/Test';
 
-const App = () => (
+const App = () =>{
+
+  
+  return (
   <>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/" element={<BaseLayout />}>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/test"   element={<Test chat='Persan' chien='labrador'/>} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/point-of-interest/list" element={<POIList />} />
         <Route path="/point-of-interest/creation" element={<POICreation />} />
@@ -36,5 +41,6 @@ const App = () => (
     </Routes>
   </>
 );
+  }
 
 export default App;

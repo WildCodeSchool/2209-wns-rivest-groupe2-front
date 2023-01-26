@@ -25,7 +25,7 @@ interface UserContextProviderProps {
 
   useEffect(() => {
     const load = async () => {
-      setUser(await getUser());
+/*       setUser(await getUser()); */
       setLoading(false);
     };
 
@@ -35,10 +35,12 @@ interface UserContextProviderProps {
   if (loading) {
     return null;
   }
+/*       <UserContext.Provider value={{ user, isLoggedIn, login }}>
+        {children}
+      </UserContext.Provider> */
+    return (
+      <div>npi</div>
 
-  return (
-    <UserContext.Provider value={{ user, setUser }}>
-      {children}
-    </UserContext.Provider>
-  );
+    )
+
 }

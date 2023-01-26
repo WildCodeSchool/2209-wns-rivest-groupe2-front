@@ -24,8 +24,29 @@ import { MessageCard } from '../../widgets/cards/message-card';
 import { platformSettingsData } from '../../data/platform-settings-data';
 import { conversationsData } from '../../data/conversations-data';
 import { projectsData } from '../../data/projects-data';
-
+import { gql, useQuery } from '@apollo/client'; 
 export function Profile() {
+
+  const GET_USER_BY_ID = gql` 
+query GetUserById($getUserByIdId: Float!) {
+  getUserById(id: $getUserByIdId) {
+    id
+    email
+    username
+    type
+    firstname
+    lastname
+    hashedPassword
+    profilePicture
+  }
+}
+`;
+
+const { data } = useQuery(GET_USER_BY_ID, {
+  variables: { getUserByIdId: 1 },
+});
+
+console.log(data)
   return (
     <>
       <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)] bg-cover	bg-center">
@@ -43,7 +64,7 @@ export function Profile() {
               />
               <div>
                 <Typography variant="h5" color="blue-gray" className="mb-1">
-                  Richard Davis
+                  yan
                 </Typography>
                 <Typography
                   variant="small"
