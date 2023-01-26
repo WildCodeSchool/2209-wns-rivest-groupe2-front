@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Header = () => {
-  return <div>Header</div>;
+
+  return (
+  <div>
+    <p>Header</p>
+  </div>
+  );
 };
 
 export default Header;
