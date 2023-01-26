@@ -10,7 +10,7 @@ import {
 import {
   useMaterialTailwindController,
   setOpenSidenav,
-} from '../../context/index';
+} from '../../contexts/index';
 
 export function Sidenav({ brandImg, brandName, routes }) {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -102,8 +102,8 @@ export function Sidenav({ brandImg, brandName, routes }) {
 }
 
 Sidenav.defaultProps = {
-  brandImg: '/img/logo-ct.png',
-  brandName: 'Material Tailwind React',
+  brandImg: '/img/map.png',
+  brandName: 'City Guide',
 };
 
 Sidenav.propTypes = {

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import App from './App';
-import { MaterialTailwindControllerProvider } from './context/index';
+import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
 import './styles/index.css';
 
