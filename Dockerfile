@@ -6,7 +6,7 @@ COPY package*.json ./
 RUN npm i
 
 COPY public public
-COPY .prettierrc.json ./
+COPY .prettierrc ./
 COPY .eslintrc.js ./
 COPY tailwind.config.js tailwind.config.js
 COPY postcss.config.js postcss.config.js
