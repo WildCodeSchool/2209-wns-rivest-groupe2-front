@@ -27,8 +27,8 @@ const MapModule = () => {
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
       {poiData.map((poi) => (
-        <div className="map-marker">
-          <Marker key={poi.id} position={poi.coordinates}>
+        <div className="map-marker" key={poi.id}>
+          <Marker position={poi.coordinates}>
             <Popup>
               <PopUpMap
                 name={poi.name}

@@ -1,10 +1,57 @@
 import { useState } from 'react';
 import ModalCategory from './ModalCategory';
 import ModalHours from './ModalHours';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { Point } from 'leaflet';
+
+enum POIType {
+  RESTAURANT = 'restaurant',
+  PLACEOFRELIGION = 'lieu de culte',
+  MUSEUM = 'musée',
+}
+
+enum EPriceRange {
+  LOW = '$',
+  MEDIUM = '$$',
+  HIGH = '$$$',
+}
+
+type IFormInput = {
+  name: string;
+  address: string;
+  postal: string;
+  type: POIType;
+  coordinates: Point;
+  pictureUrl: string;
+  websiteURL: string;
+  description: string;
+  priceRange: EPriceRange;
+  hourOpenMonday: string;
+  hourOpenThuesday: string;
+  hourOpenWenesday: string;
+  hourOpenThursday: string;
+  hourOpenFriday: string;
+  hourOpenSaturday: string;
+  hourOpenSunday: string;
+  hourCloseMonday: string;
+  hourCloseThuesday: string;
+  hourCloseWenesday: string;
+  hourCloseThursday: string;
+  hourCloseFriday: string;
+  hourCloseSaturday: string;
+  hourCloseSunday: string;
+};
 
 const ModalAddPlace = () => {
   const [openModalCategory, setOpenModalCategory] = useState(false);
   const [openModalHours, setOpenModalHours] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<IFormInput>();
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 
   console.log(openModalCategory);
   if (openModalCategory)
@@ -16,15 +63,18 @@ const ModalAddPlace = () => {
   return (
     <div className="mt-7 border-2">
       <h2 className="pt-4 text-center text-xl font-bold">Ajouter un lieu</h2>
-      <form className="flex flex-col w-[90%] mx-[5%]">
+      <form
+        className="flex flex-col w-[90%] mx-[5%]"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <label
           className="border-2 rounded-xl h-[50px] px-[15px] py-[4px] my-4"
           htmlFor="name"
         >
           <input
             type="text"
-            name="name"
             id="name"
+            {...register('name')}
             placeholder="Nom du lieu (obligatoire)"
             className="w-full h-full"
           />
@@ -42,7 +92,7 @@ const ModalAddPlace = () => {
         >
           <input
             type="text"
-            name="address"
+            {...register('address')}
             id="address"
             placeholder="Adresse (obligatoire)"
             className="w-full h-full"
@@ -56,41 +106,32 @@ const ModalAddPlace = () => {
           <div>{'>'}</div>
         </div>
         <label
-          htmlFor="phoneNumber"
-          className="border-2 rounded-xl h-[50px] my-4 px-[15px] py-[4px]"
-        >
-          <input
-            type="tel"
-            name="phoneNumber"
-            id="phoneNumber"
-            placeholder="Numéro de téléphone"
-            className="w-full h-full"
-          />
-        </label>
-        <label
           htmlFor="website"
           className="border-2 rounded-xl h-[50px] my-4 px-[15px] py-[4px]"
         >
           <input
             type="text"
-            name="website"
-            id="website"
+            {...register('websiteURL')}
+            id="websiteURL"
             placeholder="Site web"
             className="w-full h-full"
           />
         </label>
+        <button className="h-[50px] px-[15px] py-[4px] my-4 border-2 rounded-2xl text-gray-400">
+          Ajouter une photo
+        </button>
+        <div className="flex justify-end">
+          <button className="px-[15px] ml-[5%] py-2 my-4 border-2 rounded-3xl text-gray-400">
+            Annuler
+          </button>
+          <button
+            type="submit"
+            className="px-[15px] ml-[5%] py-2 my-4 border-2 rounded-3xl text-gray-400"
+          >
+            Envoyer
+          </button>
+        </div>
       </form>
-      <button className="h-[50px] px-[15px] py-[4px] ml-[5%] my-4 border-2 rounded-2xl text-gray-400">
-        Ajouter des photos
-      </button>
-      <div className="flex justify-end mx-[5%]">
-        <button className="px-[15px] ml-[5%] py-2 my-4 border-2 rounded-3xl text-gray-400">
-          Annuler
-        </button>
-        <button className="px-[15px] ml-[5%] py-2 my-4 border-2 rounded-3xl text-gray-400">
-          Envoyer
-        </button>
-      </div>
     </div>
   );
 };
