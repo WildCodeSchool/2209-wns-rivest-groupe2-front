@@ -14,12 +14,18 @@ import BaseLayout from './layouts/baseLayout';
 import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
 import Test from './pages/Test';
+import { UserContextProvider } from './contexts/userContext';
+import { gql, useQuery } from '@apollo/client';
+import { SetStateAction, useEffect, useState, useContext } from 'react';
+import { UserType } from './types/UserType';
+import { UserContext } from 'src/contexts/userContext';
 
 const App = () =>{
+  const {user} = useContext(UserContext)
 
-  
   return (
   <>
+   <UserContextProvider user={user} >
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/" element={<BaseLayout />}>
@@ -39,6 +45,7 @@ const App = () =>{
       <Route path="/auth/*" element={<Auth />} />
       <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
     </Routes>
+  </UserContextProvider>
   </>
 );
   }

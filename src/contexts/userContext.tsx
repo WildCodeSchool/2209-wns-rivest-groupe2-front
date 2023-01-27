@@ -1,46 +1,72 @@
+import { gql, useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react'
 import { UserType } from 'src/types/UserType';
 
-type UserPromise = Promise<{ success: boolean; errorCode: number }>
-
 interface UserContextValue {
-  user: UserType | null;
-  isLoggedIn: boolean;
-  login(username: string, password: string, remember: boolean): UserPromise;
+  user: UserType;
+  //isLoggedIn: boolean;
 }
+
 export const UserContext = React.createContext<UserContextValue>({
-    user: null,
-    isLoggedIn: false,
-    login: async () => ({ success: false, errorCode: 0 })
+    user:  {
+      id: 9999,
+    email: '',
+    firstname: '',
+    lastname: '',
+    profilePicture: ''
+    },
+   // isLoggedIn: false,
 })
+const GET_USER_BY_ID = gql` 
+query GetUserById($getUserByIdId: Float!) {
+  getUserById(id: $getUserByIdId) {
+    email
+    username
+    firstname
+    lastname
+  }
+}
+`;
+
+const { data } = useQuery(GET_USER_BY_ID, {
+  variables: { getUserByIdId: 1 },
+});
 
 interface UserContextProviderProps {
-    user: UserType | null;
-    setUser(user: React.SetStateAction<UserType | null>): void;
+    user: UserType ;
+   //setUser(user: React.SetStateAction<UserType | null>): void;
   }
+  const [user, setUser] = useState<UserType>({
+    id: 9999,
+    email: '',
+    firstname: '',
+    lastname: '',
+    profilePicture: ''
+  });
 
-  export const UserContextProvider = ({ children }: React.PropsWithChildren<UserContextProviderProps>) => {
-   const [user, setUser] = useState();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const load = async () => {
-/*       setUser(await getUser()); */
-      setLoading(false);
-    };
-
-    load();
-  }, []);
-
-  if (loading) {
-    return null;
-  }
-/*       <UserContext.Provider value={{ user, isLoggedIn, login }}>
-        {children}
-      </UserContext.Provider> */
+  
+export const UserContextProvider = ({ children, user }: React.PropsWithChildren<UserContextProviderProps>) => {
+  
+    useEffect(() => {
+        const load = async () => {
+            const { data } = useQuery(GET_USER_BY_ID, {
+              variables: { getUserByIdId: 1 },
+            });
+            if (data) {
+                setUser({
+                    id: data.getUserById.id,
+                    email: data.getUserById.email,
+                    firstname: data.getUserById.firstname,
+                    lastname: data.getUserById.lastname,
+                    profilePicture: data.$getUserByIdId.profilePicture
+                });
+            }
+        };
+        load();
+    }, []);
     return (
-      <div>npi</div>
-
-    )
-
-}
+        <UserContext.Provider value={{user}}>
+            {children}
+        </UserContext.Provider>
+    );
+};
