@@ -13,25 +13,27 @@ import Auth from './layouts/auth';
 import BaseLayout from './layouts/baseLayout';
 import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
-import Test from './pages/Test';
 import { UserContextProvider } from './contexts/userContext';
-import { gql, useQuery } from '@apollo/client';
-import { SetStateAction, useEffect, useState, useContext } from 'react';
+import { useState } from 'react';
 import { UserType } from './types/UserType';
-import { UserContext } from 'src/contexts/userContext';
 
 const App = () =>{
-  const {user} = useContext(UserContext)
+  const [user, setUser] = useState<UserType | null>({
+    id: 1,
+    email: '',
+    firstname: '',
+    lastname: 'labarthe',
+    profilePicture: ''
+  });
 
   return (
   <>
-   <UserContextProvider user={user} >
+   <UserContextProvider user={user} setUser={setUser}>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/" element={<BaseLayout />}>
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/test"   element={<Test chat='Persan' chien='labrador'/>} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/point-of-interest/list" element={<POIList />} />
         <Route path="/point-of-interest/creation" element={<POICreation />} />
