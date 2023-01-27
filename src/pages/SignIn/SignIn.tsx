@@ -72,10 +72,10 @@ const SignIn = () => {
 
   return (
     <>
-      <div className="bg-blue-900 h-screen w-screen">
+      <div className="bg-gray-200 h-screen w-screen">
         <div className="text-black w-full h-full flex flex-col justify-center items-center bg-primary-dark">
           <div className="row-span-2 col-span-1 relative w-3/4 md:w-1/2 lg:w-2/5">
-            <div className="bg-slate-800 rounded-lg px-6 py-4 mx-auto lg:mt-0 z-10 flex flex-col items-center lg:w-4/5">
+            <div className="bg-deep-blue rounded-lg px-6 py-4 mx-auto lg:mt-0 z-10 flex flex-col items-center lg:w-4/5">
               <span className="box-sizing:border-box;display:inline-block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:relative;max-width:100%"></span>
               {/* <p className="text-gray-300 text-center text-l my-2">
                 Sign up with

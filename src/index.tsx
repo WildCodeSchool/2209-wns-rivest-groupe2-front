@@ -5,6 +5,9 @@ import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@ap
 import { setContext } from "@apollo/client/link/context";
 import './styles/index.css';
 import App from './App';
+import { MaterialTailwindControllerProvider } from './context/index';
+import { ThemeProvider } from '@material-tailwind/react';
+import './styles/index.css';
 
 
 // AUTHENTICATION APOLLO - HEADER
@@ -37,9 +40,13 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ApolloProvider client={client}>
-        <App />
-      </ApolloProvider>
+      <ThemeProvider>
+        <MaterialTailwindControllerProvider>
+          <ApolloProvider client={client}>
+            <App />
+          </ApolloProvider>
+        </MaterialTailwindControllerProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

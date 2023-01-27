@@ -1,12 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
+import Navbar from './Navbar';
 
 const Header = () => {
-
-  return (
-  <div>
-    <p>Header</p>
-  </div>
-  );
+  return <Navbar />;
 };
 
 export default Header;
