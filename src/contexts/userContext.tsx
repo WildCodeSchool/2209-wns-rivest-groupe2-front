@@ -18,20 +18,6 @@ interface UserContextProviderProps {
   }
 
 export const UserContextProvider = ({ user, setUser, children }: React.PropsWithChildren<UserContextProviderProps>) => {
-  const GET_USER_BY_ID = gql` 
-  query GetUserById($getUserByIdId: Float!) {
-  getUserById(id: $getUserByIdId) {
-    email
-    username
-    firstname
-    lastname
-  }
-}
-`;
-
-const { data } = useQuery(GET_USER_BY_ID, {
-  variables: { getUserByIdId: 1 },
-});
 
     const value = useMemo(
       ()=>({
