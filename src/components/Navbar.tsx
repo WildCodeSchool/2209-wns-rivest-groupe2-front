@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import icon from '../asset/img/vector.png';
+import logo from '../asset/img/city-guide-logo.svg';
 
 const getActiveLinkStyle = ({ isActive }: { isActive: boolean }) => ({
   color: isActive ? 'grey' : 'black',
@@ -12,7 +12,7 @@ const Navbar = () => {
       <ul className="flex justify-between items-center m-5">
         <li>
           <NavLink to="/" style={getActiveLinkStyle}>
-            <img src={icon} alt="icon site" />
+            <img src={logo} alt="icon site" />
           </NavLink>
         </li>
         <select

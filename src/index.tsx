@@ -5,10 +5,10 @@ import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@ap
 import { setContext } from "@apollo/client/link/context";
 import './styles/index.css';
 import App from './App';
-import { MaterialTailwindControllerProvider } from './context/index';
+import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
 import './styles/index.css';
-
+import { UserProvider } from './contexts/UserContext'
 
 // AUTHENTICATION APOLLO - HEADER
 // https://www.apollographql.com/docs/react/networking/authentication/
@@ -43,7 +43,9 @@ root.render(
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
           <ApolloProvider client={client}>
-            <App />
+              <UserProvider>
+                <App />
+              </UserProvider>
           </ApolloProvider>
         </MaterialTailwindControllerProvider>
       </ThemeProvider>

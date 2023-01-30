@@ -10,7 +10,7 @@ import {
 import {
   useMaterialTailwindController,
   setOpenSidenav,
-} from '../../context/index';
+} from '../../contexts/index';
 
 export function Sidenav({ brandImg, brandName, routes }) {
   const [controller, dispatch] = useMaterialTailwindController();
