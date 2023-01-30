@@ -17,6 +17,7 @@
     "@types/react-dom": "^18.0.9",
     "apexcharts": "3.35.5",
     "flowbite": "^1.6.3",
+    "flowbite-react": "^0.3.8",
     "joi": "^17.7.0",
     "jwt-decode": "^3.1.2",
     "leaflet": "^1.9.3",

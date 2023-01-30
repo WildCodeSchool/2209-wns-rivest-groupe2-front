@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
+import UserDropdown from './UserDropdown';
 import logo from '../asset/img/city-guide-logo.svg';
 
 const getActiveLinkStyle = ({ isActive }: { isActive: boolean }) => ({
@@ -41,6 +42,9 @@ const Navbar = () => {
             <NavLink to="/signup" style={getActiveLinkStyle}>
               <p>Inscription</p>
             </NavLink>
+          </li>
+          <li>
+            <UserDropdown />
           </li>
         </div>
       </ul>
