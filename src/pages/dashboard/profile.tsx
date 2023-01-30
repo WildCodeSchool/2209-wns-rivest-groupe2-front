@@ -25,12 +25,14 @@ import { platformSettingsData } from '../../data/platform-settings-data';
 import { conversationsData } from '../../data/conversations-data';
 import { projectsData } from '../../data/projects-data';
 import { UserContext } from 'src/contexts/userContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 
 
 
 export function Profile() {
   const { user } = useContext(UserContext)
+  const [isEditMode, setIsEditMode] = useState(false)
+
   return (
     <>
       <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)] bg-cover	bg-center">
@@ -48,17 +50,17 @@ export function Profile() {
               />
               <div>
                 <Typography variant="h5" color="blue-gray" className="mb-1">
-                  {user && user.lastname}
+                  {user && user.username}
                 </Typography>
                 <Typography
                   variant="small"
                   className="font-normal text-blue-gray-600"
                 >
-                  CEO / Co-Founder
+                  Eclaireur
                 </Typography>
               </div>
             </div>
-            <div className="w-96">
+{/*             <div className="w-96">
               <Tabs value="app">
                 <TabsHeader>
                   <Tab value="app">
@@ -75,10 +77,10 @@ export function Profile() {
                   </Tab>
                 </TabsHeader>
               </Tabs>
-            </div>
+            </div> */}
           </div>
-          <div className="gird-cols-1 mb-12 grid gap-12 px-4 lg:grid-cols-2 xl:grid-cols-3">
-            <div>
+          <div className="gird-cols-1 mb-12 grid gap-12 px-4 xl:grid-cols-3">
+       {/*      <div>
               <Typography variant="h6" color="blue-gray" className="mb-3">
                 Platform Settings
               </Typography>
@@ -104,30 +106,34 @@ export function Profile() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
             <ProfileInfoCard
               title="Profile Information"
-              description="Hi, I'm Alec Thompson, Decisions: If you can't decide, the answer is no. If two equally difficult paths, choose the one more painful in the short term (pain avoidance is creating an illusion of equality)."
+              description={user?.description ? user.description : 'Please enter a description'}
               details={{
-                'first name': 'Alec M. Thompson',
-                mobile: '(44) 123 1234 123',
-                email: 'alecthompson@mail.com',
-                location: 'USA',
-                social: (
+                'firstname': user ? user.firstname : 'undefined',
+                'lastname' : user ? user.lastname : 'undefined',
+                'email': user ? user.email : 'undefined',
+/*                 'social': (
                   <div className="flex items-center gap-4">
                     <i className="fa-brands fa-facebook text-blue-700" />
                     <i className="fa-brands fa-twitter text-blue-400" />
                     <i className="fa-brands fa-instagram text-purple-500" />
                   </div>
-                ),
+                ),  */
               }}
               action={
                 <Tooltip content="Edit Profile">
-                  <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />
+                  <button onClick={()=>{
+                    setIsEditMode(!isEditMode)
+                    console.log(`EditMode is ${isEditMode}`)}}>
+                  {isEditMode===false ?  (<PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />) : (<div className="border-2 px-2 text-blue-gray-500">Save</div>)}
+                  </button>
                 </Tooltip>
               }
+              isEditMode={isEditMode}
             />
-            <div>
+            {/* <div>
               <Typography variant="h6" color="blue-gray" className="mb-3">
                 Platform Settings
               </Typography>
@@ -144,18 +150,17 @@ export function Profile() {
                   />
                 ))}
               </ul>
-            </div>
-          </div>
-          <div className="px-4 pb-4">
+            </div> */}
+                      <div className="px-4 pb-4 xl:col-span-2">
             <Typography variant="h6" color="blue-gray" className="mb-2">
-              Projects
+              Point of interests - Recently visited
             </Typography>
-            <Typography
+{/*             <Typography
               variant="small"
               className="font-normal text-blue-gray-500"
             >
-              Architects design houses
-            </Typography>
+              Places recently visited
+            </Typography> */}
             <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
               {projectsData.map(
                 ({ img, title, description, tag, route, members }) => (
@@ -219,6 +224,8 @@ export function Profile() {
               )}
             </div>
           </div>
+          </div>
+
         </CardBody>
       </Card>
     </>
