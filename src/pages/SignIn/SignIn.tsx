@@ -102,7 +102,7 @@ const SignIn = () => {
                 <hr className="grow w-full h-px bg-gray-500 border-none" />
               </div> */}
               <div className="text-gray-300 font-luckiest tracking-widest text-center text-xl md:text-2xl lg:text-2xl mb-10 mt-6">
-                Log in to your account
+                SE CONNECTER
               </div>
               <form onSubmit={handleSubmit(onSubmit)} className="w-full p-3">
                 <div className="flex flex-col mb-8">
@@ -110,7 +110,7 @@ const SignIn = () => {
                     type="email"
                     id="email"
                     {...register('email')}
-                    placeholder="E-mail"
+                    placeholder="Email"
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
                   {errors.email && (
@@ -124,12 +124,12 @@ const SignIn = () => {
                     type={passwordShown ? 'text' : 'password'}
                     id="password"
                     {...register('password')}
-                    placeholder="Password"
+                    placeholder="Mot de passe"
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
                   <i
                     onClick={handleShowPassword}
-                    className="absolute top-1/4 right-4"
+                    className="absolute top-1/3 right-4"
                   >
                     {passwordShown ? (
                       <FaEye color="#D1D5DB" />
@@ -148,7 +148,7 @@ const SignIn = () => {
                     to="#"
                     className="font-light text-base underline underline-offset-2 text-[#2EA44F]"
                   >
-                    Forgot password ?
+                    Mot de passe oublié ?
                   </Link>
                 </div>
                 <div className="flex flex-col mb-7">
@@ -156,16 +156,16 @@ const SignIn = () => {
                     type="submit"
                     className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-sm w-full font-secondary text-white text-[1rem] text-center font-semibold h-10 mt-2"
                   >
-                    CONTINUE
+                    CONTINUER
                   </button>
                   <div className="font-light text-base text-white font-secondary leading-140 text-center mt-8 text-light px-2 opacity-80 w-full">
-                    Don’t have a CityGuide account yet ?
+                    Créer votre compte CityGuide !
                     <br />
                     <Link
                       to="/signup"
                       className="underline underline-offset-2 text-[#2EA44F]"
                     >
-                      Sign Up
+                      Inscription gratuite
                     </Link>
                   </div>
                 </div>

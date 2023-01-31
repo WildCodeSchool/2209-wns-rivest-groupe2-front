@@ -135,7 +135,7 @@ const SignUp = () => {
                     type="email"
                     id="email"
                     {...register('email')}
-                    placeholder="E-mail"
+                    placeholder="Email"
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
                   {errors.email && (
@@ -144,17 +144,17 @@ const SignUp = () => {
                     </span>
                   )}
                 </div>
-                <div className="flex flex-col mb-6 relative">
+                <div className="flex flex-col mb-8 relative">
                   <input
                     type={passwordShown ? 'text' : 'password'}
                     id="password"
                     {...register('password')}
-                    placeholder="Password"
+                    placeholder="Mot de passe"
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
                   <i
                     onClick={handleShowPassword}
-                    className="absolute top-1/4 right-4"
+                    className="absolute top-1/3 right-4"
                   >
                     {passwordShown ? (
                       <FaEye color="#D1D5DB" />
@@ -168,12 +168,12 @@ const SignUp = () => {
                     </span>
                   )}
                 </div>
-                <div className="flex flex-col mb-6 relative">
+                <div className="flex flex-col mb-8 relative">
                   <input
                     type={passwordConfirmShown ? 'text' : 'password'}
                     id="confirmPassword"
                     {...register('confirmPassword')}
-                    placeholder="Confirm password"
+                    placeholder="Confirmer le mot de passe"
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
                   {errors.confirmPassword && (
@@ -184,7 +184,7 @@ const SignUp = () => {
                   {}
                   <i
                     onClick={handleConfirmShowPassword}
-                    className="absolute top-1/4 right-4"
+                    className="absolute top-1/3 right-4"
                   >
                     {passwordConfirmShown ? (
                       <FaEye color="#D1D5DB" />
@@ -198,16 +198,16 @@ const SignUp = () => {
                     type="submit"
                     className="bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 rounded-sm w-full font-secondary text-white text-[1rem] text-center font-semibold h-10 mt-2"
                   >
-                    CREATE ACCOUNT
+                    S'ISNCRIRE
                   </button>
                   <div className="font-light text-base text-white font-secondary leading-140 text-center mt-8 text-light px-2 opacity-80 w-full">
-                    Already have an CityGuide account ?
+                    Vous avez déjà un compte CityGuide ?
                     <br />
                     <Link
                       to="/signin"
                       className="underline underline-offset-2 text-[#2EA44F]"
                     >
-                      Sign In
+                      Se connecter
                     </Link>
                   </div>
                 </div>
