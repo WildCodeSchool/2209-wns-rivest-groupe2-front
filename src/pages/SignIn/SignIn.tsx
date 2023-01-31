@@ -87,7 +87,7 @@ const SignIn = () => {
 
   return (
     <>
-      <div className="bg-gray-200 h-[90vh] w-screen relative">
+      <div className="bg-gray-200 h-[90vh] w-screen relative overflow-hidden">
         <div className="text-black w-full h-full flex flex-col justify-center items-center bg-primary-dark">
         <img src={signin} alt="icon site" className="absolute object-cover h-full w-full"/>
           <div className="row-span-2 col-span-1 relative w-3/4 md:w-2/3 lg:w-1/3 ">

@@ -9,6 +9,7 @@ module.exports = withMT({
     extend: {
       colors: {
         'deep-blue': '#062428',
+        opalblue : '#44bdbe',
       },
       fontFamily: {
         luckiest: ['Luckiest Guy']
