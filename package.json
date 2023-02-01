@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.1",
-    "@heroicons/react": "2.0.12",
     "@hookform/resolvers": "^2.9.10",
+    "@heroicons/react": "2.0.12",
     "@material-tailwind/react": "^1.2.4",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
