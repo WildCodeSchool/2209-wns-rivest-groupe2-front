@@ -133,12 +133,11 @@ export function Profile() {
                     if (isEditMode === true){
                       document.body.style.cursor = 'wait';
                       setTimeout(() => {
-                        console.log("2 seconds have passed");
                         document.body.style.cursor = 'default';
                         setIsEditMode(!isEditMode)
                       }, 2000);
                     }
-                    console.log(`EditMode is ${isEditMode===true? 'ON.' : 'OFF.'}`)}}>
+                  }}>
                   {isEditMode===false ?  (<PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />) 
                   : 
                   (<div className="border-2 px-2 text-blue-gray-500">Save</div>)}
