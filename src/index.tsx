@@ -5,9 +5,10 @@ import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@ap
 import { setContext } from "@apollo/client/link/context";
 import './styles/index.css';
 import App from './App';
-import { MaterialTailwindControllerProvider } from './context/index';
+import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
 import './styles/index.css';
+import { UserContextProvider } from './contexts/userContext';
 
 
 // AUTHENTICATION APOLLO - HEADER
@@ -43,7 +44,9 @@ root.render(
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
           <ApolloProvider client={client}>
-            <App />
+            <UserContextProvider>
+              <App />
+            </UserContextProvider>
           </ApolloProvider>
         </MaterialTailwindControllerProvider>
       </ThemeProvider>

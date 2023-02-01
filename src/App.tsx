@@ -14,8 +14,10 @@ import BaseLayout from './layouts/baseLayout';
 import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
 
-const App = () => (
+const App = () =>{
+  return (
   <>
+   
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/" element={<BaseLayout />}>
@@ -34,7 +36,9 @@ const App = () => (
       <Route path="/auth/*" element={<Auth />} />
       <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
     </Routes>
+  
   </>
 );
+  }
 
 export default App;
