@@ -10,9 +10,15 @@ export interface IPOIData {
   pictureUrl: string;
   websiteURL: string;
   description: string;
+  creationDate: string;
+  priceRange: string;
+  city: string;
+  daysOpen: string[];
+  hoursOpen: string[];
+  hoursClose: string[];
 }
 
-export const poiData: IPOIData[] = [
+export const poiData = [
   {
     id: 1,
     name: 'Le Komptoir',

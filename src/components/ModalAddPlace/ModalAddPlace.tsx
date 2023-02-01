@@ -1,12 +1,19 @@
-import { useState } from 'react';
-import ModalCategory from './ModalCategory';
+import { useEffect, useState } from 'react';
 import ModalHours from './ModalHours';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { Point } from 'leaflet';
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import axios from 'axios';
+import { map } from 'lodash';
+import { GET_POI_QUERY } from 'src/pages/POIList/POIList';
 
 enum POIType {
   RESTAURANT = 'restaurant',
+  FASTFOOD = 'fast-food',
+  BAR = 'bar',
   PLACEOFRELIGION = 'lieu de culte',
+  HOSTEL = 'hôtel',
   MUSEUM = 'musée',
 }
 
@@ -22,116 +29,386 @@ type IFormInput = {
   postal: string;
   type: POIType;
   coordinates: Point;
+  creationDate: Date;
   pictureUrl: string;
   websiteURL: string;
   description: string;
   priceRange: EPriceRange;
-  hourOpenMonday: string;
-  hourOpenThuesday: string;
-  hourOpenWenesday: string;
-  hourOpenThursday: string;
-  hourOpenFriday: string;
-  hourOpenSaturday: string;
-  hourOpenSunday: string;
-  hourCloseMonday: string;
-  hourCloseThuesday: string;
-  hourCloseWenesday: string;
-  hourCloseThursday: string;
-  hourCloseFriday: string;
-  hourCloseSaturday: string;
-  hourCloseSunday: string;
+  city: string;
+  daysOpen: string;
+  firstHoursOpen: string;
+  firstHoursClose: string;
+  secondHoursOpen: string;
+  secondHoursClose: string;
 };
 
-const ModalAddPlace = () => {
-  const [openModalCategory, setOpenModalCategory] = useState(false);
+type IDataFromApi = {
+  latitude: number;
+  longitude: number;
+  type: string;
+  name: string;
+  number: string;
+  postal_code: string;
+  street: string;
+  confidence: number;
+  region: string;
+  region_code: string;
+  county: null;
+  locality: string;
+  administrative_area: string;
+  neighbourhood: string;
+  country: string;
+  country_code: string;
+  continent: string;
+  label: string;
+};
+
+const CREATE_POI_MUTATION = gql`
+  mutation CreatePoi($data: CreatePoiInput!) {
+    createPoi(data: $data) {
+      name
+      address
+      postal
+      type
+      coordinates
+      creationDate
+      pictureUrl
+      websiteURL
+      description
+      priceRange
+      city
+      daysOpen
+      hoursOpen
+      hoursClose
+    }
+  }
+`;
+
+const defaultDays = {
+  monday: false,
+  tuesday: false,
+  wednesday: false,
+  thursday: false,
+  friday: false,
+  saturday: false,
+  sunday: false,
+};
+
+const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
   const [openModalHours, setOpenModalHours] = useState(false);
+  const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
+  const [selectedDays, setSelectedDays] = useState(defaultDays);
+  const methods = useForm<IFormInput>();
   const {
     register,
     handleSubmit,
+    reset,
     watch,
+    getValues,
     formState: { errors },
-  } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+  } = methods;
 
-  console.log(openModalCategory);
-  if (openModalCategory)
-    return <ModalCategory setOpenModalCategory={setOpenModalCategory} />;
+  const params = {
+    access_key: process.env.REACT_APP_GEOCODING_ACCESS_KEY,
+    query:
+      getValues('address') && getValues('postal') && getValues('city')
+        ? getValues('address') +
+          ', ' +
+          getValues('postal') +
+          ' ' +
+          getValues('city')
+        : '',
+  };
 
-  if (openModalHours)
-    return <ModalHours setOpenModalHours={setOpenModalHours} />;
+  useEffect(() => {
+    if (params.query && params.query.length > 0) {
+      try {
+        axios
+          .get('http://api.positionstack.com/v1/forward', { params })
+          .then((response) => {
+            setDataFromApi(response.data.data[0]);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [params.query]);
+
+  const [createPoi] = useMutation(CREATE_POI_MUTATION, {
+    refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
+  });
+
+  const onSubmit: SubmitHandler<IFormInput> = (formData) => {
+    const coordinatesGPS = dataFromApi && [
+      dataFromApi.latitude,
+      dataFromApi.longitude,
+    ];
+    console.log(coordinatesGPS);
+
+    const daysOpenToSend = map(selectedDays, (value, key) => {
+      if (value) return key;
+      return;
+    }).filter((value) => value !== undefined);
+
+    createPoi({
+      variables: {
+        data: {
+          name: formData.name,
+          address: formData.address,
+          postal: formData.postal,
+          type: formData.type,
+          coordinates: coordinatesGPS,
+          websiteURL: formData.websiteURL,
+          description: formData.description,
+          city: formData.city,
+          daysOpen: daysOpenToSend,
+          hoursOpen:
+            formData.firstHoursOpen && formData.secondHoursOpen
+              ? [formData.firstHoursOpen, formData.secondHoursOpen]
+              : formData.firstHoursOpen && !formData.secondHoursOpen
+              ? [formData.firstHoursOpen]
+              : '',
+          hoursClose:
+            formData.firstHoursClose && formData.secondHoursClose
+              ? [formData.firstHoursClose, formData.secondHoursClose]
+              : formData.firstHoursClose && !formData.secondHoursClose
+              ? [formData.firstHoursClose]
+              : '',
+        },
+      },
+    });
+
+    alert("Point d'intérêt créé avec succès");
+    reset();
+    setOpenModalAddPlace(false);
+  };
 
   return (
-    <div className="mt-7 border-2">
+    <div className="mt-7 ml-4 border-2">
       <h2 className="pt-4 text-center text-xl font-bold">Ajouter un lieu</h2>
-      <form
-        className="flex flex-col w-[90%] mx-[5%]"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <label
-          className="border-2 rounded-xl h-[50px] px-[15px] py-[4px] my-4"
-          htmlFor="name"
+      <FormProvider {...methods}>
+        <form
+          className="flex flex-col w-[90%] mx-[5%]"
+          onSubmit={handleSubmit(onSubmit)}
         >
-          <input
-            type="text"
-            id="name"
-            {...register('name')}
-            placeholder="Nom du lieu (obligatoire)"
-            className="w-full h-full"
-          />
-        </label>
-        <div
-          onClick={() => setOpenModalCategory(true)}
-          className="flex justify-between items-center bg-white w-full h-[50px] px-[15px] py-[4px] mr-[80px] my-4 border-2 rounded-xl text-gray-400"
-        >
-          <div>Catégorie (obligatoire)</div>
-          <div>{'>'}</div>
-        </div>
-        <label
-          htmlFor="address"
-          className="border-2 rounded-xl h-[50px] my-4 px-[15px] py-[4px]"
-        >
-          <input
-            type="text"
-            {...register('address')}
-            id="address"
-            placeholder="Adresse (obligatoire)"
-            className="w-full h-full"
-          />
-        </label>
-        <div
-          onClick={() => setOpenModalHours(true)}
-          className="flex justify-between items-center bg-white w-full h-[50px] px-[15px] py-[4px] mr-[80px] my-4 border-2 rounded-xl text-gray-400"
-        >
-          <div>Horaires</div>
-          <div>{'>'}</div>
-        </div>
-        <label
-          htmlFor="website"
-          className="border-2 rounded-xl h-[50px] my-4 px-[15px] py-[4px]"
-        >
-          <input
-            type="text"
-            {...register('websiteURL')}
-            id="websiteURL"
-            placeholder="Site web"
-            className="w-full h-full"
-          />
-        </label>
-        <button className="h-[50px] px-[15px] py-[4px] my-4 border-2 rounded-2xl text-gray-400">
-          Ajouter une photo
-        </button>
-        <div className="flex justify-end">
-          <button className="px-[15px] ml-[5%] py-2 my-4 border-2 rounded-3xl text-gray-400">
-            Annuler
-          </button>
-          <button
-            type="submit"
-            className="px-[15px] ml-[5%] py-2 my-4 border-2 rounded-3xl text-gray-400"
-          >
-            Envoyer
-          </button>
-        </div>
-      </form>
+          {openModalHours ? (
+            <ModalHours
+              setOpenModalHours={setOpenModalHours}
+              selectedDays={selectedDays}
+              setSelectedDays={setSelectedDays}
+            />
+          ) : (
+            <>
+              <label
+                className={
+                  errors.name
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mt-4'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] my-4'
+                }
+                htmlFor="name"
+              >
+                <input
+                  type="text"
+                  id="name"
+                  {...register('name', {
+                    required: {
+                      value: true,
+                      message: 'Le nom du lieu est obligatoire',
+                    },
+                  })}
+                  placeholder="Nom du lieu (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.name && (
+                <p className="text-red-400 p-1 mb-4">*{errors.name.message}</p>
+              )}
+              <select
+                {...register('type', {
+                  required: {
+                    value: true,
+                    message: 'La catégorie est obligatoire',
+                  },
+                })}
+                className={
+                  errors.type
+                    ? 'border-2 bg-transparent text-gray-400 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 bg-transparent text-gray-400 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <option value="">Catégorie (obligatoire)*</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="fast-food">Fast-Food</option>
+                <option value="bar">Bar</option>
+                <option value="lieu de culte">Eglise</option>
+                <option value="hotel">Hotel</option>
+                <option value="musee">Musée</option>
+              </select>
+              {errors.type && (
+                <p className="text-red-400 p-1 mb-4">*{errors.type.message}</p>
+              )}
+              <label
+                htmlFor="address"
+                className={
+                  errors.address
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('address', {
+                    required: {
+                      value: true,
+                      message: 'Le numéro et le nom de rue sont obligatoires',
+                    },
+                  })}
+                  id="address"
+                  placeholder="Numéro et nom de rue (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.address && (
+                <p className="text-red-400 p-1 mb-4">
+                  *{errors.address.message}
+                </p>
+              )}
+              <label
+                htmlFor="postal"
+                className={
+                  errors.postal
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('postal', {
+                    pattern: {
+                      value: /[0-9]/,
+                      message: 'Seuls des chiffres sont acceptés',
+                    },
+                    required: {
+                      value: true,
+                      message: 'Le code postal est obligatoire',
+                    },
+                    minLength: {
+                      value: 5,
+                      message: 'Longueur minimale est de 5',
+                    },
+                    maxLength: {
+                      value: 5,
+                      message: 'Longueur maximale est de 5',
+                    },
+                  })}
+                  id="postal"
+                  placeholder="Code postal (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.postal && (
+                <p className="text-red-400 p-1 mb-4">
+                  *{errors.postal.message}
+                </p>
+              )}
+              <label
+                htmlFor="city"
+                className={
+                  errors.city
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('city', {
+                    pattern: {
+                      value: /^[a-zA-Z\s]*$/,
+                      message: 'Seuls des lettres et espace sont acceptés',
+                    },
+                    required: {
+                      value: true,
+                      message: 'La ville est obligatoire',
+                    },
+                  })}
+                  id="city"
+                  placeholder="Ville (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.city && (
+                <p className="text-red-400 p-1 mb-4">*{errors.city.message}</p>
+              )}
+              <label
+                htmlFor="description"
+                className="border-2 rounded-xl mb-4 px-[15px] py-[4px]"
+              >
+                <textarea
+                  {...register('description')}
+                  id="description"
+                  placeholder="Description"
+                  className="w-full"
+                  rows={6}
+                  cols={30}
+                />
+              </label>
+              <div
+                onClick={() => setOpenModalHours(true)}
+                className="flex justify-between items-center bg-white w-full h-[50px] px-[15px] py-[4px] mr-[80px] mb-4 border-2 rounded-xl text-gray-400"
+              >
+                <div>Horaires</div>
+                <div>{'>'}</div>
+              </div>
+              <label
+                htmlFor="website"
+                className={
+                  errors.websiteURL
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('websiteURL', {
+                    pattern: {
+                      value:
+                        /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+                      message: 'Format invalide',
+                    },
+                  })}
+                  id="websiteURL"
+                  placeholder="Site web"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.websiteURL && (
+                <p className="text-red-400 p-1">*{errors.websiteURL.message}</p>
+              )}
+              <button
+                type="button"
+                className="h-[50px] px-[15px] py-[4px] mb-4 border-2 rounded-2xl text-gray-400"
+              >
+                Ajouter une photo
+              </button>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => reset()}
+                  className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gray-500 hover:bg-white font-secondary text-white hover:text-gray-400 text-[1rem] text-center font-semibold mt-2"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold mt-2"
+                >
+                  Envoyer
+                </button>
+              </div>
+            </>
+          )}
+        </form>
+      </FormProvider>
     </div>
   );
 };

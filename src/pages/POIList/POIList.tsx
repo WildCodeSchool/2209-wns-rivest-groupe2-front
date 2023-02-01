@@ -1,28 +1,57 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MapModule from '../../components/MapModule';
-import { poiData } from 'src/data/poi-data';
+import { IPOIData } from 'src/data/poi-data';
 import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
 import ModalAddPlace from 'src/components/ModalAddPlace/ModalAddPlace';
+import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
+
+export const GET_POI_QUERY = gql`
+  query GetAllPois {
+    getAllPoi {
+      id
+      name
+      address
+      postal
+      type
+      coordinates
+      creationDate
+      pictureUrl
+      websiteURL
+      description
+      priceRange
+      city
+      daysOpen
+      hoursOpen
+      hoursClose
+    }
+  }
+`;
 
 const POIList = () => {
   const [openModalAddPlace, setOpenModalAddPlace] = useState(false);
-  const city = poiData[0].address
-    .split(' ')
-    .slice(-2, -1)
-    .join(' ')
-    .split(',')[0];
-  const count = poiData.length;
+  const [count, setCount] = useState(0);
+  const { loading, error, data } = useQuery(GET_POI_QUERY);
+
+  useEffect(() => {
+    if (data?.getAllPoi) setCount(data.getAllPoi.length);
+  }, [data]);
+
+  if (loading) return <p>Chargement...</p>;
+  if (error) return <p>Une erreur est survenue :(</p>;
 
   return (
     <div className="mt-5">
       <div className="flex justify-between mx-5">
         <strong className="py-[5px] pl-[80px]" id="results-number">
-          {count} résultat{count > 1 ? 's' : ''} de{' '}
-          {poiData[0].type.toUpperCase()} à {city.toUpperCase()}
+          {/* {count} résultat{count > 1 ? 's' : ''} de{' '}
+          {poiData[0].type.toUpperCase()} à {city.toUpperCase()} */}
+          {count} point{count > 1 ? 's' : ''} d'intérêt à{' '}
+          {data.getAllPoi[0].city}
         </strong>
         <button
-          className="px-[15px] py-[4px] mt-2 border-2 rounded-xl"
+          className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold"
           onClick={() => setOpenModalAddPlace(!openModalAddPlace)}
         >
           {!openModalAddPlace ? 'Ajouter votre lieu' : "Annuler l'ajout"}
@@ -49,32 +78,35 @@ const POIList = () => {
           <option value="restaurant">Restaurant</option>
           <option value="fast-food">Fast-Food</option>
           <option value="bar">Bar</option>
-          <option value="surch">Eglise</option>
-          <option value="hotel">Hotel</option>
+          <option value="surch">Lieu de culte</option>
+          <option value="hotel">Hôtel</option>
           <option value="museum">Musée</option>
         </select>
       </div>
       <div className="flex pt-5">
-        <div className="h-full overflow-auto w-[100%]">
+        <div className="h-[70vh] overflow-auto w-[50%]">
           {openModalAddPlace ? (
-            <ModalAddPlace />
+            <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} />
           ) : (
             <ul
               id="poi-list"
               className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
             >
-              {poiData.map((poi) => (
+              {data.getAllPoi.map((poi: IPOIData) => (
                 <Link
                   key={poi.id}
                   to={`/point-of-interest/${poi.id}/${poi.name}`}
                   style={{ cursor: 'pointer' }}
                 >
-                  <li className="h-[250px] w-[250px] border-solid border rounded-xl mb-8">
+                  <li className="h-[250px] w-[250px] border-solid border rounded-xl mb-12">
                     <POICard
                       name={poi.name}
                       address={poi.address}
+                      postal={poi.postal}
+                      city={poi.city}
                       pictureUrl={poi.pictureUrl}
                       description={poi.description}
+                      type={poi.type}
                     />
                   </li>
                 </Link>
@@ -82,8 +114,16 @@ const POIList = () => {
             </ul>
           )}
         </div>
-        <div style={{ width: '100%', height: '100vh' }}>
-          <MapModule />
+        <div
+          style={{
+            width: '50%',
+            height: '85vh',
+            position: 'fixed',
+            right: 0,
+            top: '150px',
+          }}
+        >
+          <MapModule poiData={data.getAllPoi} />
         </div>
       </div>
     </div>
