@@ -20,6 +20,7 @@ import { gql, useQuery } from '@apollo/client';
 
 const App = () =>{
   const [user, setUser] = useState<UserType | null>({
+    id: 1,
     email: '',
     firstname: '',
     lastname: 'eazeazzae+9+',
@@ -30,6 +31,7 @@ const App = () =>{
   const GET_USER_BY_ID = gql` 
   query GetUserById($getUserByIdId: Float!) {
   getUserById(id: $getUserByIdId) {
+    id
     email
     username
     firstname
@@ -46,6 +48,7 @@ const { data } = useQuery(GET_USER_BY_ID, {
   useEffect(()=>{
     if (data){
     setUser({
+      id: data.getUserById.id,
       email: data.getUserById.email,
       firstname: data.getUserById.firstname,
       lastname: data.getUserById.lastname,

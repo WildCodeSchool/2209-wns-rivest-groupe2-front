@@ -5,16 +5,41 @@ import {
   CardBody,
   Typography,
 } from "@material-tailwind/react";
-import { useEffect } from "react";
+import { useContext } from "react";
+import { useForm } from "react-hook-form";
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import { UserContext } from "src/contexts/userContext";
+
 
 export function ProfileInfoCard({ title, description, details, action, onChange, isEditMode}) {
-  const onSubmit = () =>{
-    console.log('lol encore')
+  const { user } = useContext(UserContext)
+  const UPDATE_USER_MUTATION = gql`
+  mutation UpdateUser($data: UpdateUserInput!) {
+    updateUser(data: $data) {
+      id
+      email
+      username
+      type
+      firstname
+      lastname
+      hashedPassword
+      profilePicture
+    }
   }
+`;
 
-  useEffect(()=>{
-    console.log(isEditMode)
-  },[isEditMode])
+  const { register, formState: {error}, handleSubmit} = useForm()
+  const [updateUserMutation, { data, updateError }] = useMutation(UPDATE_USER_MUTATION, {
+    variables: { data: {}  },
+  });
+
+
+  const onSubmit = (formData) =>{
+    updateUserMutation({ variables: { data: { ...formData, id: user.id } } });
+  };
+  
+
   return (
     <Card color="transparent" shadow={false}>
       <CardHeader
@@ -66,7 +91,7 @@ export function ProfileInfoCard({ title, description, details, action, onChange,
             
           </ul>
         ) : (
-          <form onSubmit={onSubmit}>  
+          <form onSubmit={handleSubmit(onSubmit)}>  
           <ul className="flex flex-col gap-4 p-0">
             {Object.keys(details).map((el, key) => (
               <li key={key} className="flex items-center gap-4">
@@ -82,7 +107,7 @@ export function ProfileInfoCard({ title, description, details, action, onChange,
                   variant="small"
                   className="font-normal text-blue-gray-500"
                   >
-                    <input name={el} defaultValue={(details[el])} onChange={(e)=>{
+                    <input {...register(el, {required: true})}  defaultValue={(details[el])} onChange={(e)=>{
                       e.target.value
                     }}/>
                   </Typography>
@@ -93,6 +118,7 @@ export function ProfileInfoCard({ title, description, details, action, onChange,
             ))}
             
           </ul>
+          <button type="submit" className="justify-center items-center self-center border px-2 mt-2">Save</button>
           </form>
         )}
       </CardBody>
