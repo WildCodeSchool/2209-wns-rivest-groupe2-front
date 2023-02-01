@@ -51,7 +51,7 @@ export function Profile() {
               />
               <div>
                 <Typography variant="h5" color="blue-gray" className="mb-1">
-                  {user && user.username}
+                  {user && user.firstname}
                 </Typography>
                 <Typography
                   variant="small"
@@ -125,8 +125,19 @@ export function Profile() {
               }}
               action={
                 <Tooltip content="Edit Profile">
-                  <button onClick={()=>{
-                    setIsEditMode(!isEditMode)
+                  <button type='submit' form='userForm' value="Update" onClick={()=>{
+           
+                    if (isEditMode === false){
+                      setIsEditMode(!isEditMode)
+                    }         
+                    if (isEditMode === true){
+                      document.body.style.cursor = 'wait';
+                      setTimeout(() => {
+                        console.log("2 seconds have passed");
+                        document.body.style.cursor = 'default';
+                        setIsEditMode(!isEditMode)
+                      }, 2000);
+                    }
                     console.log(`EditMode is ${isEditMode===true? 'ON.' : 'OFF.'}`)}}>
                   {isEditMode===false ?  (<PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />) 
                   : 

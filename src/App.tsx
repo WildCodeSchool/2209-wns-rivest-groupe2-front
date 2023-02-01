@@ -13,57 +13,11 @@ import Auth from './layouts/auth';
 import BaseLayout from './layouts/baseLayout';
 import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
-import { UserContextProvider } from './contexts/userContext';
-import { useState, useEffect } from 'react';
-import { UserType } from './types/UserType';
-import { gql, useQuery } from '@apollo/client';
 
 const App = () =>{
-  const [user, setUser] = useState<UserType | null>({
-    id: 1,
-    email: '',
-    firstname: '',
-    lastname: 'eazeazzae+9+',
-    username: 'un username',
-    profilePicture: ''
-  });
-
-  const GET_USER_BY_ID = gql` 
-  query GetUserById($getUserByIdId: Float!) {
-  getUserById(id: $getUserByIdId) {
-    id
-    email
-    username
-    firstname
-    lastname
-    profilePicture
-  }
-}
-`;
-
-const { data } = useQuery(GET_USER_BY_ID, {
-  variables: { getUserByIdId: 1 },
-});
-
-  useEffect(()=>{
-    if (data){
-    setUser({
-      id: data.getUserById.id,
-      email: data.getUserById.email,
-      firstname: data.getUserById.firstname,
-      lastname: data.getUserById.lastname,
-      username: data.getUserById.firstname + ' ' + data.getUserById.lastname.charAt(0) + '.',
-      description: data.getUserById.description,
-      profilePicture: ''
-    })
-  }
-  }, [data])
-
-/* 
- */
   return (
   <>
-   <UserContextProvider user={user} setUser={setUser}>
+   
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/" element={<BaseLayout />}>
@@ -82,7 +36,7 @@ const { data } = useQuery(GET_USER_BY_ID, {
       <Route path="/auth/*" element={<Auth />} />
       <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
     </Routes>
-  </UserContextProvider>
+  
   </>
 );
   }
