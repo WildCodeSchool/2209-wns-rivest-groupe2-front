@@ -1,7 +1,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { gql, useLazyQuery } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -55,16 +55,17 @@ const SignIn = () => {
     setPasswordShown(!passwordShown);
   };
 
-  // MUTATION - SUBMISSION
+  // ADD NAVIGATION TO THE PREVIOUS PAGE
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
+    // MUTATION - SUBMISSION
   const [login] = useLazyQuery(GET_TOKEN, {
     onCompleted(data) {
       localStorage.setItem('token', data.getToken.token);
       localStorage.setItem('user', JSON.stringify(data.getToken.userFromDB));
       setUser(data.getToken.userFromDB);
-      navigate('/point-of-interest/list');
+      navigate(-1)
     },
     onError(error: any) {
       console.log(error);

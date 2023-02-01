@@ -13,6 +13,8 @@ import Auth from './layouts/auth';
 import BaseLayout from './layouts/baseLayout';
 import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
+import RequireAuth from './components/RequireAuth';
+import Profile from './pages/dashboard/profile';
 
 const App = () => (
   <>
@@ -29,10 +31,13 @@ const App = () => (
         <Route path="/town/creation" element={<TownCreation />} />
         <Route path="*" element={<NotFound />} />
       </Route>
-      <Route path="/" element={<DashboardHome />} />
-      <Route path="/dashboard/*" element={<Dashboard />} />
-      <Route path="/auth/*" element={<Auth />} />
-      <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+      <Route element={<RequireAuth />}>
+        <Route path="/" element={<DashboardHome />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
+        <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/auth/*" element={<Auth />} />
+        <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+      </Route>
     </Routes>
   </>
 );
