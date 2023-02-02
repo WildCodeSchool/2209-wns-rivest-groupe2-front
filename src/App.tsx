@@ -33,7 +33,7 @@ const App = () =>{
         <Route path="/town/creation" element={<TownCreation />} />
         <Route path="*" element={<NotFound />} />
       </Route>
-      <Route element={<RequireAuth />}>
+      <Route element={<RequireAuth allowedRoles={["freeUser"]}/>}>
         <Route path="/" element={<DashboardHome />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/profile/:id" element={<Profile />} />
