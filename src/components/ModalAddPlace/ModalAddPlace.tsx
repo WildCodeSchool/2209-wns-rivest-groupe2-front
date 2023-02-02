@@ -1,0 +1,364 @@
+import { useEffect, useState } from 'react';
+import ModalHours from './ModalHours';
+import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
+import { useMutation } from '@apollo/client';
+import gql from 'graphql-tag';
+import axios from 'axios';
+import { map } from 'lodash';
+import { GET_POI_QUERY } from 'src/pages/POIList/POIList';
+import type { IFormInput, IDataFromApi } from 'src/types/POIType';
+
+const CREATE_POI_MUTATION = gql`
+  mutation CreatePoi($data: CreatePoiInput!) {
+    createPoi(data: $data) {
+      name
+      address
+      postal
+      type
+      coordinates
+      creationDate
+      pictureUrl
+      websiteURL
+      description
+      priceRange
+      city
+      daysOpen
+      hoursOpen
+      hoursClose
+    }
+  }
+`;
+
+const defaultDays = {
+  monday: false,
+  tuesday: false,
+  wednesday: false,
+  thursday: false,
+  friday: false,
+  saturday: false,
+  sunday: false,
+};
+
+const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
+  const [openModalHours, setOpenModalHours] = useState(false);
+  const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
+  const [selectedDays, setSelectedDays] = useState(defaultDays);
+  const methods = useForm<IFormInput>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    formState: { errors },
+  } = methods;
+
+  const options = {
+    method: 'GET',
+    url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
+    params: {
+      address:
+        getValues('address') && getValues('postal') && getValues('city')
+          ? getValues('address') +
+            ' ' +
+            getValues('postal') +
+            ' ' +
+            getValues('city')
+          : '',
+    },
+    headers: {
+      'X-RapidAPI-Key': process.env.REACT_APP_GEOCODING_ACCESS_KEY,
+      'X-RapidAPI-Host': process.env.REACT_APP_GEOCODING_ACCESS_HOST,
+    },
+  };
+
+  useEffect(() => {
+    if (options.params.address && options.params.address.length > 0) {
+      try {
+        axios.request(options).then((response) => {
+          setDataFromApi(response.data.Results[0]);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [options.params.address]);
+
+  const [createPoi] = useMutation(CREATE_POI_MUTATION, {
+    refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
+  });
+
+  const onSubmit: SubmitHandler<IFormInput> = (formData) => {
+    const coordinatesGPS = dataFromApi && [
+      dataFromApi.latitude,
+      dataFromApi.longitude,
+    ];
+
+    const daysOpenToSend = map(selectedDays, (value, key) => {
+      if (value) return key;
+      return;
+    }).filter((value) => value !== undefined);
+
+    createPoi({
+      variables: {
+        data: {
+          name: formData.name,
+          address: formData.address,
+          postal: formData.postal,
+          type: formData.type,
+          coordinates: coordinatesGPS,
+          websiteURL: formData.websiteURL,
+          description: formData.description,
+          city: formData.city,
+          daysOpen: daysOpenToSend,
+          hoursOpen:
+            formData.firstHoursOpen && formData.secondHoursOpen
+              ? [formData.firstHoursOpen, formData.secondHoursOpen]
+              : formData.firstHoursOpen && !formData.secondHoursOpen
+              ? [formData.firstHoursOpen]
+              : '',
+          hoursClose:
+            formData.firstHoursClose && formData.secondHoursClose
+              ? [formData.firstHoursClose, formData.secondHoursClose]
+              : formData.firstHoursClose && !formData.secondHoursClose
+              ? [formData.firstHoursClose]
+              : '',
+        },
+      },
+    });
+
+    alert("Point d'intérêt créé avec succès");
+    reset();
+    setOpenModalAddPlace(false);
+  };
+
+  return (
+    <div className="mt-7 ml-4 border-2">
+      <h2 className="pt-4 text-center text-xl font-bold">Ajouter un lieu</h2>
+      <FormProvider {...methods}>
+        <form
+          className="flex flex-col w-[90%] mx-[5%]"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          {openModalHours ? (
+            <ModalHours
+              setOpenModalHours={setOpenModalHours}
+              selectedDays={selectedDays}
+              setSelectedDays={setSelectedDays}
+            />
+          ) : (
+            <>
+              <label
+                className={
+                  errors.name
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mt-4'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] my-4'
+                }
+                htmlFor="name"
+              >
+                <input
+                  type="text"
+                  id="name"
+                  {...register('name', {
+                    required: {
+                      value: true,
+                      message: 'Le nom du lieu est obligatoire',
+                    },
+                  })}
+                  placeholder="Nom du lieu (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.name && (
+                <p className="text-red-400 p-1 mb-4">*{errors.name.message}</p>
+              )}
+              <select
+                {...register('type', {
+                  required: {
+                    value: true,
+                    message: 'La catégorie est obligatoire',
+                  },
+                })}
+                className={
+                  errors.type
+                    ? 'border-2 bg-transparent text-gray-400 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 bg-transparent text-gray-400 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <option value="">Catégorie (obligatoire)*</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="fast-food">Fast-Food</option>
+                <option value="bar">Bar</option>
+                <option value="lieu de culte">Eglise</option>
+                <option value="hotel">Hotel</option>
+                <option value="musee">Musée</option>
+              </select>
+              {errors.type && (
+                <p className="text-red-400 p-1 mb-4">*{errors.type.message}</p>
+              )}
+              <label
+                htmlFor="address"
+                className={
+                  errors.address
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('address', {
+                    required: {
+                      value: true,
+                      message: 'Le numéro et le nom de rue sont obligatoires',
+                    },
+                  })}
+                  id="address"
+                  placeholder="Numéro et nom de rue (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.address && (
+                <p className="text-red-400 p-1 mb-4">
+                  *{errors.address.message}
+                </p>
+              )}
+              <label
+                htmlFor="postal"
+                className={
+                  errors.postal
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('postal', {
+                    pattern: {
+                      value: /[0-9]/,
+                      message: 'Seuls des chiffres sont acceptés',
+                    },
+                    required: {
+                      value: true,
+                      message: 'Le code postal est obligatoire',
+                    },
+                    minLength: {
+                      value: 5,
+                      message: 'Longueur minimale est de 5',
+                    },
+                    maxLength: {
+                      value: 5,
+                      message: 'Longueur maximale est de 5',
+                    },
+                  })}
+                  id="postal"
+                  placeholder="Code postal (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.postal && (
+                <p className="text-red-400 p-1 mb-4">
+                  *{errors.postal.message}
+                </p>
+              )}
+              <label
+                htmlFor="city"
+                className={
+                  errors.city
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('city', {
+                    pattern: {
+                      value: /^[a-zA-Z\s]*$/,
+                      message: 'Seuls des lettres et espace sont acceptés',
+                    },
+                    required: {
+                      value: true,
+                      message: 'La ville est obligatoire',
+                    },
+                  })}
+                  id="city"
+                  placeholder="Ville (obligatoire)*"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.city && (
+                <p className="text-red-400 p-1 mb-4">*{errors.city.message}</p>
+              )}
+              <label
+                htmlFor="description"
+                className="border-2 rounded-xl mb-4 px-[15px] py-[4px]"
+              >
+                <textarea
+                  {...register('description')}
+                  id="description"
+                  placeholder="Description"
+                  className="w-full"
+                  rows={6}
+                  cols={30}
+                />
+              </label>
+              <div
+                onClick={() => setOpenModalHours(true)}
+                className="flex justify-between items-center bg-white w-full h-[50px] px-[15px] py-[4px] mr-[80px] mb-4 border-2 rounded-xl text-gray-400"
+              >
+                <div>Horaires</div>
+                <div>{'>'}</div>
+              </div>
+              <label
+                htmlFor="website"
+                className={
+                  errors.websiteURL
+                    ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
+                    : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+                }
+              >
+                <input
+                  type="text"
+                  {...register('websiteURL', {
+                    pattern: {
+                      value:
+                        /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+                      message: 'Format invalide',
+                    },
+                  })}
+                  id="websiteURL"
+                  placeholder="Site web"
+                  className="w-full h-full"
+                />
+              </label>
+              {errors.websiteURL && (
+                <p className="text-red-400 p-1">*{errors.websiteURL.message}</p>
+              )}
+              <button
+                type="button"
+                className="h-[50px] px-[15px] py-[4px] mb-4 border-2 rounded-2xl text-gray-400"
+              >
+                Ajouter une photo
+              </button>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => reset()}
+                  className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gray-500 hover:bg-white font-secondary text-white hover:text-gray-400 text-[1rem] text-center font-semibold mt-2"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold mt-2"
+                >
+                  Envoyer
+                </button>
+              </div>
+            </>
+          )}
+        </form>
+      </FormProvider>
+    </div>
+  );
+};
+
+export default ModalAddPlace;
