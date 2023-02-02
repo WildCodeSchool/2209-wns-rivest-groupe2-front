@@ -18,6 +18,7 @@ const MapModule = () => {
       style={{
         height: '100%',
         margin: '30px 20px',
+        zIndex: '10',
       }}
       id="map-container"
     >

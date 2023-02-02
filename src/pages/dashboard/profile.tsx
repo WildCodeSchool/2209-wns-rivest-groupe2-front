@@ -110,7 +110,7 @@ export function Profile() {
             </div> */}
             <ProfileInfoCard
               title="Profile Information"
-              description={user?.description ? user.description : 'Please enter a description'}
+              // description={user?.description ? user.description : 'Please enter a description'}
               details={{
                 'firstname': user ? user.firstname : 'undefined',
                 'lastname' : user ? user.lastname : 'undefined',
