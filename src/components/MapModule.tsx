@@ -1,6 +1,6 @@
 import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
-import { poiData } from 'src/data/poi-data';
+import { IPOIData } from 'src/types/POIType';
 import PopUpMap from './PopupMap';
 
 function MapComponent() {
@@ -8,15 +8,15 @@ function MapComponent() {
   return null;
 }
 
-const MapModule = () => {
+const MapModule = ({ poiData }: any) => {
   const parisPosition: LatLngExpression = [48.88, 2.33];
 
   return (
     <MapContainer
       center={parisPosition}
-      zoom={13}
+      zoom={12}
       style={{
-        height: '100%',
+        height: '90%',
         margin: '30px 20px',
         zIndex: '10',
       }}
@@ -27,18 +27,20 @@ const MapModule = () => {
         url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
-      {poiData.map((poi) => (
-        <div className="map-marker">
-          <Marker key={poi.id} position={poi.coordinates}>
-            <Popup>
-              <PopUpMap
-                name={poi.name}
-                address={poi.address}
-                pictureUrl={poi.pictureUrl}
-                id={poi.id}
-              />
-            </Popup>
-          </Marker>
+      {poiData.map((poi: IPOIData) => (
+        <div className="map-marker" key={poi.id}>
+          {poi.coordinates ? (
+            <Marker position={poi.coordinates}>
+              <Popup>
+                <PopUpMap
+                  name={poi.name}
+                  address={poi.address}
+                  pictureUrl={poi.pictureUrl}
+                  id={poi.id}
+                />
+              </Popup>
+            </Marker>
+          ) : null}
         </div>
       ))}
     </MapContainer>
