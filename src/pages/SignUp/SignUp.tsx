@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { gql, useMutation } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/UserContext';
 import { ISignUp } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
 

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { Dropdown, Avatar } from 'flowbite-react';
-import { UserContext } from '../contexts/userContext';
+import { UserContext } from '../contexts/UserContext';
 import { IUserContext } from '../types/IUserContext';
 import {Link } from 'react-router-dom';
 import redneck from '../asset/img/redneck.jpg';

@@ -8,7 +8,7 @@ import App from './App';
 import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
 import './styles/index.css';
-import { UserContextProvider } from './contexts/userContext';
+import { UserContextProvider } from './contexts/UserContext';
 
 
 // AUTHENTICATION APOLLO - HEADER

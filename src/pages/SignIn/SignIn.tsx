@@ -5,7 +5,7 @@ import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { gql, useLazyQuery } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { UserContext } from '../../contexts/userContext';
+import { UserContext } from '../../contexts/UserContext';
 import { ISignIn } from 'src/types/ISignIn';
 import signin from '../../asset/img/bg-signin.jpg';
 
@@ -21,6 +21,7 @@ const GET_TOKEN = gql`
         firstname
         lastname
         profilePicture
+        type
       }
     }
   }

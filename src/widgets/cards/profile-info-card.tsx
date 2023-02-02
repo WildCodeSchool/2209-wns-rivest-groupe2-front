@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import { UserContext } from "src/contexts/userContext";
+import { UserContext } from "src/contexts/UserContext";
 
 interface Props {
   title: string;

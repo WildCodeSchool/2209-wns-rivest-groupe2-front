@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import UserDropdown from './UserDropdown';
 import logo from '../asset/img/city-guide-logo.svg';
-import { UserContext } from '../contexts/userContext';
+import { UserContext } from '../contexts/UserContext';
 
 const getActiveLinkStyle = ({ isActive }: { isActive: boolean }) => ({
   color: isActive ? 'grey' : 'black',

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
-import { UserContext } from 'src/contexts/userContext';
+import { UserContext } from 'src/contexts/UserContext';
 import { IUserContext } from 'src/types/IUserContext';
 
 interface IAllowedRoles {
