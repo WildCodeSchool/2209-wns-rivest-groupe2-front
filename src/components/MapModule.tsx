@@ -18,6 +18,7 @@ const MapModule = ({ poiData }: any) => {
       style={{
         height: '90%',
         margin: '30px 20px',
+        zIndex: '10',
       }}
       id="map-container"
     >
