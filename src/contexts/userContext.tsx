@@ -1,5 +1,5 @@
 
-import { createContext, useState } from 'react'
+import { createContext, useState, useMemo } from 'react'
 import { IUserContext, IUser } from '../types/IUserContext'
 
 // CREATE USER CONTEXT
@@ -12,12 +12,20 @@ export const UserContext = createContext<IUserContext>({
 const localUser = localStorage.getItem('user')
 const parseUser: IUser | undefined = localUser ? JSON.parse(localUser) : null
 
-export const UserProvider = ({ children }: { children: JSX.Element }) => {
+export const UserContextProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<IUser | null>(parseUser || null)
+ 
+  const value = useMemo(
+    ()=>({
+      user,
+      setUser,
+    }),
+    [user, setUser]
+  )
 
   return (
     <UserContext.Provider
-      value={{ user, setUser }}
+      value={value}
     >
       {children}
     </UserContext.Provider>

@@ -8,7 +8,8 @@ import App from './App';
 import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
 import './styles/index.css';
-import { UserProvider } from './contexts/UserContext'
+import { UserContextProvider } from './contexts/UserContext';
+
 
 // AUTHENTICATION APOLLO - HEADER
 // https://www.apollographql.com/docs/react/networking/authentication/
@@ -43,9 +44,9 @@ root.render(
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
           <ApolloProvider client={client}>
-              <UserProvider>
-                <App />
-              </UserProvider>
+            <UserContextProvider>
+              <App />
+            </UserContextProvider>
           </ApolloProvider>
         </MaterialTailwindControllerProvider>
       </ThemeProvider>

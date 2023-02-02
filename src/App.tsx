@@ -16,8 +16,10 @@ import POIList from './pages/POIList/POIList';
 import RequireAuth from './components/RequireAuth';
 import Profile from './pages/dashboard/profile';
 
-const App = () => (
+const App = () =>{
+  return (
   <>
+   
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/" element={<BaseLayout />}>
@@ -39,7 +41,9 @@ const App = () => (
         <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
       </Route>
     </Routes>
+  
   </>
 );
+  }
 
 export default App;
