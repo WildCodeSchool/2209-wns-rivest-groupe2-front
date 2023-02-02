@@ -41,7 +41,12 @@ const POIList = () => {
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
+
+  if (data.getAllPoi.length=== 0){
+    return <div>Yan à marre</div>
+  }
   return (
+
     <div className="mt-5">
       <div className="flex justify-between mx-5">
         <strong className="py-[5px] pl-[80px]" id="results-number">

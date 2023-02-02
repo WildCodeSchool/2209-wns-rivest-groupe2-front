@@ -24,7 +24,7 @@ import { MessageCard } from '../../widgets/cards/message-card';
 import { platformSettingsData } from '../../data/platform-settings-data';
 import { conversationsData } from '../../data/conversations-data';
 import { projectsData } from '../../data/projects-data';
-import { UserContext } from 'src/contexts/UserContext';
+import { UserContext } from 'src/contexts/userContext';
 import { useContext, useState } from 'react';
 
 
