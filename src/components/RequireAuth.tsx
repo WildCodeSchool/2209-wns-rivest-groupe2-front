@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
-import { UserContext } from 'src/contexts/UserContext';
+import { UserContext } from 'src/contexts/userContext';
 import { IUserContext } from 'src/types/IUserContext';
 
 const RequireAuth = () => {
