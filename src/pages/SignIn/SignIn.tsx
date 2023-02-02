@@ -6,6 +6,7 @@ import { gql, useLazyQuery } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { UserContext } from '../../contexts/UserContext';
+import { ISignIn } from 'src/types/ISignIn';
 import signin from '../../asset/img/bg-signin.jpg';
 
 // MUTATION APOLLO
@@ -24,12 +25,6 @@ const GET_TOKEN = gql`
     }
   }
 `;
-
-// INTERFACE TS
-interface ISignIn {
-  email: string;
-  password: string;
-}
 
 // YUP SCHEMA
 const schema = yup

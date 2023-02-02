@@ -7,3 +7,8 @@ export interface IUser {
     lastname: string;
     profilePicture: string;
 }
+
+export interface IUserContext {
+    user: IUser | null
+    setUser: React.Dispatch<React.SetStateAction<IUser | null>>
+}

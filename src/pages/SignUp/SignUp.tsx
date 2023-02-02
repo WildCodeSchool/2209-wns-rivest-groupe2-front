@@ -6,6 +6,7 @@ import { gql, useMutation } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { UserContext } from '../../contexts/UserContext';
+import { ISignUp } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
 
 // MUTATION APOLLO
@@ -24,13 +25,6 @@ const CREATE_USER = gql`
     }
   }
 `;
-
-// INTERFACE TS
-interface ISignUp {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
 
 // YUP SCHEMA
 const schema = yup

@@ -1,7 +1,6 @@
 
 import { createContext, useState } from 'react'
-import { IUser } from '../interfaces/IUser'
-import { IUserContext } from '../interfaces/IUserContext'
+import { IUserContext, IUser } from '../types/IUserContext'
 
 // CREATE USER CONTEXT
 export const UserContext = createContext<IUserContext>({
