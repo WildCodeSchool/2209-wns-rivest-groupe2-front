@@ -6,18 +6,9 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import noImage from '../asset/img/no-image-icon.png';
+import { IPOICard } from 'src/types/POIType';
 
-interface Props {
-  name: string;
-  address: string;
-  postal: string;
-  city: string;
-  pictureUrl: string;
-  description: string;
-  type: string;
-}
-
-export default function POICard(props: Props) {
+export default function POICard(props: IPOICard) {
   const { name, address, postal, city, pictureUrl, description, type } = props;
   return (
     <Card className="h-full flex flex-col justify-between">

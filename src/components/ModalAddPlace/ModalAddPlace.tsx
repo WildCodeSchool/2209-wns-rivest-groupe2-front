@@ -1,67 +1,12 @@
 import { useEffect, useState } from 'react';
 import ModalHours from './ModalHours';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
-import { Point } from 'leaflet';
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import axios from 'axios';
 import { map } from 'lodash';
 import { GET_POI_QUERY } from 'src/pages/POIList/POIList';
-
-enum POIType {
-  RESTAURANT = 'restaurant',
-  FASTFOOD = 'fast-food',
-  BAR = 'bar',
-  PLACEOFRELIGION = 'lieu de culte',
-  HOSTEL = 'hôtel',
-  MUSEUM = 'musée',
-}
-
-enum EPriceRange {
-  LOW = '$',
-  MEDIUM = '$$',
-  HIGH = '$$$',
-}
-
-type IFormInput = {
-  name: string;
-  address: string;
-  postal: string;
-  type: POIType;
-  coordinates: Point;
-  creationDate: Date;
-  pictureUrl: string;
-  websiteURL: string;
-  description: string;
-  priceRange: EPriceRange;
-  city: string;
-  daysOpen: string;
-  firstHoursOpen: string;
-  firstHoursClose: string;
-  secondHoursOpen: string;
-  secondHoursClose: string;
-};
-
-type IDataFromApi = {
-  latitude: number;
-  longitude: number;
-  type: string;
-  name: string;
-  number: string;
-  postal_code: string;
-  street: string;
-  confidence: number;
-  region: string;
-  region_code: string;
-  county: null;
-  locality: string;
-  administrative_area: string;
-  neighbourhood: string;
-  country: string;
-  country_code: string;
-  continent: string;
-  label: string;
-};
+import type { IFormInput, IDataFromApi } from 'src/types/POIType';
 
 const CREATE_POI_MUTATION = gql`
   mutation CreatePoi($data: CreatePoiInput!) {
@@ -94,7 +39,7 @@ const defaultDays = {
   sunday: false,
 };
 
-const ModalAddPlace = ({ setOpenModalAddPlace, setAddress }: any) => {
+const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
   const [openModalHours, setOpenModalHours] = useState(false);
   const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
   const [selectedDays, setSelectedDays] = useState(defaultDays);

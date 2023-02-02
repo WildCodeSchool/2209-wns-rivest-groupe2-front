@@ -59,7 +59,8 @@ const POIList = () => {
         <select
           name="cities"
           id="cities"
-          className="bg-white px-[15px] py-[4px] mt-2 border-2 rounded-xl"
+          className="bg-gray-300 px-[15px] py-[4px] mt-2 border-2 rounded-xl"
+          disabled
         >
           <option value="City">Ville</option>
           <option value="Paris">Paris</option>
@@ -72,7 +73,8 @@ const POIList = () => {
         <select
           name="categories"
           id="categories"
-          className="bg-white px-[15px] py-[4px] mr-[80px] mt-2 border-2 rounded-xl"
+          className="bg-gray-300 px-[15px] py-[4px] mr-[80px] mt-2 border-2 rounded-xl"
+          disabled
         >
           <option value="Category">Catégorie</option>
           <option value="restaurant">Restaurant</option>
