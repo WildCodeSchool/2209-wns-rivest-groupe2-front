@@ -2,6 +2,7 @@ import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { IPOIData } from 'src/data/poi-data';
 import PopUpMap from './PopupMap';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
 function MapComponent() {
   const map = useMap();
@@ -10,6 +11,9 @@ function MapComponent() {
 
 const MapModule = ({ poiData }: any) => {
   const parisPosition: LatLngExpression = [48.88, 2.33];
+  /*   const provider = new OpenStreetMapProvider();
+  const results = provider.search({ query: 'rue de rivoli 75001 paris' });
+  results.then((res) => console.log(res)); */
 
   return (
     <MapContainer
@@ -28,16 +32,18 @@ const MapModule = ({ poiData }: any) => {
       />
       {poiData.map((poi: IPOIData) => (
         <div className="map-marker" key={poi.id}>
-          <Marker position={poi.coordinates}>
-            <Popup>
-              <PopUpMap
-                name={poi.name}
-                address={poi.address}
-                pictureUrl={poi.pictureUrl}
-                id={poi.id}
-              />
-            </Popup>
-          </Marker>
+          {poi.coordinates ? (
+            <Marker position={poi.coordinates}>
+              <Popup>
+                <PopUpMap
+                  name={poi.name}
+                  address={poi.address}
+                  pictureUrl={poi.pictureUrl}
+                  id={poi.id}
+                />
+              </Popup>
+            </Marker>
+          ) : null}
         </div>
       ))}
     </MapContainer>

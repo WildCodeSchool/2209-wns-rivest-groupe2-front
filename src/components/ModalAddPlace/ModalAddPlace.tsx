@@ -94,7 +94,7 @@ const defaultDays = {
   sunday: false,
 };
 
-const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
+const ModalAddPlace = ({ setOpenModalAddPlace, setAddress }: any) => {
   const [openModalHours, setOpenModalHours] = useState(false);
   const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
   const [selectedDays, setSelectedDays] = useState(defaultDays);
@@ -103,36 +103,40 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
     register,
     handleSubmit,
     reset,
-    watch,
     getValues,
     formState: { errors },
   } = methods;
 
-  const params = {
-    access_key: process.env.REACT_APP_GEOCODING_ACCESS_KEY,
-    query:
-      getValues('address') && getValues('postal') && getValues('city')
-        ? getValues('address') +
-          ', ' +
-          getValues('postal') +
-          ' ' +
-          getValues('city')
-        : '',
+  const options = {
+    method: 'GET',
+    url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
+    params: {
+      address:
+        getValues('address') && getValues('postal') && getValues('city')
+          ? getValues('address') +
+            ' ' +
+            getValues('postal') +
+            ' ' +
+            getValues('city')
+          : '',
+    },
+    headers: {
+      'X-RapidAPI-Key': process.env.REACT_APP_GEOCODING_ACCESS_KEY,
+      'X-RapidAPI-Host': process.env.REACT_APP_GEOCODING_ACCESS_HOST,
+    },
   };
 
   useEffect(() => {
-    if (params.query && params.query.length > 0) {
+    if (options.params.address && options.params.address.length > 0) {
       try {
-        axios
-          .get('http://api.positionstack.com/v1/forward', { params })
-          .then((response) => {
-            setDataFromApi(response.data.data[0]);
-          });
+        axios.request(options).then((response) => {
+          setDataFromApi(response.data.Results[0]);
+        });
       } catch (error) {
         console.log(error);
       }
     }
-  }, [params.query]);
+  }, [options.params.address]);
 
   const [createPoi] = useMutation(CREATE_POI_MUTATION, {
     refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
@@ -143,7 +147,6 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
       dataFromApi.latitude,
       dataFromApi.longitude,
     ];
-    console.log(coordinatesGPS);
 
     const daysOpenToSend = map(selectedDays, (value, key) => {
       if (value) return key;
