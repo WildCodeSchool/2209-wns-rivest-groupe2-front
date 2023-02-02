@@ -33,7 +33,7 @@ const defaultProps: Props = {
 export const ProfileInfoCard: React.FC<Props> = ({ title, description, details, action, onChange, isEditMode} = defaultProps) => {
 
   
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const UPDATE_USER_MUTATION = gql`
   mutation UpdateUser($data: UpdateUserInput!) {
     updateUser(data: $data) {
@@ -52,15 +52,19 @@ export const ProfileInfoCard: React.FC<Props> = ({ title, description, details, 
   const { register, formState, /* {error}, */ handleSubmit} = useForm()
   const [updateUserMutation, { data/* , updateError */ }] = useMutation(UPDATE_USER_MUTATION, {
     variables: { data: {}  },
+    onCompleted: (data) => {
+      setUser(data.updateUser);
+    }
   });
 
 
   const onSubmit = (formData: {}) =>{
-    if (user){
+    if (user && isEditMode){
       updateUserMutation({ variables: { data: { ...formData, id: user.id } } });
     }
 
     console.log(formData)
+
   };
   
 

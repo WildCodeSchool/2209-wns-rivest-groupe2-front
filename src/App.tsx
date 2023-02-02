@@ -35,7 +35,7 @@ const App = () => {
         <Route element={<RequireAuth allowedRoles={['freeUser']} />}>
           <Route path="/" element={<DashboardHome />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
-          <Route path="/profile/:id" element={<Profile />} />
+          <Route path="/profile/" element={<Profile />} />
           <Route path="/auth/*" element={<Auth />} />
           <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
         </Route>

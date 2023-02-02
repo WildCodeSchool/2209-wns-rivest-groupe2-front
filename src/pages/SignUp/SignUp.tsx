@@ -21,6 +21,7 @@ const CREATE_USER = gql`
         firstname
         lastname
         profilePicture
+        type
       }
     }
   }
