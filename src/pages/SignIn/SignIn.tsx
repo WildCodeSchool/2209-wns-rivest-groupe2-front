@@ -10,7 +10,7 @@ import { ISignIn } from 'src/types/ISignIn';
 import signin from '../../asset/img/bg-signin.jpg';
 
 // MUTATION APOLLO
-const GET_TOKEN = gql`
+export const GET_TOKEN = gql`
   query Query($password: String!, $email: String!) {
     getToken(password: $password, email: $email) {
       token

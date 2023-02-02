@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
 import { IUserContext, IUser } from '../types/IUserContext';
 
 // CREATE USER CONTEXT
@@ -14,8 +14,16 @@ const parseUser: IUser | undefined = localUser ? JSON.parse(localUser) : null;
 export const UserProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<IUser | null>(parseUser || null);
 
+  const value = useMemo(
+    ()=>({
+      user,
+      setUser,
+    }),
+    [user, setUser]
+  )
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={value}>
       {children}
     </UserContext.Provider>
   );
