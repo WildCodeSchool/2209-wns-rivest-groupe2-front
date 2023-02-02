@@ -3,12 +3,12 @@ import {
   CardHeader,
   CardBody,
   Typography,
-} from "@material-tailwind/react";
-import { useContext } from "react";
-import { useForm } from "react-hook-form";
+} from '@material-tailwind/react';
+import { useContext } from 'react';
+import { useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
-import { UserContext } from "src/contexts/userContext";
+import { UserContext } from 'src/contexts/userContext';
 
 interface Props {
   title: string;
@@ -30,43 +30,49 @@ const defaultProps: Props = {
   onSubmit: () => {},
 };
 
-export const ProfileInfoCard: React.FC<Props> = ({ title, description, details, action, onChange, isEditMode} = defaultProps) => {
-
-  
-  const { user, setUser } = useContext(UserContext)
+export const ProfileInfoCard: React.FC<Props> = ({
+  title,
+  description,
+  details,
+  action,
+  onChange,
+  isEditMode,
+} = defaultProps) => {
+  const { user, setUser } = useContext(UserContext);
   const UPDATE_USER_MUTATION = gql`
-  mutation UpdateUser($data: UpdateUserInput!) {
-    updateUser(data: $data) {
-      id
-      email
-      username
-      type
-      firstname
-      lastname
-      hashedPassword
-      profilePicture
+    mutation UpdateUser($data: UpdateUserInput!) {
+      updateUser(data: $data) {
+        id
+        email
+        username
+        type
+        firstname
+        lastname
+        hashedPassword
+        profilePicture
+      }
     }
-  }
-`;
+  `;
 
-  const { register, formState, /* {error}, */ handleSubmit} = useForm()
-  const [updateUserMutation, { data/* , updateError */ }] = useMutation(UPDATE_USER_MUTATION, {
-    variables: { data: {}  },
-    onCompleted: (data) => {
-      setUser(data.updateUser);
+  const { register, formState, /* {error}, */ handleSubmit } = useForm();
+  const [updateUserMutation, { data /* , updateError */ }] = useMutation(
+    UPDATE_USER_MUTATION,
+    {
+      variables: { data: {} },
+      onCompleted: (data) => {
+        setUser(data.updateUser);
+        localStorage.setItem('user', JSON.stringify(data.updateUser));
+      },
     }
-  });
+  );
 
-
-  const onSubmit = (formData: {}) =>{
-    if (user && isEditMode){
+  const onSubmit = (formData: {}) => {
+    if (user && isEditMode) {
       updateUserMutation({ variables: { data: { ...formData, id: user.id } } });
     }
 
-    console.log(formData)
-
+    console.log(formData);
   };
-  
 
   return (
     <Card color="transparent" shadow={false}>
@@ -104,7 +110,7 @@ export const ProfileInfoCard: React.FC<Props> = ({ title, description, details, 
                 >
                   {el}:
                 </Typography>
-                {typeof details[el] === "string" ? (
+                {typeof details[el] === 'string' ? (
                   <Typography
                     variant="small"
                     className="font-normal text-blue-gray-500"
@@ -116,41 +122,43 @@ export const ProfileInfoCard: React.FC<Props> = ({ title, description, details, 
                 )}
               </li>
             ))}
-            
           </ul>
         ) : (
-          <form id='userForm' onSubmit={handleSubmit(onSubmit)}>  
-          <ul className="flex flex-col gap-4 p-0">
-            {Object.keys(details).map((el, key) => (
-              <li key={key} className="flex items-center gap-4">
-                <Typography
-                  variant="small"
-                  color="blue-gray"
-                  className="font-semibold capitalize"
-                  >
-                  {el}:
-                </Typography>
-        
+          <form id="userForm" onSubmit={handleSubmit(onSubmit)}>
+            <ul className="flex flex-col gap-4 p-0">
+              {Object.keys(details).map((el, key) => (
+                <li key={key} className="flex items-center gap-4">
                   <Typography
-                  variant="small"
-                  className="font-normal text-blue-gray-500"
+                    variant="small"
+                    color="blue-gray"
+                    className="font-semibold capitalize"
                   >
-                    <input {...register(el, {required: true})} className='w-full min-w-full border-2'  defaultValue={(details[el])} onChange={(e)=>{
-                      e.target.value
-                    }}/>
+                    {el}:
                   </Typography>
-              </li>
-            ))}
-            
-          </ul>
+
+                  <Typography
+                    variant="small"
+                    className="font-normal text-blue-gray-500"
+                  >
+                    <input
+                      {...register(el, { required: true })}
+                      className="w-full min-w-full border-2"
+                      defaultValue={details[el]}
+                      onChange={(e) => {
+                        e.target.value;
+                      }}
+                    />
+                  </Typography>
+                </li>
+              ))}
+            </ul>
           </form>
         )}
       </CardBody>
     </Card>
   );
-}
+};
 
-
-ProfileInfoCard.displayName = "/src/widgets/cards/profile-info-card.jsx";
+ProfileInfoCard.displayName = '/src/widgets/cards/profile-info-card.jsx';
 
 export default ProfileInfoCard;
