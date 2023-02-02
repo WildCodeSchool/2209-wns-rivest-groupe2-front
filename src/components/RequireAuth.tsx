@@ -9,7 +9,6 @@ const RequireAuth = () => {
   const location = useLocation();
 
   //OUTLET REPRESENT ANY CHILD OF REQUIREAUTH COMPONENT
-  console.log(Outlet);
   return user ? (
     <Outlet />
   ) : (
