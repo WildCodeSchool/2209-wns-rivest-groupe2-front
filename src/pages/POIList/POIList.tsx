@@ -37,12 +37,10 @@ const POIList = () => {
   useEffect(() => {
     if (data?.getAllPoi) setCount(data.getAllPoi.length);
   }, [data]);
-  const test = [];
-
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
-  if (test.length === 0)
+  if (data.getAllPoi.length === 0)
     return (
       <div className="mt-5">
         <div className="flex justify-between mx-5">
