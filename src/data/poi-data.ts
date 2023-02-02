@@ -1,23 +1,3 @@
-import { LatLngExpression } from 'leaflet';
-
-export interface IPOIData {
-  id: number;
-  name: string;
-  address: string;
-  postal: string;
-  type: string;
-  coordinates: LatLngExpression;
-  pictureUrl: string;
-  websiteURL: string;
-  description: string;
-  creationDate: string;
-  priceRange: string;
-  city: string;
-  daysOpen: string[];
-  hoursOpen: string[];
-  hoursClose: string[];
-}
-
 export const poiData = [
   {
     id: 1,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import MapModule from '../../components/MapModule';
-import { IPOIData } from 'src/data/poi-data';
+import { IPOIData } from 'src/types/POIType';
 import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
 import ModalAddPlace from 'src/components/ModalAddPlace/ModalAddPlace';

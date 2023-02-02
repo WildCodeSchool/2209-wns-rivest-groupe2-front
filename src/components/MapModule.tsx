@@ -1,6 +1,6 @@
 import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
-import { IPOIData } from 'src/data/poi-data';
+import { IPOIData } from 'src/types/POIType';
 import PopUpMap from './PopupMap';
 
 function MapComponent() {
