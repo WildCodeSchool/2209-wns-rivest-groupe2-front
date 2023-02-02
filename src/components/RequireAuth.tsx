@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
 import { UserContext } from 'src/contexts/UserContext';
-import { IUserContext } from 'src/interfaces/IUserContext';
+import { IUserContext } from 'src/types/IUserContext';
 
 const RequireAuth = () => {
   //CREATE PRIVATE ROUTE BASED ON THE USER PROFILE
