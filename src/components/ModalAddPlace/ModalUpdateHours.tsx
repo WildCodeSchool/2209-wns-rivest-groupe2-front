@@ -1,5 +1,5 @@
 import { Checkbox } from '@material-tailwind/react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 const ModalUpdateHours = ({
@@ -13,7 +13,6 @@ const ModalUpdateHours = ({
   );
   const [fullOpenChecked, setFullOpenChecked] = useState(false);
   const [addingNewHours, setAddingNewHours] = useState(false);
-  console.log(closedChecked, fullOpenChecked);
 
   return (
     <div className="w-[90%] mx-auto">
