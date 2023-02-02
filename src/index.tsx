@@ -13,12 +13,7 @@ import App from './App';
 import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
 import './styles/index.css';
-<<<<<<< HEAD
-import { UserContextProvider } from './contexts/UserContext';
-
-=======
 import { UserProvider } from 'src/contexts/userContext';
->>>>>>> 74a22a8a486ec5ec16223256afc2428dc7c7365e
 
 // AUTHENTICATION APOLLO - HEADER
 // https://www.apollographql.com/docs/react/networking/authentication/
