@@ -2,6 +2,14 @@ import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { IPOIData } from 'src/types/POIType';
 import PopUpMap from './PopupMap';
+import L from 'leaflet';
+
+var redMarker = new L.Icon({
+  /* eslint-disable global-require */
+  iconUrl: require('../asset/img/no-image-icon.png'),
+  /* eslint-enable global-require */
+  iconSize: [35, 90],
+});
 
 function MapComponent() {
   const map = useMap();
@@ -30,7 +38,7 @@ const MapModule = ({ poiData }: any) => {
       {poiData.map((poi: IPOIData) => (
         <div className="map-marker" key={poi.id}>
           {poi.coordinates ? (
-            <Marker position={poi.coordinates}>
+            <Marker position={poi.coordinates} icon={redMarker}>
               <Popup>
                 <PopUpMap
                   name={poi.name}
