@@ -29,7 +29,7 @@ const UserDropdown = () => {
         <span className="block text-sm text-opalblue">{user?.username}</span>
       </Dropdown.Header>
       <Dropdown.Item>
-        <Link to={`/dashboard/profile/${id}`}>Mon compte</Link>
+        <Link to={`/dashboard/profile/`}>Mon compte</Link>
       </Dropdown.Item>
       <Dropdown.Divider />
       <Dropdown.Item onClick={logout}>Déconnexion</Dropdown.Item>
