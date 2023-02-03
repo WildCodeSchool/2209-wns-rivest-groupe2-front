@@ -2,14 +2,13 @@ import { useContext } from 'react';
 import { Dropdown, Avatar } from 'flowbite-react';
 import { UserContext } from '../contexts/userContext';
 import { IUserContext } from '../types/IUserContext';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import redneck from '../asset/img/redneck.jpg';
 
 const UserDropdown = () => {
-
   // CATCH ID FROM USERCONTEXT
   const { user, setUser } = useContext<IUserContext>(UserContext);
-  const id = user?.id
+  const id = user?.id;
 
   // FN LOGOUT TO CLEAR LOCAL STORAGE
   const logout = () => {

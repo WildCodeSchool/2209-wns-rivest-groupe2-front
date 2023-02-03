@@ -14,16 +14,16 @@ const parseUser: IUser | undefined = localUser ? JSON.parse(localUser) : null;
 export const UserProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<IUser | null>(parseUser || null);
 
-  const value = useMemo(
+  /*   const value = useMemo(
     ()=>({
       user,
       setUser,
     }),
     [user, setUser]
-  )
+  ) */
 
   return (
-    <UserContext.Provider value={value}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );
