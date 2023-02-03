@@ -1,5 +1,5 @@
 import image from '../../asset/img/map.png';
-import { Link } from 'react-router-dom';
+import logo from '../../asset/img/city-guide-logo.svg';
 
 const Home = () => {
   return (
@@ -8,10 +8,11 @@ const Home = () => {
         className="w-full bg-cover bg-no-repeat bg-center opacity-25 h-screen overscroll-none relative"
         style={{ backgroundImage: `url(${image})` }}
       ></div>
-      <div className="flex flex-col justify-center items-center bg-white h-28 w-60 p-4 rounded-lg shadow-2xl absolute mx-auto top-0 bottom-0 my-auto left-0 right-0 z-2">
-        <div className="order-first decoration-solid pb-2">
-          Choissez votre ville
+      <div className="flex flex-col w-[400px] h-[200px] justify-center items-center bg-white p-4 rounded-lg shadow-2xl absolute mx-auto top-0 bottom-0 my-auto left-0 right-0 z-2">
+        <div className="mb-4">
+          <img src={logo} alt="icon site" />
         </div>
+        <div className="decoration-solid pb-2">Choissez votre ville</div>
         <select
           id="select a city"
           onChange={() =>
