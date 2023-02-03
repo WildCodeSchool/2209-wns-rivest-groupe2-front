@@ -1,14 +1,13 @@
 import {
-  BanknotesIcon,
-  UserPlusIcon,
-  UserIcon,
-  ChartBarIcon,
+  MapIcon,
+  StarIcon,
+  PencilIcon,
 } from "@heroicons/react/24/solid";
 
 export const statisticsCardsData = [
   {
     color: "blue",
-    icon: BanknotesIcon,
+    icon: MapIcon,
     title: "Places visited",
     value: "12",
     footer: {
@@ -19,7 +18,7 @@ export const statisticsCardsData = [
   },
   {
     color: "pink",
-    icon: UserIcon,
+    icon: StarIcon,
     title: "Number of rated places",
     value: "6",
     footer: {
@@ -30,7 +29,7 @@ export const statisticsCardsData = [
   },
   {
     color: "green",
-    icon: UserPlusIcon,
+    icon: StarIcon,
     title: "Average rate  ",
     value: "3.5",
     footer: {
@@ -41,7 +40,7 @@ export const statisticsCardsData = [
   },
   {
     color: "orange",
-    icon: ChartBarIcon,
+    icon: PencilIcon,
     title: "Review written",
     value: "1",
     footer: {
