@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 
 const POIDetails = () => {
   const {id} = useParams()
-  console.log(id)
   const thisPOI = poiData.find(poi => poi.id === Number(id))
 
   if (!thisPOI) return <p>test</p>;
@@ -35,18 +34,12 @@ const POIDetails = () => {
         </li>
       </ol>
     </nav>
- {/* <h1 name={thisPOI.name} className="text-3xl font-bold underline">Point Of Interest Details</h1> */}
-    {/* Image gallery */}
-        {/* {pictures?.map((pictureUrl) => (  
+    {/* Image gallery */}   
          <Gallery
               pictureUrl={thisPOI.pictureUrl}        
         />
-       ))}  */}
-
   {/* POI Detail */}
-
   <div className="product-detail-desc">
-          <h1>{thisPOI.name}</h1>
   </div>
     <ul
       id="poi-detail"
@@ -62,12 +55,12 @@ const POIDetails = () => {
     </ul>
     <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
       <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Resto</h1>
+        <h2 className="font-bold tracking-tight text-gray-900 ">Information</h2>
       </div>
 
       {/* <!-- Options --> */}
       <div className="mt-4 lg:row-span-3 lg:mt-0">
-        <h2 className="sr-only">Informations</h2>
+        <h2 className="sr-only">Reviews</h2>
 
         {/* <!-- Reviews --> */}
         <div className="mt-6">
