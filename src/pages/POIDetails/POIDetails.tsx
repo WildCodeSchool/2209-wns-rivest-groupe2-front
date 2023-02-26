@@ -1,15 +1,45 @@
 import React from 'react';
-import { useState } from 'react';
-import { poiData } from 'src/data/poi-data';
+import { useEffect, useState } from 'react';
+import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
-import Gallery from 'src/components/Gallery';
+// import Gallery from 'src/components/Gallery';
 import { useParams } from 'react-router-dom';
+import { useQuery } from '@apollo/client';
+import gql from 'graphql-tag';
+
+
+export const GET_POI_QUERY = gql`
+  query GetPoi {
+    getPoi {
+      id
+      name
+      address
+      postal
+      type
+      coordinates
+      creationDate
+      pictureUrl
+      websiteURL
+      description
+      priceRange
+      city
+      daysOpen
+      hoursOpen
+      hoursClose
+    }
+  }
+`;
 
 const POIDetails = () => {
   const {id} = useParams()
-  const thisPOI = poiData.find(poi => poi.id === Number(id))
+  const thisPOI = data.find(poi => poi.id === Number(id))
 
-  if (!thisPOI) return <p>test</p>;
+  const { loading, error, data } = useQuery(GET_POI_QUERY);
+
+  if (loading) return <p>Chargement...</p>;
+  if (error) return <p>Une erreur est survenue :(</p>;
+
+  if (!thisPOI) return <p>Pas de point d'interet</p>
 
   return (
   <div className="bg-white">
@@ -35,9 +65,9 @@ const POIDetails = () => {
       </ol>
     </nav>
     {/* Image gallery */}   
-         <Gallery
+         {/* <Gallery */}
               pictureUrl={thisPOI.pictureUrl}        
-        />
+        {/* /> */}
   {/* POI Detail */}
   <div className="product-detail-desc">
   </div>
@@ -47,7 +77,8 @@ const POIDetails = () => {
       >
         <li className="mb-8">
           <POIInfo
-            name={thisPOI.name}
+          // poiData={data.getPoi(poi: IPOIData)} 
+            name={data.thisPOI.name}
             address={thisPOI.address}
             description={thisPOI.description}
           />

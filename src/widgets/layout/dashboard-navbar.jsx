@@ -24,7 +24,7 @@ import {
   useMaterialTailwindController,
   setOpenConfigurator,
   setOpenSidenav,
-} from '../../context/index';
+} from '../../contexts/index';
 
 export function DashboardNavbar() {
   const [controller, dispatch] = useMaterialTailwindController();
@@ -50,7 +50,8 @@ export function DashboardNavbar() {
               fixedNavbar ? 'mt-1' : ''
             }`}
           >
-            <Link to={`/${layout}`}>
+            <Link to={`/${layout}
+            `}>
               <Typography
                 variant="small"
                 color="blue-gray"

@@ -9,7 +9,7 @@ import routes from '../routes';
 import {
   useMaterialTailwindController,
   setOpenConfigurator,
-} from '../context/index';
+} from '../contexts/index';
 
 export function Dashboard() {
   const [controller, dispatch] = useMaterialTailwindController();

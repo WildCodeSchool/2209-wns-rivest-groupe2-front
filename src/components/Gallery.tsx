@@ -2,12 +2,12 @@ import React from 'react';
 import { poiData } from 'src/data/poi-data';
 import { useParams } from 'react-router-dom';
 
-export interface Props {
+interface Props {
   pictureUrl: string;
   allpictures: [];
 }
 
-const Gallery = ({pictureUrl}: Props) => {
+export default function Gallery (pictureUrl: Props) {
 const allpictures = [pictureUrl]
 // const {id} = useParams()
 // const thisPOI = poiData.find(poi => poi.id === Number(id))
@@ -18,8 +18,11 @@ const allpictures = [pictureUrl]
   return (
     <div>
       <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
-      <ul>{allpictures.map(pictureUrl => <li>{pictureUrl}</li>)}
+      <ul>
+        {/* {allpictures.map(pictureUrl => <li>{pictureUrl}</li>)} */}
+      {/* <li>{pictureUrl}</li> */}
       </ul>  
+
         {/* <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block"  key={p}>
           <img src={listPictures} alt="default image" className="h-full w-full object-cover object-center"/>
         </div> */}
@@ -37,6 +40,4 @@ const allpictures = [pictureUrl]
       </div>
     </div>
   )
-};
-
-export default Gallery
+}

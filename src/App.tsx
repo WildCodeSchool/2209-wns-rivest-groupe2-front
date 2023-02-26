@@ -13,28 +13,35 @@ import Auth from './layouts/auth';
 import BaseLayout from './layouts/baseLayout';
 import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
+import RequireAuth from './components/RequireAuth';
+import Profile from './pages/dashboard/profile';
 
-const App = () => (
-  <>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/" element={<BaseLayout />}>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/point-of-interest/list" element={<POIList />} />
-        <Route path="/point-of-interest/creation" element={<POICreation />} />
-        <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
-        <Route path="/profil/:id" element={<Profil />} />
-        <Route path="/town/creation" element={<TownCreation />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
-      <Route path="/" element={<DashboardHome />} />
-      <Route path="/dashboard/*" element={<Dashboard />} />
-      <Route path="/auth/*" element={<Auth />} />
-      <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
-    </Routes>
-  </>
-);
+const App = () => {
+  return (
+    <>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/" element={<BaseLayout />}>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/point-of-interest/list" element={<POIList />} />
+          <Route path="/point-of-interest/creation" element={<POICreation />} />
+          <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
+          <Route path="/profil/:id" element={<Profil />} />
+          <Route path="/town/creation" element={<TownCreation />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route element={<RequireAuth allowedRoles={['freeUser']} />}>
+          <Route path="/" element={<DashboardHome />} />
+          <Route path="/dashboard/*" element={<Dashboard />} />
+          <Route path="/profile/" element={<Profile />} />
+          <Route path="/auth/*" element={<Auth />} />
+          <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+        </Route>
+      </Routes>
+    </>
+  );
+};
 
 export default App;
