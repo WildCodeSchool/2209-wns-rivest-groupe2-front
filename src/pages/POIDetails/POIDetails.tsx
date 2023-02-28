@@ -80,9 +80,21 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
         <li className="mb-8">
           <POIInfo
           // poiData={data.getPoi(poi: IPOIData)} 
-            name={data.thisPOI.name}
-            address={thisPOI.address}
-            description={thisPOI.description}
+          id={thisPOI.id}
+          name={thisPOI.name}
+          address={thisPOI.address}
+          postal={thisPOI.postal}
+          city={thisPOI.city}
+          pictureUrl={thisPOI.pictureUrl}
+          description={thisPOI.description}
+          type={thisPOI.type}
+          coordinates={thisPOI.coordinates}
+          websiteURL={thisPOI.websiteURL}
+          creationDate={thisPOI.creationDate}
+          priceRange={thisPOI.priceRange}
+          daysOpen={thisPOI.daysOpen}
+          hoursOpen={thisPOI.hoursOpen}
+          hoursClose={thisPOI.hoursClose}
           />
         </li>
     </ul>

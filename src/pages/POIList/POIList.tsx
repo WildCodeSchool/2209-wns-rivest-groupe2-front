@@ -35,9 +35,10 @@ const POIList = () => {
   const { loading, error, data } = useQuery(GET_POI_QUERY);
 
   useEffect(() => {
+    
     if (data?.getAllPoi) setCount(data.getAllPoi.length);
   }, [data]);
-  if (loading) return <p>Chargement...</p>;
+  if (loading) return <p>Chargement...</p>;console.log(error)
   if (error) return <p>Une erreur est survenue :(</p>;
 
   if (data.getAllPoi.length === 0)

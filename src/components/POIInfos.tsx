@@ -1,16 +1,17 @@
 import {
   Typography,
 } from '@material-tailwind/react';
+import { IPOIData } from 'src/types/POIType';
 
-interface Props {
-  name?: string;
-  address?: string;
-  description?: string;
-  // rates?: [];
-}
+// interface Props {
+//   name?: string;
+//   address?: string;
+//   description?: string;
+//   // rates?: [];
+// }
 
-export default function POIInfos(props: Props) {
-  const { name, address, description } = props;
+export default function POIInfos(props: IPOIData) {
+  const { name, address, postal, city, pictureUrl, description, type, creationDate, priceRange, daysOpen, hoursOpen, hoursClose } = props;
   return (
     <div>
     <div className="h-full flex flex-col justify-between">
