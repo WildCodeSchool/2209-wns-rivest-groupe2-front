@@ -9,8 +9,8 @@ import gql from 'graphql-tag';
 
 
 export const GET_POI_QUERY = gql`
-  query GetPoi {
-    getPoi {
+  query GetAllPois {
+    getAllPoi {
       id
       name
       address
@@ -31,11 +31,13 @@ export const GET_POI_QUERY = gql`
 `;
 
 const POIDetails = () => {
-  const {id} = useParams()
-  const thisPOI = data.find(poi => poi.id === Number(id))
+ const { loading, error, data } = useQuery(GET_POI_QUERY); 
+ const {id} = useParams()
+const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Number(id))
 
-  const { loading, error, data } = useQuery(GET_POI_QUERY);
+  
 
+ 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
