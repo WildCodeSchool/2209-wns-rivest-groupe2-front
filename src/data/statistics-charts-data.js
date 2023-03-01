@@ -5,8 +5,8 @@ const websiteViewsChart = {
   height: 220,
   series: [
     {
-      name: 'Views',
-      data: [50, 20, 10, 22, 50, 10, 40],
+      name: 'Visited places',
+      data: [6, 10, 6, 7, 6, 12],
     },
   ],
   options: {
@@ -20,7 +20,14 @@ const websiteViewsChart = {
     },
     xaxis: {
       ...chartsConfig.xaxis,
-      categories: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+      categories: [
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ]
     },
   },
 };
@@ -30,8 +37,8 @@ const dailySalesChart = {
   height: 220,
   series: [
     {
-      name: 'Sales',
-      data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
+      name: 'Kilometers',
+      data: [ 70, 95, 66, 80, 80, 115],
     },
   ],
   options: {
@@ -46,9 +53,6 @@ const dailySalesChart = {
     xaxis: {
       ...chartsConfig.xaxis,
       categories: [
-        'Apr',
-        'May',
-        'Jun',
         'Jul',
         'Aug',
         'Sep',
@@ -60,36 +64,61 @@ const dailySalesChart = {
   },
 };
 
+
+
 const completedTasksChart = {
-  ...dailySalesChart,
+  type: 'line',
+  height: 220,
   series: [
     {
-      name: 'Tasks',
-      data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+      name: 'Kilometers',
+      data: [ 4, 4.25, 3.5, 5, 4.25, 3.5],
     },
   ],
+  options: {
+    ...chartsConfig,
+    colors: ['#fff'],
+    stroke: {
+      lineCap: 'round',
+    },
+    markers: {
+      size: 5,
+    },
+    xaxis: {
+      ...chartsConfig.xaxis,
+      categories: [
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ],
+    },
+  },
 };
+
 
 export const statisticsChartsData = [
   {
     color: 'blue',
-    title: 'Website View',
-    description: 'Last Campaign Performance',
-    footer: 'campaign sent 2 days ago',
+    title: 'Visited Places',
+    description: 'Last 6 months',
+    footer: 'Last visited place: 2 days ago',
     chart: websiteViewsChart,
   },
   {
     color: 'pink',
-    title: 'Daily Sales',
-    description: '15% increase in today sales',
-    footer: 'updated 4 min ago',
+    title: 'Number of kilometers travelled',
+    description: 'Last 6 months',
+    footer: 'Updated: 2 days ago',
     chart: dailySalesChart,
   },
   {
     color: 'green',
-    title: 'Completed Tasks',
-    description: 'Last Campaign Performance',
-    footer: 'just updated',
+    title: 'Average rating evolution',
+    description: 'Last 6 months',
+    footer: 'Updated: 2 days ago',
     chart: completedTasksChart,
   },
 ];
