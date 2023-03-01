@@ -5,8 +5,8 @@ import { useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import axios from 'axios';
 import { map } from 'lodash';
-import { GET_POI_QUERY } from 'src/pages/POIList/POIList';
 import type { IFormInput, IDataFromApi } from 'src/types/POIType';
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 
 const CREATE_POI_MUTATION = gql`
   mutation CreatePoi($data: CreatePoiInput!) {

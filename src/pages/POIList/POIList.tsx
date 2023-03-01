@@ -5,29 +5,7 @@ import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
 import ModalAddPlace from 'src/components/ModalAddPlace/ModalAddPlace';
 import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
-
-export const GET_POI_QUERY = gql`
-  query GetAllPois {
-    getAllPoi {
-      id
-      name
-      address
-      postal
-      type
-      coordinates
-      creationDate
-      pictureUrl
-      websiteURL
-      description
-      priceRange
-      city
-      daysOpen
-      hoursOpen
-      hoursClose
-    }
-  }
-`;
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 
 const POIList = () => {
   const [openModalAddPlace, setOpenModalAddPlace] = useState(false);
