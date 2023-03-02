@@ -6,6 +6,7 @@ import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
+import noImage from '../asset/img/no-image-icon.png';
 
 
 export const GET_POI_QUERY = gql`
@@ -35,9 +36,6 @@ const POIDetails = () => {
  const {id} = useParams()
 const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Number(id))
 
-  
-
- 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
@@ -68,18 +66,17 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
     </nav>
     {/* Image gallery */}   
          {/* <Gallery */}
-              pictures... {thisPOI.pictureUrl}        
+               {/* {thisPOI.pictureUrl}
         {/* /> */}
   {/* POI Detail */}
   <div className="product-detail-desc">
   </div>
     <ul
       id="poi-detail"
-      className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+      className="flex py-4 flex-wrap w-4/5 my-3.5 mx-auto"
       >
         <li className="mb-8">
-          <POIInfo
-          // poiData={data.getPoi(poi: IPOIData)} 
+          <POIInfo 
           id={thisPOI.id}
           name={thisPOI.name}
           address={thisPOI.address}
