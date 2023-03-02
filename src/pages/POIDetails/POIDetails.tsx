@@ -72,12 +72,9 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
         {/* /> */}
   {/* POI Detail */}
   </div>
-  <div className="product-detail-desc">
-    <ul
-      id="poi-detail"
-      className="flex py-4 flex-wrap w-4/5 my-3.5 mx-auto"
-      >
-        <li className="mb-8">
+  <div className="product-detail-desc ">
+  <div className="mx-auto px-4 pt-10 pb-10">
+        <div>
           <POIInfo 
           id={thisPOI.id}
           name={thisPOI.name}
@@ -95,13 +92,12 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
           hoursOpen={thisPOI.hoursOpen}
           hoursClose={thisPOI.hoursClose}
           />
-        </li>
-    </ul>
-    <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
+        </div>
+    </div>
+    <div className="mx-auto px-4 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24">
       <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-        <h2 className="font-bold tracking-tight text-gray-900 ">Information</h2>
+        <h1 className="font-bold tracking-tight text-gray-900 ">Information</h1>
       </div>
-
       {/* <!-- Options --> */}
       <div className="mt-4 lg:row-span-3 lg:mt-0">
         <h2 className="sr-only">Reviews</h2>
@@ -145,7 +141,7 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
     
   </div>
   <div className="products-similar py-4 w-4/5 my-3.5 mx-auto">
-      <h3>Autres lieux similaires</h3>
+      <h2 className="text-[#005356] font-bold">Autres lieux similaires</h2>
             <div className="maylike-products-container flex flex-row items-stretch">
             <ul
               id="poi-similar"
