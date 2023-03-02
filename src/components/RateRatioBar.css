@@ -1,0 +1,26 @@
+.rate-bar-container {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+  .rate-bar {
+    position: relative;
+    height: 12px;
+    width: 80px;
+    background-color: #ccc;
+    border-radius: 6px;
+  }
+  
+  .rate-bar-fill {
+    position: absolute;
+    height: 100%;
+    background-color: #fdd835;
+    border-radius: 6px;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .rate-text {
+    margin-left: 10px;
+  }
+  
