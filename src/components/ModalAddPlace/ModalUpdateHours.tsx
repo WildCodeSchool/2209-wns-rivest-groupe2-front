@@ -231,7 +231,7 @@ const ModalUpdateHours = ({
           <button
             type="button"
             onClick={() => setOpenModalUpdateHours(false)}
-            className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold mt-2"
+            className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold mt-2"
           >
             Valider
           </button>

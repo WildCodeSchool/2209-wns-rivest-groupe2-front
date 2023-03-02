@@ -250,7 +250,7 @@ const ModalHours = ({
                     sunday: true,
                   });
                 }}
-                className="p-2 border-2 rounded-2xl bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold"
+                className="p-2 border-2 rounded-2xl bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
               >
                 Modifier tous les horaires
               </button>
@@ -266,7 +266,7 @@ const ModalHours = ({
                     friday: true,
                   });
                 }}
-                className="p-2 border-2 rounded-2xl bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold"
+                className="p-2 border-2 rounded-2xl bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
               >
                 Modifier lun.-ven.
               </button>
@@ -279,7 +279,7 @@ const ModalHours = ({
                     sunday: true,
                   });
                 }}
-                className="p-2 border-2 rounded-2xl bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold"
+                className="p-2 border-2 rounded-2xl bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
               >
                 Modifier sam.-dim.
               </button>
