@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ModalHours from './ModalHours';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import { map } from 'lodash';
 import { GET_POI_QUERY } from 'src/pages/POIList/POIList';
 import type { IFormInput, IDataFromApi } from 'src/types/POIType';
+import { UserContext } from 'src/contexts/userContext';
 
 const CREATE_POI_MUTATION = gql`
   mutation CreatePoi($data: CreatePoiInput!) {
@@ -40,6 +41,7 @@ const defaultDays = {
 };
 
 const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
+  const { user } = useContext(UserContext);
   const [openModalHours, setOpenModalHours] = useState(false);
   const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
   const [selectedDays, setSelectedDays] = useState(defaultDays);
@@ -84,6 +86,11 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
   }, [options.params.address]);
 
   const [createPoi] = useMutation(CREATE_POI_MUTATION, {
+    context: {
+      headers: {
+        authorization: `Bearer ${user?.id}`,
+      },
+    },
     refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
   });
 
