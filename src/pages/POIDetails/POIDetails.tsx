@@ -7,6 +7,8 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
 import noImage from '../asset/img/no-image-icon.png';
+import POICard from 'src/components/POICard';
+import { Link } from 'react-router-dom';
 
 
 export const GET_POI_QUERY = gql`
@@ -69,8 +71,8 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
                {/* {thisPOI.pictureUrl}
         {/* /> */}
   {/* POI Detail */}
-  <div className="product-detail-desc">
   </div>
+  <div className="product-detail-desc">
     <ul
       id="poi-detail"
       className="flex py-4 flex-wrap w-4/5 my-3.5 mx-auto"
@@ -118,7 +120,6 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
             </div>
-            <p className="sr-only">4 out of 5 stars</p>
             <a href="#" className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">117 likes</a>
           </div>
         </div>
@@ -126,7 +127,7 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
         
       </div>
       
-       <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pb-16 lg:pr-8">
+      <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pb-16 lg:pr-8">
          {/* <!-- Description and details -->  */}
         <div>
           <div className="space-y-6">
@@ -141,8 +142,36 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
           </div>
         </div>
       </div>
-    </div>
+    
   </div>
+  <div className="products-similar py-4 w-4/5 my-3.5 mx-auto">
+      <h3>Autres lieux similaires</h3>
+            <div className="maylike-products-container flex flex-row items-stretch">
+            <ul
+              id="poi-similar"
+              className="flex justify-around py-4 w-4/5 my-3.5"
+            > 
+              {data.getAllPoi.map((poi: IPOIData) => (
+                <Link
+                  key={poi.id}
+                  to={`/point-of-interest/${poi.id}/${poi.name}`}
+                  style={{ cursor: 'pointer' }}
+                >
+                 <li className="h-[200px] w-[150px] border-solid border rounded-xl mb-12">
+                <POICard name={poi.name}
+                      address={poi.address}
+                      postal={poi.postal}
+                      city={poi.city}
+                      pictureUrl={poi.pictureUrl}
+                      description={poi.description}
+                      type={poi.type} />
+                </li>
+                </Link>
+              ))}
+            </ul> 
+            </div>
+      </div>
+    </div>
 </div>
   );
 };
