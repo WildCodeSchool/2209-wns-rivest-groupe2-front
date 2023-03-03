@@ -2,34 +2,13 @@ import { useContext, useEffect, useState } from 'react';
 import ModalHours from './ModalHours';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
-import gql from 'graphql-tag';
 import axios from 'axios';
 import { map } from 'lodash';
-import { GET_POI_QUERY } from 'src/pages/POIList/POIList';
 import type { IFormInput, IDataFromApi } from 'src/types/POIType';
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
 import { BsFillCameraFill } from 'react-icons/bs';
-
-const CREATE_POI_MUTATION = gql`
-  mutation CreatePoi($data: CreatePoiInput!) {
-    createPoi(data: $data) {
-      name
-      address
-      postal
-      type
-      coordinates
-      creationDate
-      pictureUrl
-      websiteURL
-      description
-      priceRange
-      city
-      daysOpen
-      hoursOpen
-      hoursClose
-    }
-  }
-`;
+import { CREATE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 
 const defaultDays = {
   monday: false,

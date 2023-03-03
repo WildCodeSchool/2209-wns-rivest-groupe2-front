@@ -4,30 +4,8 @@ import { IPOIData } from 'src/types/POIType';
 import POICard, { goodWrittenType } from 'src/components/POICard';
 import ModalAddPlace from 'src/components/ModalAddPlace/ModalAddPlace';
 import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
-
-export const GET_POI_QUERY = gql`
-  query GetAllPois {
-    getAllPoi {
-      id
-      name
-      address
-      postal
-      type
-      coordinates
-      creationDate
-      pictureUrl
-      websiteURL
-      description
-      priceRange
-      city
-      daysOpen
-      hoursOpen
-      hoursClose
-    }
-  }
-`;
 
 const POIList = () => {
   const { user } = useContext(UserContext);
@@ -40,8 +18,6 @@ const POIList = () => {
   const [filteredPois, setFilteredPois] = useState<IPOIData[] | []>([]);
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [zoomPoi, setZoomPoi] = useState<IPOIData | void>();
-
-  console.log('user', user);
 
   useEffect(() => {
     if (data?.getAllPoi) {
