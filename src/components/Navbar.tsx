@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
+import icon from '../asset/img/logo.png';
 import UserDropdown from './UserDropdown';
 import logo from '../asset/img/city-guide-logo.svg';
 import { UserContext } from '../contexts/userContext';
@@ -14,11 +15,12 @@ const Navbar = () => {
   return (
     <nav className="border-b-2">
       <ul className="flex flex-grow justify-between items-center m-5">
-        <li>
           <NavLink to="/" style={getActiveLinkStyle}>
-            <img src={logo} alt="icon site" />
+            <img src={icon} alt="icon site1"  className="h-20"/>
           </NavLink>
-        </li>
+          <NavLink to="/" style={getActiveLinkStyle}>
+            <img src={logo} alt="icon site2"/>
+          </NavLink>
         <select
           name="cities"
           id="cities"
