@@ -36,8 +36,6 @@ const POIComment: React.FC<POIDetailsProps> = ({
     if (userCommentData?.getUserCommentForPOI) {
       setCurrentComment(userCommentData.getUserCommentForPOI.text);
     }
-
-    console.log(userCommentData);
   }, [userCommentData]);
 
   const [commentPOI] = useMutation(COMMENT_POI_MUTATION, {

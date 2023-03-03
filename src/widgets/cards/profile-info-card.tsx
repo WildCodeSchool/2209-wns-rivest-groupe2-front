@@ -70,8 +70,6 @@ export const ProfileInfoCard: React.FC<Props> = ({
     if (user && isEditMode) {
       updateUserMutation({ variables: { data: { ...formData, id: user.id } } });
     }
-
-    console.log(formData);
   };
 
   return (

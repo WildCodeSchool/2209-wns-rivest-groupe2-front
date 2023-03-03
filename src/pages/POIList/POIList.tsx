@@ -19,8 +19,6 @@ const POIList = () => {
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [zoomPoi, setZoomPoi] = useState<IPOIData | void>();
 
-  console.log('user', user);
-
   useEffect(() => {
     if (data?.getAllPoi) {
       setFilteredPois(data.getAllPoi);
