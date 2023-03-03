@@ -8,6 +8,7 @@ import { map } from 'lodash';
 import { GET_POI_QUERY } from 'src/pages/POIList/POIList';
 import type { IFormInput, IDataFromApi } from 'src/types/POIType';
 import { UserContext } from 'src/contexts/userContext';
+import { BsFillCameraFill } from 'react-icons/bs';
 
 const CREATE_POI_MUTATION = gql`
   mutation CreatePoi($data: CreatePoiInput!) {
@@ -172,7 +173,7 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                     },
                   })}
                   placeholder="Nom du lieu (obligatoire)*"
-                  className="w-full h-full"
+                  className="w-full h-full border-none focus:outline-none"
                 />
               </label>
               {errors.name && (
@@ -220,7 +221,7 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                   })}
                   id="address"
                   placeholder="Numéro et nom de rue (obligatoire)*"
-                  className="w-full h-full"
+                  className="w-full h-full border-none focus:outline-none"
                 />
               </label>
               {errors.address && (
@@ -258,7 +259,7 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                   })}
                   id="postal"
                   placeholder="Code postal (obligatoire)*"
-                  className="w-full h-full"
+                  className="w-full h-full border-none focus:outline-none"
                 />
               </label>
               {errors.postal && (
@@ -288,7 +289,7 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                   })}
                   id="city"
                   placeholder="Ville (obligatoire)*"
-                  className="w-full h-full"
+                  className="w-full h-full border-none focus:outline-none"
                 />
               </label>
               {errors.city && (
@@ -302,14 +303,14 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                   {...register('description')}
                   id="description"
                   placeholder="Description"
-                  className="w-full"
+                  className="w-full border-none focus:outline-none"
                   rows={6}
                   cols={30}
                 />
               </label>
               <div
                 onClick={() => setOpenModalHours(true)}
-                className="flex justify-between items-center bg-white w-full h-[50px] px-[15px] py-[4px] mr-[80px] mb-4 border-2 rounded-xl text-gray-400"
+                className="flex justify-between items-center bg-white w-full h-[50px] px-[15px] py-[4px] mr-[80px] mb-4 border-2 border-gray-500 rounded-xl text-gray-400"
               >
                 <div>Horaires</div>
                 <div>{'>'}</div>
@@ -333,7 +334,7 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                   })}
                   id="websiteURL"
                   placeholder="Site web"
-                  className="w-full h-full"
+                  className="w-full h-full border-none focus:outline-none"
                 />
               </label>
               {errors.websiteURL && (
@@ -341,21 +342,25 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
               )}
               <button
                 type="button"
-                className="h-[50px] px-[15px] py-[4px] mb-4 border-2 rounded-2xl text-gray-400"
+                className="h-[50px] w-[200px] text-opalblue px-[15px] py-[4px] flex justify-center items-center mb-4 border-2 border-opalblue rounded-2xl"
               >
-                Ajouter une photo
+                <BsFillCameraFill width={40} />
+                <p className="pl-2">Ajouter une photo</p>
               </button>
               <div className="flex justify-end">
                 <button
                   type="button"
-                  onClick={() => reset()}
+                  onClick={() => {
+                    reset();
+                    setOpenModalAddPlace(false);
+                  }}
                   className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gray-500 hover:bg-white font-secondary text-white hover:text-gray-400 text-[1rem] text-center font-semibold mt-2"
                 >
                   Annuler
                 </button>
                 <button
                   type="submit"
-                  className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold mt-2"
+                  className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold mt-2"
                 >
                   Envoyer
                 </button>

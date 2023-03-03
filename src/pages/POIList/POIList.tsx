@@ -74,7 +74,7 @@ const POIList = () => {
             : `${count} Point${count > 1 ? 's' : ''} d'intérêt à Paris`}
         </strong>
         <button
-          className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 font-secondary text-white text-[1rem] text-center font-semibold"
+          className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
           onClick={() => setOpenModalAddPlace(!openModalAddPlace)}
           style={{ visibility: user?.type ? 'initial' : 'hidden' }}
         >
