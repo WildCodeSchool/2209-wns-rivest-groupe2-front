@@ -9,6 +9,7 @@ export interface IPOICard {
   pictureUrl: string;
   description: string;
   type: string;
+  rate?: number
 }
 
 enum POIType {

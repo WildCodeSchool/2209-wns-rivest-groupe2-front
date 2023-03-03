@@ -5,34 +5,38 @@ import {
   CardFooter,
   Avatar,
   Typography,
-  Tabs,
-  TabsHeader,
-  Tab,
-  Switch,
   Tooltip,
-  Button,
 } from '@material-tailwind/react';
-import {
-  HomeIcon,
-  ChatBubbleLeftEllipsisIcon,
-  Cog6ToothIcon,
-  PencilIcon,
-} from '@heroicons/react/24/solid';
+import { useQuery } from '@apollo/client';
+
+import { PencilIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 import { ProfileInfoCard } from '../../widgets/cards/profile-info-card';
-import { MessageCard } from '../../widgets/cards/message-card';
-import { platformSettingsData } from '../../data/platform-settings-data';
-import { conversationsData } from '../../data/conversations-data';
-import { projectsData } from '../../data/projects-data';
 import { UserContext } from 'src/contexts/userContext';
-import { useContext, useState } from 'react';
-
-
+import { useContext, useState, useEffect, useRef } from 'react';
+import { IPOIData } from 'src/types/POIType';
+import noImage from '../../asset/img/no-image-icon.png';
+import StarRating from 'src/components/StarRating';
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 
 export function Profile() {
-  const { user } = useContext(UserContext)
-  const [isEditMode, setIsEditMode] = useState(false)
+  const { user } = useContext(UserContext);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const POIData = useQuery(GET_POI_QUERY);
 
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = textRef.current;
+    if (element?.clientHeight) {
+      const lineHeight = parseInt(getComputedStyle(element).lineHeight);
+      const maxHeight = lineHeight * 2;
+      if (element.clientHeight > maxHeight) {
+        setIsTruncated(true);
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -61,27 +65,9 @@ export function Profile() {
                 </Typography>
               </div>
             </div>
-{/*             <div className="w-96">
-              <Tabs value="app">
-                <TabsHeader>
-                  <Tab value="app">
-                    <HomeIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    App
-                  </Tab>
-                  <Tab value="message">
-                    <ChatBubbleLeftEllipsisIcon className="-mt-0.5 mr-2 inline-block h-5 w-5" />
-                    Message
-                  </Tab>
-                  <Tab value="settings">
-                    <Cog6ToothIcon className="-mt-1 mr-2 inline-block h-5 w-5" />
-                    Settings
-                  </Tab>
-                </TabsHeader>
-              </Tabs>
-            </div> */}
           </div>
-          <div className="gird-cols-1 mb-12 grid gap-12 px-4 xl:grid-cols-3">
-       {/*      <div>
+          <div className="gird-cols-1 mb-12 grid gap-6 px-4 xl:grid-cols-3">
+            {/*      <div>
               <Typography variant="h6" color="blue-gray" className="mb-3">
                 Platform Settings
               </Typography>
@@ -112,10 +98,10 @@ export function Profile() {
               title="Profile Information"
               // description={user?.description ? user.description : 'Please enter a description'}
               details={{
-                'firstname': user ? user.firstname : 'undefined',
-                'lastname' : user ? user.lastname : 'undefined',
-                'email': user ? user.email : 'undefined',
-/*                 'social': (
+                firstname: user ? user.firstname : 'undefined',
+                lastname: user ? user.lastname : 'undefined',
+                email: user ? user.email : 'undefined',
+                /*                 'social': (
                   <div className="flex items-center gap-4">
                     <i className="fa-brands fa-facebook text-blue-700" />
                     <i className="fa-brands fa-twitter text-blue-400" />
@@ -125,22 +111,30 @@ export function Profile() {
               }}
               action={
                 <Tooltip content="Edit Profile">
-                  <button type='submit' form='userForm' value="Update" onClick={()=>{
-           
-                    if (isEditMode === false){
-                      setIsEditMode(!isEditMode)
-                    }         
-                    if (isEditMode === true){
-                      document.body.style.cursor = 'wait';
-                      setTimeout(() => {
-                        document.body.style.cursor = 'default';
-                        setIsEditMode(!isEditMode)
-                      }, 2000);
-                    }
-                  }}>
-                  {isEditMode===false ?  (<PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />) 
-                  : 
-                  (<div className="border-2 px-2 text-blue-gray-500">Save</div>)}
+                  <button
+                    type="submit"
+                    form="userForm"
+                    value="Update"
+                    onClick={() => {
+                      if (isEditMode === false) {
+                        setIsEditMode(!isEditMode);
+                      }
+                      if (isEditMode === true) {
+                        document.body.style.cursor = 'wait';
+                        setTimeout(() => {
+                          document.body.style.cursor = 'default';
+                          setIsEditMode(!isEditMode);
+                        }, 2000);
+                      }
+                    }}
+                  >
+                    {isEditMode === false ? (
+                      <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />
+                    ) : (
+                      <div className="border-2 px-2 text-blue-gray-500">
+                        Save
+                      </div>
+                    )}
                   </button>
                 </Tooltip>
               }
@@ -164,81 +158,70 @@ export function Profile() {
                 ))}
               </ul>
             </div> */}
-                      <div className="px-4 pb-4 xl:col-span-2">
-            <Typography variant="h6" color="blue-gray" className="mb-2">
-              Point of interests - Recently visited
-            </Typography>
-{/*             <Typography
+            <div className="pl-2 xl:col-span-2">
+              <Typography variant="h6" color="blue-gray" className="mb-2">
+                Point of interests - Migth interest you
+              </Typography>
+              {/*             <Typography
               variant="small"
               className="font-normal text-blue-gray-500"
             >
               Places recently visited
             </Typography> */}
-            <div className="mt-6 grid grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-4">
-              {projectsData.map(
-                ({ img, title, description, tag, route, members }) => (
-                  <Card key={title} color="transparent" shadow={false}>
-                    <CardHeader
-                      floated={false}
-                      color="gray"
-                      className="mx-0 mt-0 mb-4 h-64 xl:h-40"
+              <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                {POIData.data?.getAllPoi
+                  .map((poi: IPOIData) => (
+                    <Card
+                      key={poi.id}
+                      color="transparent"
+                      shadow={false}
+                      className="min-h-full"
                     >
-                      <img
-                        src={img}
-                        alt={title}
-                        className="h-full w-full object-cover"
-                      />
-                    </CardHeader>
-                    <CardBody className="py-0 px-1">
-                      <Typography
-                        variant="small"
-                        className="font-normal text-blue-gray-500"
-                      >
-                        {tag}
-                      </Typography>
-                      <Typography
-                        variant="h5"
-                        color="blue-gray"
-                        className="mt-1 mb-2"
-                      >
-                        {title}
-                      </Typography>
-                      <Typography
-                        variant="small"
-                        className="font-normal text-blue-gray-500"
-                      >
-                        {description}
-                      </Typography>
-                    </CardBody>
-                    <CardFooter className="mt-6 flex items-center justify-between py-0 px-1">
-                      <Link to={route}>
-                        <Button variant="outlined" size="sm">
-                          view project
-                        </Button>
-                      </Link>
-                      <div>
-                        {members.map(({ img, name }, key) => (
-                          <Tooltip key={name} content={name}>
-                            <Avatar
-                              src={img}
-                              alt={name}
-                              size="xs"
-                              variant="circular"
-                              className={`cursor-pointer border-2 border-white ${
-                                key === 0 ? '' : '-ml-2.5'
-                              }`}
+                      <li className="border-solid border rounded-xl mb-12 h-full">
+                        <Card className="h-full flex flex-col justify-between">
+                          {' '}
+                          <Link
+                            key={poi.id}
+                            to={`/point-of-interest/${poi.id}/${poi.name}`}
+                            style={{ cursor: 'pointer' }}
+                          >
+                            <CardHeader className="flex items-center justify-center">
+                              <Typography className="text-center overflow-hidden">
+                                <div ref={textRef}>{poi.name}</div>
+                                {isTruncated && '...'}
+                              </Typography>
+                            </CardHeader>
+                            <CardBody className="p-3 flex flex-col justify-between">
+                              <img
+                                src={poi.pictureUrl ? poi.pictureUrl : noImage}
+                                alt={poi.name}
+                                className="w-[90%] m-auto bg-cover bg-center"
+                              />
+                            </CardBody>
+                          </Link>
+                          {user?.id && (
+                            <StarRating
+                              className="border-2 flex items-center justify-center"
+                              userId={user?.id}
+                              poiId={poi?.id}
                             />
-                          </Tooltip>
-                        ))}
-                      </div>
-                    </CardFooter>
-                  </Card>
-                )
-              )}
+                          )}
+                          <CardFooter
+                            divider
+                            className="flex items-center justify-between py-1"
+                          >
+                            <Typography className="text-center text-xs font-normal text-blue-gray-400 pt-[10px]">
+                              {poi.description.slice(0, 20)}...
+                            </Typography>
+                          </CardFooter>
+                        </Card>
+                      </li>
+                    </Card>
+                  ))
+                  .reverse()}
+              </ul>
             </div>
           </div>
-          </div>
-
         </CardBody>
       </Card>
     </>

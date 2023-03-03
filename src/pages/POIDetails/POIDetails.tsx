@@ -9,6 +9,7 @@ import gql from 'graphql-tag';
 import noImage from '../asset/img/no-image-icon.png';
 import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
+import POIComment from 'src/components/Comment';
 
 
 export const GET_POI_QUERY = gql`
@@ -117,6 +118,7 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
               </svg>
             </div>
             <a href="#" className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">117 likes</a>
+            <POIComment poiId={1} userId={7} />
           </div>
         </div>
 

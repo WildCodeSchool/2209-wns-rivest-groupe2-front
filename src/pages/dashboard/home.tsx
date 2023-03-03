@@ -105,26 +105,24 @@ export function DashboardHome() {
             <table className="w-full min-w-[640px] table-auto">
               <thead>
                 <tr>
-                  {['Place', 'Rate', 'Review', 'Date'].map(
-                    (el) => (
-                      <th
-                        key={el}
-                        className="border-b border-blue-gray-50 py-3 px-6 text-left"
+                  {['Place', 'Rate', 'Review', 'Date'].map((el) => (
+                    <th
+                      key={el}
+                      className="border-b border-blue-gray-50 py-3 px-6 text-left"
+                    >
+                      <Typography
+                        variant="small"
+                        className="text-[11px] font-medium uppercase text-blue-gray-400"
                       >
-                        <Typography
-                          variant="small"
-                          className="text-[11px] font-medium uppercase text-blue-gray-400"
-                        >
-                          {el}
-                        </Typography>
-                      </th>
-                    )
-                  )}
+                        {el}
+                      </Typography>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {projectsTableData.map(
-                  ({ img, name, rate, review, date}, key) => {
+                  ({ img, name, rate, review, date }, key) => {
                     const className = `py-3 px-5 ${
                       key === projectsTableData.length - 1
                         ? ''
@@ -147,19 +145,19 @@ export function DashboardHome() {
                         </td>
                         <td className={className}>
                           {rate}
-{/*                           {members.map(({ img, name }, key) => (
-                            <Tooltip key={name} content={name}>
-                              <Avatar
-                                src={img}
-                                alt={name}
-                                size="xs"
-                                variant="circular"
-                                className={`cursor-pointer border-2 border-white ${
-                                  key === 0 ? '' : '-ml-2.5'
-                                }`}
-                              />
-                            </Tooltip>
-                          ))} */}
+                          {/*                           {members.map(({ img, name }, key) => (
+  <Tooltip key={name} content={name}>
+  <Avatar
+  src={img}
+  alt={name}
+  size="xs"
+  variant="circular"
+  className={`cursor-pointer border-2 border-white ${
+    key === 0 ? '' : '-ml-2.5'
+  }`}
+  />
+  </Tooltip>
+))} */}
                         </td>
                         <td className={className}>
                           <Typography
@@ -175,9 +173,9 @@ export function DashboardHome() {
                               variant="small"
                               className="mb-1 block text-xs font-medium text-blue-gray-600"
                             >
-                           {date}
+                              {date}
                             </Typography>
-                          {/*   <Progress
+                            {/*   <Progress
                               value={completion}
                               variant="gradient"
                               color={completion === 100 ? 'green' : 'blue'}
@@ -215,39 +213,37 @@ export function DashboardHome() {
             </Typography>
           </CardHeader>
           <CardBody className="pt-0">
-            {placesToVisit.map(
-              ({ icon, color, title, description }, key) => (
-                <div key={title} className="flex items-start gap-4 py-3">
-                  <div
-                    className={`relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50 after:content-[''] ${
-                      key === placesToVisit.length - 1
-                        ? 'after:h-0'
-                        : 'after:h-4/6'
-                    }`}
-                  >
-                    {React.createElement(icon, {
-                      className: `!w-5 !h-5 ${color}`,
-                    })}
-                  </div>
-                  <div>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="block font-medium"
-                    >
-                      {title}
-                    </Typography>
-                    <Typography
-                      as="span"
-                      variant="small"
-                      className="text-xs font-medium text-blue-gray-500"
-                    >
-                      {description}
-                    </Typography>
-                  </div>
+            {placesToVisit.map(({ icon, color, title, description }, key) => (
+              <div key={title} className="flex items-start gap-4 py-3">
+                <div
+                  className={`relative p-1 after:absolute after:-bottom-6 after:left-2/4 after:w-0.5 after:-translate-x-2/4 after:bg-blue-gray-50 after:content-[''] ${
+                    key === placesToVisit.length - 1
+                      ? 'after:h-0'
+                      : 'after:h-4/6'
+                  }`}
+                >
+                  {React.createElement(icon, {
+                    className: `!w-5 !h-5 ${color}`,
+                  })}
                 </div>
-              )
-            )}
+                <div>
+                  <Typography
+                    variant="small"
+                    color="blue-gray"
+                    className="block font-medium"
+                  >
+                    {title}
+                  </Typography>
+                  <Typography
+                    as="span"
+                    variant="small"
+                    className="text-xs font-medium text-blue-gray-500"
+                  >
+                    {description}
+                  </Typography>
+                </div>
+              </div>
+            ))}
           </CardBody>
         </Card>
       </div>
