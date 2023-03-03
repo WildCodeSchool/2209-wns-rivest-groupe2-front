@@ -8,8 +8,28 @@ import {
 import noImage from '../asset/img/no-image-icon.png';
 import { IPOICard } from 'src/types/POIType';
 
+export function goodWrittenType(type: string) {
+  switch (type) {
+    case 'restaurant':
+      return 'Restaurant';
+    case 'fast-food':
+      return 'Fast Food';
+    case 'bar':
+      return 'Bar';
+    case 'lieu de culte':
+      return 'Lieu de culte';
+    case 'hotel':
+      return 'Hôtel';
+    case 'musee':
+      return 'Musée';
+    default:
+      return '';
+  }
+}
+
 export default function POICard(props: IPOICard) {
   const { name, address, postal, city, pictureUrl, description, type } = props;
+
   return (
     <Card className="h-full flex flex-col justify-between">
       <CardHeader>
@@ -18,6 +38,9 @@ export default function POICard(props: IPOICard) {
         </Typography>
       </CardHeader>
       <CardBody className="p-3 flex flex-col justify-between">
+        <Typography className="text-center text-xl font-normal -pt-3">
+          {goodWrittenType(type)}
+        </Typography>
         <img
           src={pictureUrl ? pictureUrl : noImage}
           alt={name}
