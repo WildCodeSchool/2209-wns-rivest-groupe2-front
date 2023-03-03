@@ -185,8 +185,8 @@ export function Profile() {
                             to={`/point-of-interest/${poi.id}/${poi.name}`}
                             style={{ cursor: 'pointer' }}
                           >
-                            <CardHeader className="xl:h-24 flex items-center justify-center">
-                              <Typography className="text-center truncate overflow-hidden max-h-16 lg:max-h-20">
+                            <CardHeader className="flex items-center justify-center">
+                              <Typography className="text-center overflow-hidden">
                                 <div ref={textRef}>{poi.name}</div>
                                 {isTruncated && '...'}
                               </Typography>

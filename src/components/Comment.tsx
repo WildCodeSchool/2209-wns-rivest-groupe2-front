@@ -118,7 +118,7 @@ const POIComment: React.FC<POIDetailsProps> = ({
 
   return (
     <div>
-      <div className="mt-4">
+      <div className={className ? className : 'mt-4'}>
         <h2 className="text-lg font-bold">Comments</h2>
         {editingComment ? (
           <form onSubmit={handleCommentSubmit} className="mt-4">
