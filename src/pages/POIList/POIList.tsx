@@ -123,10 +123,10 @@ const POIList = () => {
         <div
           style={{
             width: '50%',
-            height: '85vh',
+            height: '75vh',
             position: 'fixed',
             right: 0,
-            top: '150px',
+            top: '180px',
           }}
         >
           <MapModule poiData={filteredPois} zoomPoi={zoomPoi} />
