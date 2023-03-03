@@ -38,7 +38,7 @@ const POIList = () => {
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;
   return (
-    <div className="mt-5">
+    <div className="mt-5 h-full">
       <div className="flex justify-between mx-5">
         <strong className="py-[5px] pl-[80px]" id="results-number">
           {data.getAllPoi.length === 0
@@ -85,8 +85,8 @@ const POIList = () => {
           <option value="musee">Musée</option>
         </select>
       </div>
-      <div className="flex pt-5">
-        <div className="h-[70vh] overflow-auto w-[50%]">
+      <div className="flex pt-5 h-full">
+        <div className="h-[72vh] overflow-auto w-[50%]">
           {openModalAddPlace ? (
             <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} />
           ) : data.getAllPoi.length === 0 || filteredPois.length === 0 ? (
@@ -120,6 +120,7 @@ const POIList = () => {
             </ul>
           )}
         </div>
+        <div></div>
         <div
           style={{
             width: '50%',
