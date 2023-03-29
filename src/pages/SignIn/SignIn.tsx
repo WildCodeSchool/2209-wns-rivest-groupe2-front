@@ -23,7 +23,7 @@ export const GET_TOKEN = gql`
         profilePicture
         type
       }
-    }
+    } 
   }
 `;
 
@@ -55,7 +55,7 @@ const SignIn = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
-    // MUTATION - SUBMISSION
+  // MUTATION - SUBMISSION
   const [login] = useLazyQuery(GET_TOKEN, {
     onCompleted(data) {
       localStorage.setItem('token', data.getToken.token);
