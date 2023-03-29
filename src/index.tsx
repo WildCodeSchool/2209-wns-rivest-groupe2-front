@@ -19,7 +19,7 @@ import { UserProvider } from 'src/contexts/userContext';
 // https://www.apollographql.com/docs/react/networking/authentication/
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:5000/',
+  uri: '/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {
