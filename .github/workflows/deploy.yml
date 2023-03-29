@@ -8,7 +8,7 @@ on:
   # Triggers the workflow on push or pull request events but only for the master branch
 
   push:
-    branches: ["main"]
+    branches: ['main']
 
   # Allows you to run this workflow manually from the Actions tab
 
@@ -57,7 +57,7 @@ jobs:
         name: Build and push
 
         with:
-          context: "{{defaultContext}}"
+          context: '{{defaultContext}}'
 
           file: ./Dockerfile
 
