@@ -1,0 +1,34 @@
+.popupContainer {
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+}
+
+.popupContainer p {
+  margin: 4px 0;
+  padding: 0px;
+}
+
+.poiImage {
+  width: 100%;
+  height: 80px;
+  background-position: center;
+  background-size: cover;
+}
+
+.poiName {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.poiAdress {
+  display: flex;
+  text-align: left;
+}
+
+.poiShowDetails {
+  color: rgb(0, 174, 255);
+  cursor: pointer;
+}
