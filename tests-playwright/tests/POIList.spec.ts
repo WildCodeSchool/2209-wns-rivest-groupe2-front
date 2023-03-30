@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('homepage has select modal & go to POIList page', async ({ page }) => {
-  await page.goto('http://localhost:3000/');
+  await page.goto('https://rivest2.wns.wilders.dev/');
   await expect(page.locator('id=select a city')).toHaveValue('ville');
   await page.locator('id=select a city').click();
   await page.locator('id=select a city').selectOption('Paris');
@@ -10,7 +10,7 @@ test('homepage has select modal & go to POIList page', async ({ page }) => {
 
 test.describe('POIList Page', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:3000/');
+    await page.goto('https://rivest2.wns.wilders.dev/');
     await page.locator('id=select a city').click();
     await page.locator('id=select a city').selectOption('Paris');
   });
