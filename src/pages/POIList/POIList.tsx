@@ -11,39 +11,60 @@ const POIList = () => {
   const { user } = useContext(UserContext);
   const [openModalAddPlace, setOpenModalAddPlace] = useState(false);
   const [count, setCount] = useState(0);
+  const windowHeight = window.innerHeight;
+  console.log('windowHeight', windowHeight);
 
-  const { loading, error, data } = useQuery(GET_POI_QUERY);
+  const {
+    loading: getPoiLoading,
+    error: getPoiError,
+    data: getPoiData,
+  } = useQuery(GET_POI_QUERY);
 
   const [category, setCategory] = useState<string>('');
   const [filteredPois, setFilteredPois] = useState<IPOIData[] | []>([]);
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [zoomPoi, setZoomPoi] = useState<IPOIData | void>();
+  const [barPois, setBarPois] = useState<IPOIData[] | []>([]);
+  const [restaurantPois, setRestaurantPois] = useState<IPOIData[] | []>([]);
+  const [fastFoodPois, setFastFoodPois] = useState<IPOIData[] | []>([]);
+  const [cultePois, setCultePois] = useState<IPOIData[] | []>([]);
+  const [hotelPois, setHotelPois] = useState<IPOIData[] | []>([]);
+  const [museumPois, setMuseumPois] = useState<IPOIData[] | []>([]);
 
   useEffect(() => {
-    if (data?.getAllPoi) {
-      setFilteredPois(data.getAllPoi);
-      setCount(data.getAllPoi.length);
+    if (getPoiData?.getAllPoi) {
+      const pois = [...getPoiData.getAllPoi];
+      setFilteredPois(pois);
+      setBarPois(pois.filter((poi: IPOIData) => poi.type === 'bar'));
+      setRestaurantPois(
+        pois.filter((poi: IPOIData) => poi.type === 'restaurant')
+      );
+      setFastFoodPois(pois.filter((poi: IPOIData) => poi.type === 'fast-food'));
+      setCultePois(
+        pois.filter((poi: IPOIData) => poi.type === 'lieu de culte')
+      );
+      setHotelPois(pois.filter((poi: IPOIData) => poi.type === 'hotel'));
+      setMuseumPois(pois.filter((poi: IPOIData) => poi.type === 'musee'));
+      setCount(pois.length);
       if (category) {
-        setFilteredPois(
-          data.getAllPoi.filter((poi: IPOIData) => poi.type === category)
-        );
+        setFilteredPois(pois.filter((poi: IPOIData) => poi.type === category));
       }
     }
-  }, [data, category]);
+  }, [getPoiData, category]);
 
   useEffect(() => {
     setFilteredCount(filteredPois.length);
   }, [filteredPois.length]);
 
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>{error.message}</p>;
+  if (getPoiLoading) return <p>Chargement...</p>;
+  if (getPoiError) return <p>{getPoiError.message}</p>;
   return (
-    <div className="mt-5 h-full">
-      <div className="flex justify-between mx-5">
+    <div className="mt-5 h-full w-full">
+      <div className="flex justify-between items-center mx-5">
         <strong className="py-[5px] pl-[80px]" id="results-number">
-          {data.getAllPoi.length === 0
+          {getPoiData.getAllPoi.length === 0
             ? "Aucun point d'intérêt à Paris"
-            : data.getAllPoi.length > 0 && category !== ''
+            : getPoiData.getAllPoi.length > 0 && category !== ''
             ? `${filteredCount} ${goodWrittenType(category)}${
                 filteredCount > 1 ? 's' : ''
               } à Paris`
@@ -86,45 +107,231 @@ const POIList = () => {
         </select>
       </div>
       <div className="flex pt-5 h-full">
-        <div className="h-[72vh] overflow-auto w-[50%]">
+        <div style={{ height: '65vh' }} className="overflow-auto w-[50%]">
           {openModalAddPlace ? (
             <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} />
-          ) : data.getAllPoi.length === 0 || filteredPois.length === 0 ? (
+          ) : getPoiData.getAllPoi.length === 0 || filteredPois.length === 0 ? (
             <p className="py-4 w-4/5 my-3.5 mx-auto">
               Pas de point d'intérêt renseigné pour l'instant.
             </p>
           ) : (
-            <ul
-              id="poi-list"
-              className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
-            >
-              {filteredPois &&
-                filteredPois.map((poi: IPOIData) => (
-                  <li
-                    className="h-[250px] w-[250px] border-solid border rounded-xl mb-12"
-                    key={poi.id}
-                    value={poi.id}
-                    onClick={() => setZoomPoi(poi)}
+            <>
+              {category !== '' ? (
+                <ul
+                  id="poi-list-bar"
+                  className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+                >
+                  {filteredPois &&
+                    filteredPois.map((poi: IPOIData) => (
+                      <li
+                        className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                        key={poi.id}
+                        value={poi.id}
+                        onClick={() => setZoomPoi(poi)}
+                      >
+                        <POICard
+                          name={poi.name}
+                          address={poi.address}
+                          postal={poi.postal}
+                          city={poi.city}
+                          pictureUrl={poi.pictureUrl}
+                          description={poi.description}
+                          type={poi.type}
+                          id={poi.id}
+                        />
+                      </li>
+                    ))}
+                </ul>
+              ) : null}
+              {barPois.length > 0 && category === '' && (
+                <>
+                  <h3 className="pl-8 text-3xl font-bold">Les Bars</h3>
+                  <ul
+                    id="poi-list-bar"
+                    className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                   >
-                    <POICard
-                      name={poi.name}
-                      address={poi.address}
-                      postal={poi.postal}
-                      city={poi.city}
-                      pictureUrl={poi.pictureUrl}
-                      description={poi.description}
-                      type={poi.type}
-                    />
-                  </li>
-                ))}
-            </ul>
+                    {barPois &&
+                      barPois.map((poi: IPOIData) => (
+                        <li
+                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          key={poi.id}
+                          value={poi.id}
+                          onClick={() => setZoomPoi(poi)}
+                        >
+                          <POICard
+                            name={poi.name}
+                            address={poi.address}
+                            postal={poi.postal}
+                            city={poi.city}
+                            pictureUrl={poi.pictureUrl}
+                            description={poi.description}
+                            type={poi.type}
+                            id={poi.id}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+              {fastFoodPois.length > 0 && category === '' && (
+                <>
+                  <h3 className="pl-8 text-3xl font-bold">Les Fast Food</h3>
+                  <ul
+                    id="poi-list-bar"
+                    className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+                  >
+                    {fastFoodPois &&
+                      fastFoodPois.map((poi: IPOIData) => (
+                        <li
+                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          key={poi.id}
+                          value={poi.id}
+                          onClick={() => setZoomPoi(poi)}
+                        >
+                          <POICard
+                            name={poi.name}
+                            address={poi.address}
+                            postal={poi.postal}
+                            city={poi.city}
+                            pictureUrl={poi.pictureUrl}
+                            description={poi.description}
+                            type={poi.type}
+                            id={poi.id}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+              {hotelPois.length > 0 && category === '' && (
+                <>
+                  <h3 className="pl-8 text-3xl font-bold">Les Hôtels</h3>
+                  <ul
+                    id="poi-list-bar"
+                    className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+                  >
+                    {hotelPois &&
+                      hotelPois.map((poi: IPOIData) => (
+                        <li
+                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          key={poi.id}
+                          value={poi.id}
+                          onClick={() => setZoomPoi(poi)}
+                        >
+                          <POICard
+                            name={poi.name}
+                            address={poi.address}
+                            postal={poi.postal}
+                            city={poi.city}
+                            pictureUrl={poi.pictureUrl}
+                            description={poi.description}
+                            type={poi.type}
+                            id={poi.id}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+              {cultePois.length > 0 && category === '' && (
+                <>
+                  <h3 className="pl-8 text-3xl font-bold">
+                    Les Lieux de culte
+                  </h3>
+                  <ul
+                    id="poi-list-bar"
+                    className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+                  >
+                    {cultePois &&
+                      cultePois.map((poi: IPOIData) => (
+                        <li
+                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          key={poi.id}
+                          value={poi.id}
+                          onClick={() => setZoomPoi(poi)}
+                        >
+                          <POICard
+                            name={poi.name}
+                            address={poi.address}
+                            postal={poi.postal}
+                            city={poi.city}
+                            pictureUrl={poi.pictureUrl}
+                            description={poi.description}
+                            type={poi.type}
+                            id={poi.id}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+              {museumPois.length > 0 && category === '' && (
+                <>
+                  <h3 className="pl-8 text-3xl font-bold">Les Musées</h3>
+                  <ul
+                    id="poi-list-bar"
+                    className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+                  >
+                    {museumPois &&
+                      museumPois.map((poi: IPOIData) => (
+                        <li
+                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          key={poi.id}
+                          value={poi.id}
+                          onClick={() => setZoomPoi(poi)}
+                        >
+                          <POICard
+                            name={poi.name}
+                            address={poi.address}
+                            postal={poi.postal}
+                            city={poi.city}
+                            pictureUrl={poi.pictureUrl}
+                            description={poi.description}
+                            type={poi.type}
+                            id={poi.id}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+              {restaurantPois.length > 0 && category === '' && (
+                <>
+                  <h3 className="pl-8 text-3xl font-bold">Les Restaurants</h3>
+                  <ul
+                    id="poi-list-bar"
+                    className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
+                  >
+                    {restaurantPois &&
+                      restaurantPois.map((poi: IPOIData) => (
+                        <li
+                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          key={poi.id}
+                          value={poi.id}
+                          onClick={() => setZoomPoi(poi)}
+                        >
+                          <POICard
+                            name={poi.name}
+                            address={poi.address}
+                            postal={poi.postal}
+                            city={poi.city}
+                            pictureUrl={poi.pictureUrl}
+                            description={poi.description}
+                            type={poi.type}
+                            id={poi.id}
+                          />
+                        </li>
+                      ))}
+                  </ul>
+                </>
+              )}
+            </>
           )}
         </div>
-        <div></div>
         <div
           style={{
             width: '50%',
-            height: '75vh',
+            height: '70vh',
             position: 'fixed',
             right: 0,
             top: '180px',
