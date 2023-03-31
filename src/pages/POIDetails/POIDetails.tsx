@@ -46,7 +46,7 @@ const POIDetails = () => {
   if (!thisPOI) return <p>Pas de point d'interet</p>;
 
   return (
-    <div className="bg-white">
+    <div className="bg-white mb-[100px]">
       <div className="pt-6">
         {/* Navigation */}
         <nav aria-label="Breadcrumb">
