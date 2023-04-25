@@ -9,12 +9,8 @@ import noImage from '../asset/img/no-image-icon.png';
 import { IPOICard } from 'src/types/POIType';
 import StarRating from 'src/components/StarRating';
 import { UserContext } from 'src/contexts/userContext';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-/* import { BiEditAlt } from 'react-icons/bi';
-import { AiOutlineDelete } from 'react-icons/ai'; */
-import ModalConfirmDelete from './ModalAddPlace/ModalConfirmDelete';
-import ModalAddPlace from './ModalAddPlace/ModalAddPlace';
 
 export function goodWrittenType(type: string) {
   switch (type) {
@@ -36,58 +32,17 @@ export function goodWrittenType(type: string) {
 }
 
 export default function POICard(props: IPOICard) {
-  const {
-    name,
-    address,
-    postal,
-    city,
-    pictureUrl,
-    description,
-    type,
-    id,
-    /* setOpenModalAddPlace,
-    openModalAddPlace,
-    websiteURL,
-    daysOpen,
-    hoursOpen,
-    hoursClose, */
-  } = props;
+  const { name, address, postal, city, pictureUrl, description, type, id } =
+    props;
   const { user } = useContext(UserContext);
-  /*   const [openModalDelete, setOpenModalDelete] = useState(false); */
 
   return (
     <>
-      {/* {openModalAddPlace && (
-        <ModalAddPlace
-          setOpenModalAddPlace={setOpenModalAddPlace}
-          name={name}
-          address={address}
-          postal={postal}
-          city={city}
-          pictureUrl={pictureUrl}
-          description={description}
-          type={type}
-          id={id}
-          websiteURL={websiteURL}
-          daysOpen={daysOpen}
-          hoursOpen={hoursOpen}
-          hoursClose={hoursClose}
-        />
-      )} */}
       <Card className="h-full flex flex-col justify-between">
         <CardHeader>
-          {/* <button
-            type="button"
-            onClick={() => setOpenModalAddPlace(!openModalAddPlace)}
-          >
-            <BiEditAlt width={40} />
-          </button> */}
           <Typography variant="h5" className="text-center">
             {name}
           </Typography>
-          {/* <button type="button" onClick={() => setOpenModalDelete(true)}>
-            <AiOutlineDelete width={40} />
-          </button> */}
         </CardHeader>
         <CardBody className="p-3 flex flex-col justify-between">
           <Typography className="text-center text-xl font-normal -pt-3">
@@ -126,14 +81,6 @@ export default function POICard(props: IPOICard) {
           </Typography>
         </CardFooter>
       </Card>
-      {/* {openModalDelete && (
-        <ModalConfirmDelete
-          id={id}
-          name={name}
-          setOpenModalDelete={setOpenModalDelete}
-          type={goodWrittenType(type)}
-        />
-      )} */}
     </>
   );
 }

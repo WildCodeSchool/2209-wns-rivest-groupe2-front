@@ -8,10 +8,7 @@ import type { IFormInput, IDataFromApi } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
 import { BsFillCameraFill } from 'react-icons/bs';
-import {
-  CREATE_POI_MUTATION,
-  UPDATE_POI_MUTATION,
-} from 'src/services/mutations/POIMutations';
+import { CREATE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 
 const defaultDays = {
   monday: false,
@@ -23,44 +20,7 @@ const defaultDays = {
   sunday: false,
 };
 
-interface IModalAddPlace {
-  name?: string;
-  address?: string;
-  postal?: string;
-  city?: string;
-  pictureUrl?: string;
-  description?: string;
-  type?: string;
-  id?: number;
-  setOpenModalAddPlace?: any;
-  openModalAddPlace?: boolean;
-  websiteURL?: string;
-  daysOpen?: string[];
-  hoursOpen?: string[];
-  hoursClose?: string[];
-}
-
-const ModalAddPlace = (props: IModalAddPlace) => {
-  const {
-    name,
-    address,
-    postal,
-    city,
-    pictureUrl,
-    description,
-    type,
-    id,
-    setOpenModalAddPlace,
-    openModalAddPlace,
-    websiteURL,
-    daysOpen,
-    hoursOpen,
-    hoursClose,
-  } = props;
-
-  const values = [];
-  values.push(props);
-  console.log('values', values);
+const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
   const { user } = useContext(UserContext);
   const [openModalHours, setOpenModalHours] = useState(false);
   const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
@@ -106,15 +66,6 @@ const ModalAddPlace = (props: IModalAddPlace) => {
   }, [options.params.address]);
 
   const [createPoi] = useMutation(CREATE_POI_MUTATION, {
-    context: {
-      headers: {
-        authorization: `Bearer ${user?.id}`,
-      },
-    },
-    refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
-  });
-
-  const [updatePoi] = useMutation(UPDATE_POI_MUTATION, {
     context: {
       headers: {
         authorization: `Bearer ${user?.id}`,
