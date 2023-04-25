@@ -1,0 +1,68 @@
+.info {
+  padding: 6px 8px;
+  background: white;
+  border-radius: 5px;
+  z-index: 1000;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 150px;
+}
+
+.blackBox {
+  width: 20px;
+  height: 10px;
+  background-color: black;
+  border: solid 1px black;
+}
+
+.blueBox {
+  width: 20px;
+  height: 10px;
+  background-color: #4388be;
+  border: solid 1px #4388be;
+}
+
+.goldBox {
+  width: 20px;
+  height: 10px;
+  background-color: #fed52e;
+  border: solid 1px #fed52e;
+}
+
+.greenBox {
+  width: 20px;
+  height: 10px;
+  background-color: #25aa22;
+  border: solid 1px #25aa22;
+}
+
+.orangeBox {
+  width: 20px;
+  height: 10px;
+  background-color: #cd8631;
+  border: solid 1px #cd8631;
+}
+
+.purpleBox {
+  width: 20px;
+  height: 10px;
+  background-color: #9a2dcc;
+  border: solid 1px #9a2dcc;
+}
+
+.redBox {
+  width: 20px;
+  height: 10px;
+  background-color: #cc2c47;
+  border: solid 1px #cc2c47;
+}
+
+.legend {
+  text-align: left;
+  line-height: 18px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #555;
+  padding-left: 10px;
+}
