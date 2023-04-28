@@ -3,6 +3,17 @@ import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { IPOIData } from 'src/types/POIType';
 import { Legend } from './MapLegend';
 import PopUpMap from './PopupMap';
+import {
+  restaurantIcon,
+  fastFoodIcon,
+  barIcon,
+  culteIcon,
+  hotelIcon,
+  museeIcon,
+  zoomIcon,
+  defaultIcon,
+} from './MapIcons';
+import { useEffect, useRef } from 'react';
 
 function MapComponent() {
   const map = useMap();
@@ -18,63 +29,22 @@ const MapModule = ({
 }) => {
   const parisPosition: LatLngExpression = [48.88, 2.33];
   const zoom: number = 12;
+  const mapRef = useRef(null);
+  const markerRef = useRef(null);
 
-  const restaurantIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-black.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
-  const fastFoodIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-blue.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
-  const barIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-gold.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
-  const culteIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-green.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
-  const hotelIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-orange.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
-  const museeIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-violet.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
-  const zoomIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-red.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
-  const defaultIcon: L.Icon = new L.Icon({
-    iconUrl: require('../asset/icons/marker-map/marker-icon-grey.png'),
-    iconSize: [25, 35],
-    popupAnchor: [0, -20],
-    shadowAnchor: [15, 20],
-    shadowUrl: require('../asset/icons/marker-map/marker-shadow.png'),
-  });
+  useEffect(() => {
+    if (zoomPoi) {
+      const map = mapRef.current;
+      if (!map) {
+        return;
+      }
+
+      const marker: any = markerRef.current;
+      if (marker) {
+        marker.openPopup();
+      }
+    }
+  }, [zoomPoi]);
 
   function switchIcon(poi: IPOIData) {
     switch (poi.type) {
@@ -105,6 +75,10 @@ const MapModule = ({
         zIndex: '10',
       }}
       id="map-container"
+      // @ts-ignore
+      whenReady={(map: any) => {
+        mapRef.current = map;
+      }}
     >
       <MapComponent />
       <TileLayer
@@ -116,7 +90,11 @@ const MapModule = ({
         poiData.map((poi: IPOIData) => (
           <div className="map-marker" key={poi.id}>
             {poi?.coordinates && zoomPoi?.id === poi?.id ? (
-              <Marker position={poi.coordinates} icon={zoomIcon}>
+              <Marker
+                position={poi.coordinates}
+                icon={zoomIcon}
+                ref={markerRef}
+              >
                 <Popup>
                   <PopUpMap
                     name={poi.name}

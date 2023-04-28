@@ -1,4 +1,4 @@
-import styles from '../styles/legendComponent.module.css';
+import styles from '../../styles/legendComponent.module.css';
 
 export const Legend = () => {
   return (
