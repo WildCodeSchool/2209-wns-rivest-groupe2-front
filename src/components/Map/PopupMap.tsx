@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import styles from '../styles/popUpMap.module.css';
-import noImage from '../asset/img/no-image-icon.png';
+import styles from '../../styles/popUpMap.module.css';
+import noImage from '../../asset/img/no-image-icon.png';
 
 function PopUpMap({
   name,
