@@ -1,7 +1,7 @@
 import L, { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { IPOIData } from 'src/types/POIType';
-import Legend from './MapLegend';
+import { Legend } from './MapLegend';
 import PopUpMap from './PopupMap';
 import {
   restaurantIcon,

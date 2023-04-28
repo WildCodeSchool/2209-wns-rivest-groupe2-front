@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const CREATE_POI_MUTATION = gql`
   mutation CreatePoi($data: CreatePoiInput!) {

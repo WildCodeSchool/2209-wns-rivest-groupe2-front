@@ -9,7 +9,14 @@ export interface IPOICard {
   pictureUrl: string;
   description: string;
   type: string;
-  rate?: number
+  rate?: number;
+  id: number;
+  setOpenModalAddPlace?: any;
+  openModalAddPlace?: boolean;
+  websiteURL?: string;
+  daysOpen?: string[];
+  hoursOpen?: string[];
+  hoursClose?: string[];
 }
 
 enum POIType {

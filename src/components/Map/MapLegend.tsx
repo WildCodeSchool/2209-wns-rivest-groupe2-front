@@ -1,6 +1,6 @@
 import styles from '../../styles/legendComponent.module.css';
 
-const Legend = () => {
+export const Legend = () => {
   return (
     <div className={styles.info}>
       <div className="flex items-center">
