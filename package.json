@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^3.7.1",
+    "@apollo/client": "^3.7.14",
     "@heroicons/react": "2.0.12",
     "@hookform/resolvers": "^2.9.10",
     "@material-tailwind/react": "^1.4.2",
@@ -29,7 +29,7 @@
     "react-hook-form": "^7.42.1",
     "react-icons": "^4.6.0",
     "react-leaflet": "^4.2.0",
-    "react-router-dom": "^6.4.3",
+    "react-router-dom": "^6.11.2",
     "react-scripts": "5.0.1",
     "typescript-plugin-css-modules": "^4.2.2",
     "web-vitals": "^2.1.4",
@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.2",
-    "@types/react": "^18.0.28",
+    "@types/react": "^18.2.6",
     "@types/react-dom": "^18.0.11",
     "@types/react-leaflet": "^2.8.2",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
