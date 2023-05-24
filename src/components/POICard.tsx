@@ -9,8 +9,13 @@ import noImage from '../asset/img/no-image-icon.png';
 import { IPOICard } from 'src/types/POIType';
 import StarRating from 'src/components/StarRating';
 import { UserContext } from 'src/contexts/userContext';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/client';
+import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
+import { TOGGLE_FAVORITE_MUTATION } from 'src/services/mutations/favoriteMutations';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { IFavorite } from 'src/types/IFavorite';
 
 export function goodWrittenType(type: string) {
   switch (type) {
@@ -32,17 +37,46 @@ export function goodWrittenType(type: string) {
 }
 
 export default function POICard(props: IPOICard) {
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const { name, address, postal, city, pictureUrl, description, type, id } =
     props;
   const { user } = useContext(UserContext);
+
+  const { loading, error, data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
+    variables: { userId: user?.id },
+  });
+
+  useEffect(() => {
+    if (data) {
+      const userFavorites = data.getUserFavorites.map(
+        (favorite: IFavorite) => favorite.pointOfInterest.id
+      );
+      setIsFavorite(userFavorites.includes(id));
+    }
+  }, [data]);
+
+  const [toggleFavoriteMutation] = useMutation(TOGGLE_FAVORITE_MUTATION, {
+    variables: { userId: user?.id, poiId: id },
+    onCompleted: () => {
+      setIsFavorite((prevIsFavorite) => !prevIsFavorite);
+    },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
 
   return (
     <>
       <Card className="h-full flex flex-col justify-between">
         <CardHeader>
-          <Typography variant="h5" className="text-center">
-            {name}
-          </Typography>
+          <div className="flex justify-between items-center">
+            <Typography variant="h5" className="text-center">
+              {name}
+            </Typography>
+            <button onClick={() => toggleFavoriteMutation()}>
+              {isFavorite ? <FaHeart color="red" /> : <FaRegHeart />}
+            </button>
+          </div>
         </CardHeader>
         <CardBody className="p-3 flex flex-col justify-between">
           <Typography className="text-center text-xl font-normal -pt-3">

@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.2",
-    "@types/react": "^18.0.28",
+    "@types/react": "^18.2.6",
     "@types/react-dom": "^18.0.11",
     "@types/react-leaflet": "^2.8.2",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
