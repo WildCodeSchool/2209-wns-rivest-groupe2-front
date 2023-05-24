@@ -49,7 +49,7 @@ export default function POICard(props: IPOICard) {
             {goodWrittenType(type)}
           </Typography>
           <img
-            src={pictureUrl ? pictureUrl : noImage}
+            src={pictureUrl ? `http://localhost:8000${pictureUrl[0]}` : noImage}
             alt={name}
             className="h-[100px] w-[90%] m-auto bg-cover bg-center"
           />
