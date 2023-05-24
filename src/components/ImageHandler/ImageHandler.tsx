@@ -5,20 +5,25 @@ interface IPropsImageHandler {
   type: 'avatar' | 'poi';
   imgUrl?: string | null | undefined;
   updateBackendUrlImg: (imgUrl: string | null) => Promise<any>;
+  lastPoiId: number | null;
 }
 
 const ImageHandler = ({
   type,
   imgUrl,
   updateBackendUrlImg,
+  lastPoiId,
 }: IPropsImageHandler) => {
   const dataFilename = imgUrl ? imgUrl.split('/').at(-1) : null;
-
-  const url = urlAPI(type, dataFilename);
+  const poiId = lastPoiId ? lastPoiId + 1 : null;
+  const url = urlAPI(type, dataFilename, poiId);
+  console.log('poiId', poiId);
+  console.log('url', url);
 
   function urlAPI(
     type: 'avatar' | 'poi',
-    filename: string | undefined | null
+    filename: string | undefined | null,
+    poiId: number | null
   ): {
     postUrl: string;
     updateUrl: string;
@@ -35,9 +40,9 @@ const ImageHandler = ({
         deleteUrl = `/delete/avatars/${filename}`;
         break;
       case 'poi':
-        postUrl = '/upload/pois';
-        updateUrl = `/update/pois/${filename}`;
-        deleteUrl = `/delete/pois/${filename}`;
+        postUrl = `/upload/pois/${poiId}`;
+        updateUrl = `/update/pois/${poiId}/${filename}`;
+        deleteUrl = `/delete/pois/${poiId}/${filename}`;
         break;
     }
     return { postUrl, updateUrl, deleteUrl };

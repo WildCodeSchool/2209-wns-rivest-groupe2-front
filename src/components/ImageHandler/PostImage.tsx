@@ -37,6 +37,8 @@ const PostImage = ({
     });
   };
 
+  console.log('postUrl', postUrl);
+
   const handleImageUpload = async () => {
     const formData = new FormData();
     if (selectedImage.image)

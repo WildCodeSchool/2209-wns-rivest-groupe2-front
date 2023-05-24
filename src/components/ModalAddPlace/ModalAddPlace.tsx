@@ -72,7 +72,6 @@ const ModalAddPlace = (props: Props) => {
   }, [options.params.address]);
 
   let pictureUrlArray: string[] = [];
-  console.log('lastPoiId', lastPoiId);
 
   const updateBackendUrlImg = async (filename: string | null) => {
     if (filename) pictureUrlArray.push(filename);
@@ -370,6 +369,7 @@ const ModalAddPlace = (props: Props) => {
                     type="poi"
                     /* imgUrl={coverUrl} */
                     updateBackendUrlImg={updateBackendUrlImg}
+                    lastPoiId={lastPoiId}
                   />
                 </div>
                 <div className="flex justify-end">
