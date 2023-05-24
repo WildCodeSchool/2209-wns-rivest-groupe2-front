@@ -15,9 +15,7 @@ const Home = () => {
         <div className="decoration-solid pb-2">Choissez votre ville</div>
         <select
           id="select a city"
-          onChange={() =>
-            (document.location = 'http://localhost:3000/point-of-interest/list')
-          }
+          onChange={() => (document.location = '/point-of-interest/list')}
           className="w-full content-center p-2.5 text-gray-500 bg-transparent border rounded-md shadow-sm outline-none appearance-none focus:border-indigo-600"
         >
           <option value="ville">Ville</option>
