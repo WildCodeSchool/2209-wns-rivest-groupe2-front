@@ -12,9 +12,9 @@ import POIComment from 'src/components/Comment';
 import Gallery from 'src/components/Gallery';
 
 
-export const GET_POI_QUERY = gql`
-  query GetAllPois {
-    getAllPoi {
+export const GET_POI_BY_ID_QUERY = gql`
+  query GetPOIbyId($getPoIbyId: Float!) {
+    getPoIbyId(id: $getPoIbyId) {
       id
       name
       address
@@ -30,16 +30,22 @@ export const GET_POI_QUERY = gql`
       daysOpen
       hoursOpen
       hoursClose
+      getRates {
+        id
+        rate
+        createDate
+        updateDate
     }
   }
 `;
 
 const POIDetails = () => {
-  const { loading, error, data } = useQuery(GET_POI_QUERY);
   const { id } = useParams();
-  const thisPOI = data?.getAllPoi?.find(
-    (poi: { id: number }) => poi.id === Number(id)
-  );
+  const { loading, error, data } = useQuery(GET_POI_BY_ID_QUERY, {
+    variables: { getPoIbyId: id },
+  });
+  
+  const thisPOI = data?.getPOIbyId;
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
@@ -70,13 +76,10 @@ const POIDetails = () => {
       </ol>
     </nav>
     {/* Image gallery */}   
-         <Gallery pictureUrls={thisPOI.pictureUrl}
-         /> 
-  {/* POI Detail */}
-  </div>
-  <div className="product-detail-desc ">
-  <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div>
+         {/* <Gallery id={thisPOI.id} pictureUrls={thisPOI.pictureUrls}/>  */}
+    {/* POI Detail */}
+    <div className="product-detail-desc ">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <POIInfo 
           id={thisPOI.id}
           name={thisPOI.name}
@@ -94,11 +97,11 @@ const POIDetails = () => {
           hoursOpen={thisPOI.hoursOpen}
           hoursClose={thisPOI.hoursClose}
           />
-        </div>
-    </div>
-    <div className="mx-auto px-4 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24">
-      <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
+      </div>
+      <div className="mx-auto px-4 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24">
+        <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
         <h1 className="font-bold tracking-tight text-gray-900 ">Information</h1>
+        </div>      
       </div>
       {/* <!-- Options --> */}
       <div className="mt-4 lg:row-span-3 lg:mt-0">
@@ -162,8 +165,9 @@ const POIDetails = () => {
               </div>
             </div>
           </div>
-        </div>
-        <div className="products-similar py-4 w-4/5 my-3.5 mx-auto">
+      </div>
+                  {/* <!-- POI similaires -->  */}
+        {/* <div className="products-similar py-4 w-4/5 my-3.5 mx-auto">
           <h2 className="text-[#005356] font-bold">Autres lieux similaires</h2>
           <div className="maylike-products-container flex flex-row items-stretch">
             <ul
@@ -192,10 +196,10 @@ const POIDetails = () => {
               ))}
             </ul>
           </div>
-        </div>
-      </div>
+        </div> */}
     </div>
+  </div>
   );
-};
+}
 
 export default POIDetails;

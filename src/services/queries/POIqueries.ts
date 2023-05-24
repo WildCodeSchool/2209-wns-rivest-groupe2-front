@@ -23,8 +23,8 @@ export const GET_POI_QUERY = gql`
 `;
 
 export const GET_POI_BY_ID_QUERY = gql`
-  query GetPOIbyId($getPoIbyIdId: Float!) {
-    getPOIbyId(id: $getPoIbyIdId) {
+  query GetPOIbyId($getPoIbyId: Float!) {
+    getPoIbyId(id: $getPoIbyId) {
       id
       name
       address
