@@ -6,10 +6,10 @@ import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import gql from 'graphql-tag';
-import noImage from '../asset/img/no-image-icon.png';
 import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
 import POIComment from 'src/components/Comment';
+import Gallery from 'src/components/Gallery';
 
 
 export const GET_POI_QUERY = gql`
@@ -68,13 +68,13 @@ const thisPOI = data?.getAllPoi?.find((poi: { id: number; }) => poi.id === Numbe
       </ol>
     </nav>
     {/* Image gallery */}   
-         {/* <Gallery */}
-               {/* {thisPOI.pictureUrl}
-        {/* /> */}
+         <Gallery
+                pictureUrls={thisPOI.pictureUrl}
+         /> 
   {/* POI Detail */}
   </div>
   <div className="product-detail-desc ">
-  <div className="mx-auto px-4 pt-10 pb-10">
+  <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div>
           <POIInfo 
           id={thisPOI.id}
