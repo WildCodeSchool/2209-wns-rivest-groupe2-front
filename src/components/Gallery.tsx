@@ -4,12 +4,11 @@ import { useParams } from 'react-router-dom';
 import noImage from '../asset/img/no-image-icon.png';
 
 interface Props {
-  id: number;
   pictureUrls: string[];
 }
 
-export default function Gallery ({ id, pictureUrls}: Props ) {
-// const {id} = useParams();
+export default function Gallery ({pictureUrls}: Props ) {
+const {id} = useParams();
 const thisPOI = poiData.find(poi => poi.id === Number(id));
 // const listPictures = allpictures.map((pictureUrl) => 
 // <p>{pictureUrl}</p>
@@ -20,7 +19,7 @@ const thisPOI = poiData.find(poi => poi.id === Number(id));
       {pictureUrls.map((url, index) => (  
       <div className="h-full row-span-1 justify-between ">
         <img src={url || noImage}
-           alt={`POI Image ${id}-${index}`}
+           alt={thisPOI ? thisPOI.name : ''}
            className="h-[100%] items-center"
         />
       </div>
