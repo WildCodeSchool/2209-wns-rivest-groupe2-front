@@ -50,10 +50,32 @@ const POIDetails = () => {
     (poi: { id: number }) => poi.id !== Number(id)
   ).slice(0, 6);
 
+  const categoryBackgroundStyle = {
+    backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    paddingTop: '10px',
+    paddingLeft: '10px',
+    paddingRight: '10px',
+  };
+
+  function getCategoryBackgroundImage(type: any) {
+    // Define the background images for each category type
+    switch (type) {
+      case 'hotel':
+        return 'hotel-background.jpg';
+      case 'restaurant':
+        return 'restaurant-background.jpg';
+      default:
+        return 'bg-register.jpg';
+    }
+  }
 
   return (
   <div className="bg-white">
-  <div className="pt-6">
+  {/* Category Background */}
+  <div className="category-background" style={categoryBackgroundStyle}>
+        <div className="container mx-auto">
     {/* Navigation */}
     <nav aria-label="Breadcrumb">
       <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -147,6 +169,7 @@ const POIDetails = () => {
             )}
           </div>
         </div>
+    </div>
     </div>
   );
 }

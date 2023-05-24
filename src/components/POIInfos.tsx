@@ -21,13 +21,13 @@ export default function POIInfos(props: IPOIData) {
               {city}
             </Typography>
             <Typography variant="h5" className="mb-2">
-              {daysOpen}
+              Ouvert le: {daysOpen}
             </Typography>
             <Typography variant="h5" className="mb-2">
-              {hoursOpen}
+              à {hoursOpen}
             </Typography>
             <Typography variant="h5" className="mb-2">
-              {hoursClose}
+              jusqu'à {hoursClose}
             </Typography>
           </div>
         </div>
