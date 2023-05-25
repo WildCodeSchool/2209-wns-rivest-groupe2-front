@@ -2,6 +2,8 @@ import { useState } from 'react';
 import axios from 'axios';
 import DragAndDrop from './DragAndDrop';
 
+const image_url = process.env.REACT_APP_IMAGE_URL;
+
 const PostImage = ({
   type,
   postUrl,
@@ -44,15 +46,11 @@ const PostImage = ({
 
     const token = localStorage.getItem('token');
     try {
-      const { data } = await axios.post(
-        `http://localhost:9000${postUrl}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const { data } = await axios.post(`${image_url}${postUrl}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(data);
       await updateBackendUrlImg(data.filename);
       setSelectedImage({ ...selectedImage, imageUrl: data.filename });
