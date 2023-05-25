@@ -43,6 +43,8 @@ export function goodWrittenType(type: string) {
   }
 }
 
+const image_url = process.env.REACT_APP_IMAGE_URL;
+
 const POICard = (props: POICardProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const { name, address, postal, city, pictureUrl, description, type, id } =
@@ -90,7 +92,7 @@ const POICard = (props: POICardProps) => {
             {goodWrittenType(type)}
           </Typography>
           <img
-            src={pictureUrl ? `http://localhost:9000${pictureUrl[0]}` : noImage}
+            src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
             alt={name}
             className="h-[100px] w-[90%] m-auto bg-cover bg-center"
           />
