@@ -17,8 +17,6 @@ const ImageHandler = ({
   const dataFilename = imgUrl ? imgUrl.split('/').at(-1) : null;
   const poiId = lastPoiId ? lastPoiId + 1 : null;
   const url = urlAPI(type, dataFilename, poiId);
-  console.log('poiId', poiId);
-  console.log('url', url);
 
   function urlAPI(
     type: 'avatar' | 'poi',
