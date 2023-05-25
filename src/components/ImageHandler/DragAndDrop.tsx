@@ -35,6 +35,7 @@ const DragAndDrop = ({
             name="file_upload"
             onChange={handleImageChange}
             className="hidden"
+            multiple
           />
         </label>
       )}
