@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
-import {
-  RATE_POI_MUTATION,
-  UPDATE_RATE_POI_MUTATION,
-} from 'src/services/mutations/rateMutations';
+import { RATE_POI_MUTATION } from 'src/services/mutations/rateMutations';
 import { GET_USER_RATE_POI_QUERY } from 'src/services/queries/rateQueries';
 
 interface StarRatingProps {
@@ -35,7 +32,7 @@ const StarRating: React.FC<StarRatingProps> = ({
 
   const [ratePOI] = useMutation(RATE_POI_MUTATION, {
     update(cache, { data: { ratePOI } }) {
-      // Update the cache with the new POI rating
+      // Update the cache with the new or updated POI rating
       const { getUserRateForPOI } = cache.readQuery({
         query: GET_USER_RATE_POI_QUERY,
         variables: { userId, poiId },
@@ -48,24 +45,6 @@ const StarRating: React.FC<StarRatingProps> = ({
         },
       });
       setCurrentRating(ratePOI.rate);
-    },
-  });
-
-  const [updatePOIRate] = useMutation(UPDATE_RATE_POI_MUTATION, {
-    update(cache, { data: { updatePOIRate } }) {
-      // Update the cache with the updated POI rating
-      const { getUserRateForPOI } = cache.readQuery({
-        query: GET_USER_RATE_POI_QUERY,
-        variables: { userId, poiId },
-      }) as { getUserRateForPOI: { rate: number } };
-      cache.writeQuery({
-        query: GET_USER_RATE_POI_QUERY,
-        variables: { userId, poiId },
-        data: {
-          getUserRateForPOI: { ...getUserRateForPOI, ...updatePOIRate },
-        },
-      });
-      setCurrentRating(updatePOIRate.rate);
     },
   });
 
@@ -82,14 +61,8 @@ const StarRating: React.FC<StarRatingProps> = ({
       poiId,
     };
     try {
-      if (currentRating !== undefined) {
-        // If the user has already rated the POI, use the update mutation
-        await updatePOIRate({ variables });
-      } else {
-        // Otherwise, use the post mutation
-        const result = await ratePOI({ variables });
-        setCurrentRating(result.data.ratePOI.rate);
-      }
+      const result = await ratePOI({ variables });
+      setCurrentRating(result.data.ratePOI.rate);
     } catch (error) {
       console.log(error);
     }

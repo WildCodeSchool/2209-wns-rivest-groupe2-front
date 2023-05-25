@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useEffect, useState } from 'react';
 import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
@@ -10,6 +10,7 @@ import noImage from '../asset/img/no-image-icon.png';
 import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
 import POIComment from 'src/components/Comment';
+import { UserContext } from 'src/contexts/userContext';
 
 export const GET_POI_QUERY = gql`
   query GetAllPois {
@@ -36,6 +37,7 @@ export const GET_POI_QUERY = gql`
 const POIDetails = () => {
   const { loading, error, data } = useQuery(GET_POI_QUERY);
   const { id } = useParams();
+  const { user } = useContext(UserContext);
   const thisPOI = data?.getAllPoi?.find(
     (poi: { id: number }) => poi.id === Number(id)
   );
@@ -151,13 +153,7 @@ const POIDetails = () => {
                     />
                   </svg>
                 </div>
-                <a
-                  href="#"
-                  className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  117 likes
-                </a>
-                <POIComment poiId={1} userId={7} />
+                {user && <POIComment poiId={thisPOI.id} userId={user.id} />}
               </div>
             </div>
           </div>
