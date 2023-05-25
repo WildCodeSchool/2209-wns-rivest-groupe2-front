@@ -40,6 +40,8 @@ export function goodWrittenType(type: string) {
   }
 }
 
+const image_url = process.env.REACT_APP_IMAGE_URL;
+
 const POICard = (props: POICardProps) => {
   const {
     name,

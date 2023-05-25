@@ -20,3 +20,11 @@ export const CREATE_POI_MUTATION = gql`
     }
   }
 `;
+
+export const UPDATE_POI_IMG = gql`
+  mutation UpdatePoi($slug: String!, $coverUrl: String) {
+    updateBlog(blogSlug: $slug, coverUrl: $coverUrl) {
+      coverUrl
+    }
+  }
+`;
