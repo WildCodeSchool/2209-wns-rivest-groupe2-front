@@ -90,7 +90,7 @@ const POICard = (props: POICardProps) => {
             {goodWrittenType(type)}
           </Typography>
           <img
-            src={pictureUrl ? `http://localhost:8000${pictureUrl[0]}` : noImage}
+            src={pictureUrl ? `http://localhost:9000${pictureUrl[0]}` : noImage}
             alt={name}
             className="h-[100px] w-[90%] m-auto bg-cover bg-center"
           />

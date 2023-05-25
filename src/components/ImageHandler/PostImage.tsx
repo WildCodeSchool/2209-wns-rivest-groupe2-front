@@ -45,7 +45,7 @@ const PostImage = ({
     const token = localStorage.getItem('token');
     try {
       const { data } = await axios.post(
-        `http://localhost:8000${postUrl}`,
+        `http://localhost:9000${postUrl}`,
         formData,
         {
           headers: {

@@ -29,7 +29,7 @@ const UpdateImage = ({
   const [dataImg, setDataImg] = useState<string | null>(null);
 
   useEffect(() => {
-    setDataImg(`http://localhost:8000${imgUrl}`);
+    setDataImg(`http://localhost:9000${imgUrl}`);
   }, []);
 
   const resetImage = () => {
@@ -42,7 +42,7 @@ const UpdateImage = ({
 
   const deleteImg = async () => {
     try {
-      await axios.delete(`http://localhost:8000${deleteUrl}`, {
+      await axios.delete(`http://localhost:9000${deleteUrl}`, {
         headers: {
           Authorization: token,
         },
@@ -68,9 +68,9 @@ const UpdateImage = ({
       formData.append('file', selectedImage.image, selectedImage.image.name);
 
     try {
-      await axios.get(`http://localhost:8000${imgUrl}`);
+      await axios.get(`http://localhost:9000${imgUrl}`);
       const { data } = await axios.put(
-        `http://localhost:8000${updateUrl}`,
+        `http://localhost:9000${updateUrl}`,
         formData,
         {
           headers: {
