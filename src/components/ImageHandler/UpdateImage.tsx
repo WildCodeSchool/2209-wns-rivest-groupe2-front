@@ -9,6 +9,8 @@ interface IPropsUpdate {
   updateBackendUrlImg: (imgUrl: string | null) => Promise<any>;
 }
 
+const image_url = process.env.REACT_APP_IMAGE_URL;
+
 const UpdateImage = ({
   type,
   imgUrl,
@@ -29,7 +31,7 @@ const UpdateImage = ({
   const [dataImg, setDataImg] = useState<string | null>(null);
 
   useEffect(() => {
-    setDataImg(`http://localhost:9000${imgUrl}`);
+    setDataImg(`${image_url}${imgUrl}`);
   }, []);
 
   const resetImage = () => {
@@ -42,7 +44,7 @@ const UpdateImage = ({
 
   const deleteImg = async () => {
     try {
-      await axios.delete(`http://localhost:9000${deleteUrl}`, {
+      await axios.delete(`${image_url}${deleteUrl}`, {
         headers: {
           Authorization: token,
         },
@@ -68,16 +70,12 @@ const UpdateImage = ({
       formData.append('file', selectedImage.image, selectedImage.image.name);
 
     try {
-      await axios.get(`http://localhost:9000${imgUrl}`);
-      const { data } = await axios.put(
-        `http://localhost:9000${updateUrl}`,
-        formData,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.get(`${image_url}${imgUrl}`);
+      const { data } = await axios.put(`${image_url}${updateUrl}`, formData, {
+        headers: {
+          Authorization: token,
+        },
+      });
       console.log(data);
       await updateBackendUrlImg(data.filename);
     } catch (err) {
