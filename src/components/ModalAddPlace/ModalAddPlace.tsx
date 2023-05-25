@@ -4,10 +4,10 @@ import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import axios from 'axios';
 import { map } from 'lodash';
+import ImageHandler from '../ImageHandler/ImageHandler';
 import type { IFormInput, IDataFromApi } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
-import { BsFillCameraFill } from 'react-icons/bs';
 import { CREATE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 
 const defaultDays = {
@@ -20,7 +20,13 @@ const defaultDays = {
   sunday: false,
 };
 
-const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
+type Props = {
+  setOpenModalAddPlace: any;
+  lastPoiId: number | null;
+};
+
+const ModalAddPlace = (props: Props) => {
+  const { setOpenModalAddPlace, lastPoiId } = props;
   const { user } = useContext(UserContext);
   const [openModalHours, setOpenModalHours] = useState(false);
   const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
@@ -64,6 +70,13 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
       }
     }
   }, [options.params.address]);
+
+  let pictureUrlArray: string[] = [];
+
+  const updateBackendUrlImg = async (filename: string | null) => {
+    if (filename) pictureUrlArray.push(filename);
+    return Promise.resolve();
+  };
 
   const [createPoi] = useMutation(CREATE_POI_MUTATION, {
     context: {
@@ -109,6 +122,7 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
               : formData.firstHoursClose && !formData.secondHoursClose
               ? [formData.firstHoursClose]
               : '',
+          pictureUrl: pictureUrlArray,
         },
       },
     });
@@ -123,11 +137,12 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
       className="mt-7 ml-4 border-2 rounded-md"
       style={{
         position: 'absolute',
-        top: '180px',
-        left: '25%',
+        top: '50%',
+        left: '50%',
         height: '65%',
-        width: '50%',
+        width: '30%',
         backgroundColor: 'white',
+        transform: 'translate(-50%, -50%)',
       }}
     >
       <div
@@ -349,13 +364,14 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                     *{errors.websiteURL.message}
                   </p>
                 )}
-                <button
-                  type="button"
-                  className="h-[50px] w-[200px] text-opalblue px-[15px] py-[4px] flex justify-center items-center mb-4 border-2 border-opalblue rounded-2xl"
-                >
-                  <BsFillCameraFill width={40} />
-                  <p className="pl-2">Ajouter une photo</p>
-                </button>
+                <div className="py-[4px]">
+                  <ImageHandler
+                    type="poi"
+                    /* imgUrl={coverUrl} */
+                    updateBackendUrlImg={updateBackendUrlImg}
+                    lastPoiId={lastPoiId}
+                  />
+                </div>
                 <div className="flex justify-end">
                   <button
                     type="button"
