@@ -2,6 +2,7 @@ import { Point } from 'leaflet';
 import { LatLngExpression } from 'leaflet';
 
 export interface IPOICard {
+  id: number;
   name: string;
   address: string;
   postal: string;
@@ -10,7 +11,6 @@ export interface IPOICard {
   description: string;
   type: string;
   rate?: number;
-  id: number;
   setOpenModalAddPlace?: any;
   openModalAddPlace?: boolean;
   websiteURL?: string;
@@ -91,3 +91,14 @@ export interface IPOIData {
   hoursOpen: string[];
   hoursClose: string[];
 }
+
+export interface IFavorite {
+  id: number;
+  user: {
+    id: number;
+  };
+  pointOfInterest: {
+    id: number;
+  };
+}
+
