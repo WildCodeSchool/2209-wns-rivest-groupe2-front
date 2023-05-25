@@ -14,6 +14,7 @@ import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
 import './styles/index.css';
 import { UserProvider } from 'src/contexts/userContext';
+import { FavoriteRateProvider } from './contexts/favoriteRateContext';
 
 // AUTHENTICATION APOLLO - HEADER
 // https://www.apollographql.com/docs/react/networking/authentication/
@@ -51,9 +52,11 @@ root.render(
       <ThemeProvider>
         <MaterialTailwindControllerProvider>
           <ApolloProvider client={client}>
+          <FavoriteRateProvider>
             <UserProvider>
               <App />
             </UserProvider>
+            </FavoriteRateProvider>
           </ApolloProvider>
         </MaterialTailwindControllerProvider>
       </ThemeProvider>

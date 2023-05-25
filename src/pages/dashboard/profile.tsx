@@ -1,8 +1,6 @@
 import {
   Card,
   CardBody,
-  CardHeader,
-  CardFooter,
   Avatar,
   Typography,
   Tooltip,
@@ -10,23 +8,24 @@ import {
 import { useQuery } from '@apollo/client';
 
 import { PencilIcon } from '@heroicons/react/24/solid';
-import { Link } from 'react-router-dom';
 import { ProfileInfoCard } from '../../widgets/cards/profile-info-card';
 import { UserContext } from 'src/contexts/userContext';
 import { useContext, useState, useEffect, useRef } from 'react';
-import { IPOIData } from 'src/types/POIType';
-import noImage from '../../asset/img/no-image-icon.png';
-import StarRating from 'src/components/StarRating';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import POIMap from 'src/components/POIMap';
+
+
+
 
 export function Profile() {
   const { user } = useContext(UserContext);
   const [isEditMode, setIsEditMode] = useState(false);
+  
   const POIData = useQuery(GET_POI_QUERY);
-
+  
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
-
+  
   useEffect(() => {
     const element = textRef.current;
     if (element?.clientHeight) {
@@ -37,6 +36,9 @@ export function Profile() {
       }
     }
   }, []);
+
+  
+  
 
   return (
     <>
@@ -67,33 +69,7 @@ export function Profile() {
             </div>
           </div>
           <div className="gird-cols-1 mb-12 grid gap-6 px-4 xl:grid-cols-3">
-            {/*      <div>
-              <Typography variant="h6" color="blue-gray" className="mb-3">
-                Platform Settings
-              </Typography>
-              <div className="flex flex-col gap-12">
-                {platformSettingsData.map(({ title, options }) => (
-                  <div key={title}>
-                    <Typography className="mb-4 block text-xs font-semibold uppercase text-blue-gray-500">
-                      {title}
-                    </Typography>
-                    <div className="flex flex-col gap-6">
-                      {options.map(({ checked, label }) => (
-                        <Switch
-                          key={label}
-                          id={label}
-                          label={label}
-                          defaultChecked={checked}
-                          labelProps={{
-                            className: 'text-sm font-normal text-blue-gray-500',
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div> */}
+            
             <ProfileInfoCard
               title="Profile Information"
               // description={user?.description ? user.description : 'Please enter a description'}
@@ -162,63 +138,14 @@ export function Profile() {
               <Typography variant="h6" color="blue-gray" className="mb-2">
                 Point of interests - Migth interest you
               </Typography>
-              {/*             <Typography
-              variant="small"
-              className="font-normal text-blue-gray-500"
-            >
-              Places recently visited
-            </Typography> */}
               <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {POIData.data?.getAllPoi
-                  .map((poi: IPOIData) => (
-                    <Card
-                      key={poi.id}
-                      color="transparent"
-                      shadow={false}
-                      className="min-h-full"
-                    >
-                      <li className="border-solid border rounded-xl mb-12 h-full">
-                        <Card className="h-full flex flex-col justify-between">
-                          {' '}
-                          <Link
-                            key={poi.id}
-                            to={`/point-of-interest/${poi.id}/${poi.name}`}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            <CardHeader className="flex items-center justify-center">
-                              <Typography className="text-center overflow-hidden">
-                                <div ref={textRef}>{poi.name}</div>
-                                {isTruncated && '...'}
-                              </Typography>
-                            </CardHeader>
-                            <CardBody className="p-3 flex flex-col justify-between">
-                              <img
-                                src={poi.pictureUrl ? poi.pictureUrl : noImage}
-                                alt={poi.name}
-                                className="w-[90%] m-auto bg-cover bg-center"
-                              />
-                            </CardBody>
-                          </Link>
-                          {user?.id && (
-                            <StarRating
-                              className="border-2 flex items-center justify-center"
-                              userId={user?.id}
-                              poiId={poi?.id}
-                            />
-                          )}
-                          <CardFooter
-                            divider
-                            className="flex items-center justify-between py-1"
-                          >
-                            <Typography className="text-center text-xs font-normal text-blue-gray-400 pt-[10px]">
-                              {poi.description.slice(0, 20)}...
-                            </Typography>
-                          </CardFooter>
-                        </Card>
-                      </li>
-                    </Card>
-                  ))
-                  .reverse()}
+              <POIMap userId={user?.id} />
+              </ul>
+              <Typography variant="h6" color="blue-gray" className="mb-2">
+                Vos lieux favoris
+              </Typography>
+              <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              <POIMap userId={user?.id} />
               </ul>
             </div>
           </div>

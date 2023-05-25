@@ -17,6 +17,13 @@ import { TOGGLE_FAVORITE_MUTATION } from 'src/services/mutations/favoriteMutatio
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { IFavorite } from 'src/types/IFavorite';
 
+interface POICardProps {
+  poi: IPOICard;
+  isFavorite: boolean;
+  favoriteId: number | null;
+  onToggleFavorite: (poiId: number, favoriteId: number | null) => void;
+}
+
 export function goodWrittenType(type: string) {
   switch (type) {
     case 'restaurant':
@@ -36,10 +43,10 @@ export function goodWrittenType(type: string) {
   }
 }
 
-export default function POICard(props: IPOICard) {
+const POICard = (props: POICardProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const { name, address, postal, city, pictureUrl, description, type, id } =
-    props;
+    props.poi;
   const { user } = useContext(UserContext);
 
   const { loading, error, data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
@@ -117,4 +124,6 @@ export default function POICard(props: IPOICard) {
       </Card>
     </>
   );
-}
+};
+
+export default POICard;

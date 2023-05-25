@@ -1,51 +1,49 @@
-import React, { useContext } from 'react';
-import { useEffect, useState } from 'react';
+import { useState, useContext } from 'react';
 import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
-// import Gallery from 'src/components/Gallery';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
-import noImage from '../asset/img/no-image-icon.png';
 import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
 import POIComment from 'src/components/Comment';
 import { UserContext } from 'src/contexts/userContext';
-
-export const GET_POI_QUERY = gql`
-  query GetAllPois {
-    getAllPoi {
-      id
-      name
-      address
-      postal
-      type
-      coordinates
-      creationDate
-      pictureUrl
-      websiteURL
-      description
-      priceRange
-      city
-      daysOpen
-      hoursOpen
-      hoursClose
-    }
-  }
-`;
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 
 const POIDetails = () => {
   const { loading, error, data } = useQuery(GET_POI_QUERY);
   const { id } = useParams();
-  const { user } = useContext(UserContext);
   const thisPOI = data?.getAllPoi?.find(
     (poi: { id: number }) => poi.id === Number(id)
   );
+  const [favorites, setFavorites] = useState(new Map<number, number>());
+  const { user } = useContext(UserContext);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
   if (!thisPOI) return <p>Pas de point d'interet</p>;
+
+  function handleAddFavorite(poiId: number, favoriteId: number) {
+    setFavorites((prevFavorites) =>
+      new Map(prevFavorites).set(poiId, favoriteId)
+    );
+  }
+
+  function handleRemoveFavorite(poiId: number) {
+    setFavorites((prevFavorites) => {
+      const newFavorites = new Map(prevFavorites);
+      newFavorites.delete(poiId);
+      return newFavorites;
+    });
+  }
+
+  function toggleFavorite(poiId: number, favoriteId: number | null) {
+    if (favoriteId === null) {
+      handleRemoveFavorite(poiId);
+    } else {
+      handleAddFavorite(poiId, favoriteId);
+    }
+  }
 
   return (
     <div className="bg-white mb-[100px]">
@@ -191,14 +189,11 @@ const POIDetails = () => {
                 >
                   <li className="h-[200px] w-[150px] border-solid border rounded-xl mb-12">
                     <POICard
-                      name={poi.name}
-                      address={poi.address}
-                      postal={poi.postal}
-                      city={poi.city}
-                      pictureUrl={poi.pictureUrl}
-                      description={poi.description}
-                      type={poi.type}
-                      id={poi.id}
+                      key={poi.id}
+                      poi={poi}
+                      isFavorite={favorites.has(poi.id)}
+                      favoriteId={favorites.get(poi.id) || null}
+                      onToggleFavorite={toggleFavorite}
                     />
                   </li>
                 </Link>
