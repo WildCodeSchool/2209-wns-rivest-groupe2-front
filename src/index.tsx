@@ -22,8 +22,7 @@ import { FavoriteRateProvider } from './contexts/favoriteRateContext';
 const api_url = process.env.REACT_APP_API_URL;
 
 const httpLink = createHttpLink({
-  uri:
-    process.env.NODE_ENV === 'production' ? '/graphql' : `${api_url}/graphql`,
+  uri: process.env.NODE_ENV === 'production' ? '/graphql' : api_url,
 });
 
 const authLink = setContext((_, { headers }) => {
