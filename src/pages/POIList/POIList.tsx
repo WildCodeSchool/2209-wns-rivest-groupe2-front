@@ -22,17 +22,13 @@ const POIList = () => {
   const [filteredPois, setFilteredPois] = useState<IPOIData[] | []>([]);
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [zoomPoi, setZoomPoi] = useState<IPOIData | void>();
-<<<<<<< HEAD
   const [favorites, setFavorites] = useState(new Map<number, number>());
-  
-=======
   const [barPois, setBarPois] = useState<IPOIData[] | []>([]);
   const [restaurantPois, setRestaurantPois] = useState<IPOIData[] | []>([]);
   const [fastFoodPois, setFastFoodPois] = useState<IPOIData[] | []>([]);
   const [cultePois, setCultePois] = useState<IPOIData[] | []>([]);
   const [hotelPois, setHotelPois] = useState<IPOIData[] | []>([]);
   const [museumPois, setMuseumPois] = useState<IPOIData[] | []>([]);
->>>>>>> 2d0fa18c6e5fc0a18af5e6c34efa9cd0e2256d42
 
   useEffect(() => {
     if (getPoiData?.getAllPoi) {
@@ -59,15 +55,15 @@ const POIList = () => {
     setFilteredCount(filteredPois.length);
   }, [filteredPois.length]);
 
-<<<<<<< HEAD
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>{error.message}</p>;
-
+  if (getPoiLoading) return <p>Chargement...</p>;
+  if (getPoiError) return <p>{getPoiError.message}</p>;
 
   function handleAddFavorite(poiId: number, favoriteId: number) {
-    setFavorites((prevFavorites) => new Map(prevFavorites).set(poiId, favoriteId));
+    setFavorites((prevFavorites) =>
+      new Map(prevFavorites).set(poiId, favoriteId)
+    );
   }
-  
+
   function handleRemoveFavorite(poiId: number) {
     setFavorites((prevFavorites) => {
       const newFavorites = new Map(prevFavorites);
@@ -75,7 +71,7 @@ const POIList = () => {
       return newFavorites;
     });
   }
-  
+
   function toggleFavorite(poiId: number, favoriteId: number | null) {
     if (favoriteId === null) {
       handleRemoveFavorite(poiId);
@@ -84,10 +80,6 @@ const POIList = () => {
     }
   }
 
-=======
-  if (getPoiLoading) return <p>Chargement...</p>;
-  if (getPoiError) return <p>{getPoiError.message}</p>;
->>>>>>> 2d0fa18c6e5fc0a18af5e6c34efa9cd0e2256d42
   return (
     <>
       <div className="mt-5 h-full w-full">
@@ -150,31 +142,6 @@ const POIList = () => {
                     id="poi-list-bar"
                     className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                   >
-<<<<<<< HEAD
-                    <POICard
-        key={poi.id}
-        poi={poi}
-        isFavorite={favorites.has(poi.id)}
-        favoriteId={favorites.get(poi.id) || null}
-        onToggleFavorite={toggleFavorite}
-        />
-                  </li>
-                ))}
-            </ul>
-          )}
-        </div>
-        <div></div>
-        <div
-          style={{
-            width: '50%',
-            height: '75vh',
-            position: 'fixed',
-            right: 0,
-            top: '180px',
-          }}
-        >
-          <MapModule poiData={filteredPois} zoomPoi={zoomPoi} />
-=======
                     {filteredPois &&
                       filteredPois.map((poi: IPOIData) => (
                         <li
@@ -184,20 +151,11 @@ const POIList = () => {
                           onClick={() => setZoomPoi(poi)}
                         >
                           <POICard
-                            name={poi.name}
-                            address={poi.address}
-                            postal={poi.postal}
-                            city={poi.city}
-                            pictureUrl={poi.pictureUrl}
-                            description={poi.description}
-                            type={poi.type}
-                            id={poi.id}
-                            websiteURL={poi.websiteURL}
-                            daysOpen={poi.daysOpen}
-                            hoursOpen={poi.hoursOpen}
-                            hoursClose={poi.hoursClose}
-                            setOpenModalAddPlace={setOpenModalAddPlace}
-                            openModalAddPlace={openModalAddPlace}
+                            key={poi.id}
+                            poi={poi}
+                            isFavorite={favorites.has(poi.id)}
+                            favoriteId={favorites.get(poi.id) || null}
+                            onToggleFavorite={toggleFavorite}
                           />
                         </li>
                       ))}
@@ -219,20 +177,11 @@ const POIList = () => {
                             onClick={() => setZoomPoi(poi)}
                           >
                             <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
+                              key={poi.id}
+                              poi={poi}
+                              isFavorite={favorites.has(poi.id)}
+                              favoriteId={favorites.get(poi.id) || null}
+                              onToggleFavorite={toggleFavorite}
                             />
                           </li>
                         ))}
@@ -255,20 +204,11 @@ const POIList = () => {
                             onClick={() => setZoomPoi(poi)}
                           >
                             <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
+                              key={poi.id}
+                              poi={poi}
+                              isFavorite={favorites.has(poi.id)}
+                              favoriteId={favorites.get(poi.id) || null}
+                              onToggleFavorite={toggleFavorite}
                             />
                           </li>
                         ))}
@@ -291,20 +231,11 @@ const POIList = () => {
                             onClick={() => setZoomPoi(poi)}
                           >
                             <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
+                              key={poi.id}
+                              poi={poi}
+                              isFavorite={favorites.has(poi.id)}
+                              favoriteId={favorites.get(poi.id) || null}
+                              onToggleFavorite={toggleFavorite}
                             />
                           </li>
                         ))}
@@ -329,20 +260,11 @@ const POIList = () => {
                             onClick={() => setZoomPoi(poi)}
                           >
                             <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
+                              key={poi.id}
+                              poi={poi}
+                              isFavorite={favorites.has(poi.id)}
+                              favoriteId={favorites.get(poi.id) || null}
+                              onToggleFavorite={toggleFavorite}
                             />
                           </li>
                         ))}
@@ -365,20 +287,11 @@ const POIList = () => {
                             onClick={() => setZoomPoi(poi)}
                           >
                             <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
+                              key={poi.id}
+                              poi={poi}
+                              isFavorite={favorites.has(poi.id)}
+                              favoriteId={favorites.get(poi.id) || null}
+                              onToggleFavorite={toggleFavorite}
                             />
                           </li>
                         ))}
@@ -401,20 +314,11 @@ const POIList = () => {
                             onClick={() => setZoomPoi(poi)}
                           >
                             <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
+                              key={poi.id}
+                              poi={poi}
+                              isFavorite={favorites.has(poi.id)}
+                              favoriteId={favorites.get(poi.id) || null}
+                              onToggleFavorite={toggleFavorite}
                             />
                           </li>
                         ))}
@@ -435,7 +339,6 @@ const POIList = () => {
           >
             <MapModule poiData={filteredPois} zoomPoi={zoomPoi} />
           </div>
->>>>>>> 2d0fa18c6e5fc0a18af5e6c34efa9cd0e2256d42
         </div>
       </div>
       {openModalAddPlace && (
