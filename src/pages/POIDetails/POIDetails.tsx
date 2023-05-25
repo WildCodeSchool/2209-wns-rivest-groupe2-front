@@ -10,6 +10,8 @@ import POICard from 'src/components/POICard';
 import { Link } from 'react-router-dom';
 import POIComment from 'src/components/Comment';
 import Gallery from 'src/components/Gallery';
+import registerBackground from 'src/asset/img/kelsey-curtis--27u_GzlAFw-unsplash.jpg';
+import { Typography } from '@material-tailwind/react';
 
 
 export const GET_POI_QUERY = gql`
@@ -51,12 +53,13 @@ const POIDetails = () => {
   ).slice(0, 6);
 
   const categoryBackgroundStyle = {
-    backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
+    // backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
+    backgroundImage: `url(${registerBackground})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    paddingTop: '10px',
-    paddingLeft: '10px',
-    paddingRight: '10px',
+    paddingTop: '5em',
+    paddingLeft: '10em',
+    paddingRight: '10em',
   };
 
   function getCategoryBackgroundImage(type: any) {
@@ -75,11 +78,24 @@ const POIDetails = () => {
   <div className="bg-white">
   {/* Category Background */}
   <div className="category-background" style={categoryBackgroundStyle}>
-        <div className="container mx-auto">
+            <Typography variant="h1" className="mb-8 center text-white capitalize text-center">
+              {thisPOI.type}
+            </Typography>
+    <div className="container mx-auto bg-white drop-shadow-2xl">
     {/* Navigation */}
     <nav aria-label="Breadcrumb">
-      <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-        <li>
+      <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">  
+      <li>
+          <div className="flex items-center">
+            <a href="/point-of-interest/list" className="mr-2 text-sm font-medium text-gray-900">
+            Paris
+            </a>
+            <svg width="16" height="20" viewBox="0 0 16 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="h-5 w-4 text-gray-300">
+              <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+            </svg>
+          </div>
+      </li>
+      <li>
           <div className="flex items-center">
             <a href="#" className="mr-2 text-sm font-medium text-gray-900">
             {thisPOI.type}
@@ -135,9 +151,9 @@ const POIDetails = () => {
                 </div>
               </div>
             </div>
-        </div>
+       
       {/* <!-- POI similaires -->  */}
-        <div className="mt-4 lg:row-span-3 lg:mt-10">
+        <div className="mt-4 mb-8 lg:row-span-3 lg:mt-10">
           <h2 className="col-span-1 lg:col-span-3 px-10">Autres lieux similaires</h2>
           <div className="flex flex-row items-stretch">
           {similarPOIs && (
@@ -169,6 +185,7 @@ const POIDetails = () => {
             )}
           </div>
         </div>
+      </div>
     </div>
     </div>
   );
