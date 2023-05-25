@@ -11,11 +11,8 @@ import StarRating from 'src/components/StarRating';
 import { UserContext } from 'src/contexts/userContext';
 import { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
-import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
-import { TOGGLE_FAVORITE_MUTATION } from 'src/services/mutations/favoriteMutations';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import { IFavorite } from 'src/types/IFavorite';
+import { AverageRatingStar } from './AverageRatingStar';
+import { FavoriteButton } from './FavoriteButton';
 
 interface POICardProps {
   poi: IPOICard;
@@ -44,59 +41,48 @@ export function goodWrittenType(type: string) {
 }
 
 const POICard = (props: POICardProps) => {
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const { name, address, postal, city, pictureUrl, description, type, id } =
-    props.poi;
+  const {
+    name,
+    address,
+    postal,
+    city,
+    pictureUrl,
+    description,
+    type,
+    id,
+    averageRate,
+  } = props.poi;
   const { user } = useContext(UserContext);
-
-  const { loading, error, data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
-    variables: { userId: user?.id },
-  });
-
-  useEffect(() => {
-    if (data) {
-      const userFavorites = data.getUserFavorites.map(
-        (favorite: IFavorite) => favorite.pointOfInterest.id
-      );
-      setIsFavorite(userFavorites.includes(id));
-    }
-  }, [data]);
-
-  const [toggleFavoriteMutation] = useMutation(TOGGLE_FAVORITE_MUTATION, {
-    variables: { userId: user?.id, poiId: id },
-    onCompleted: () => {
-      setIsFavorite((prevIsFavorite) => !prevIsFavorite);
-    },
-  });
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
 
   return (
     <>
-      <Card className="h-full flex flex-col justify-between">
+      <Card className="h-full flex flex-col justify-center items-center">
         <CardHeader>
           <div className="flex justify-between items-center">
             <Typography variant="h5" className="text-center">
               {name}
             </Typography>
-            <button onClick={() => toggleFavoriteMutation()}>
-              {isFavorite ? <FaHeart color="red" /> : <FaRegHeart />}
-            </button>
           </div>
         </CardHeader>
-        <CardBody className="p-3 flex flex-col justify-between">
-          <Typography className="text-center text-xl font-normal -pt-3">
-            {goodWrittenType(type)}
-          </Typography>
-          <img
-            src={pictureUrl ? pictureUrl : noImage}
-            alt={name}
-            className="h-[100px] w-[90%] m-auto bg-cover bg-center"
-          />
+        <CardBody className="p-0 flex flex-col justify-center items-center relative">
+          <div className="relative w-full">
+            <img
+              src={pictureUrl ? pictureUrl : noImage}
+              alt={name}
+              className="h-[100px] w-[90%] m-auto bg-cover bg-center"
+            />
+            {user && (
+              <FavoriteButton
+                userId={user?.id}
+                poiId={id}
+                className="absolute top-0 right-0"
+              />
+            )}
+          </div>
           <Typography className="text-center text-xs font-normal text-blue-gray-400 pt-[10px]">
             {description.slice(0, 60)}...
           </Typography>
+          <AverageRatingStar averageRate={averageRate} />
           {user?.id && (
             <StarRating
               className="border-2 flex items-center justify-center cursor-default"
