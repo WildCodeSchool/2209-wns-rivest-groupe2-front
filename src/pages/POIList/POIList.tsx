@@ -22,7 +22,6 @@ const POIList = () => {
   const [filteredPois, setFilteredPois] = useState<IPOIData[] | []>([]);
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [zoomPoi, setZoomPoi] = useState<IPOIData | void>();
-  const [favorites, setFavorites] = useState(new Map<number, number>());
   const [barPois, setBarPois] = useState<IPOIData[] | []>([]);
   const [restaurantPois, setRestaurantPois] = useState<IPOIData[] | []>([]);
   const [fastFoodPois, setFastFoodPois] = useState<IPOIData[] | []>([]);
@@ -61,28 +60,6 @@ const POIList = () => {
 
   if (getPoiLoading) return <p>Chargement...</p>;
   if (getPoiError) return <p>{getPoiError.message}</p>;
-
-  function handleAddFavorite(poiId: number, favoriteId: number) {
-    setFavorites((prevFavorites) =>
-      new Map(prevFavorites).set(poiId, favoriteId)
-    );
-  }
-
-  function handleRemoveFavorite(poiId: number) {
-    setFavorites((prevFavorites) => {
-      const newFavorites = new Map(prevFavorites);
-      newFavorites.delete(poiId);
-      return newFavorites;
-    });
-  }
-
-  function toggleFavorite(poiId: number, favoriteId: number | null) {
-    if (favoriteId === null) {
-      handleRemoveFavorite(poiId);
-    } else {
-      handleAddFavorite(poiId, favoriteId);
-    }
-  }
 
   return (
     <>
@@ -154,13 +131,7 @@ const POIList = () => {
                           value={poi.id}
                           onClick={() => setZoomPoi(poi)}
                         >
-                          <POICard
-                            key={poi.id}
-                            poi={poi}
-                            isFavorite={favorites.has(poi.id)}
-                            favoriteId={favorites.get(poi.id) || null}
-                            onToggleFavorite={toggleFavorite}
-                          />
+                          <POICard key={poi.id} poi={poi} />
                         </li>
                       ))}
                   </ul>
@@ -180,13 +151,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              key={poi.id}
-                              poi={poi}
-                              isFavorite={favorites.has(poi.id)}
-                              favoriteId={favorites.get(poi.id) || null}
-                              onToggleFavorite={toggleFavorite}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -207,13 +172,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              key={poi.id}
-                              poi={poi}
-                              isFavorite={favorites.has(poi.id)}
-                              favoriteId={favorites.get(poi.id) || null}
-                              onToggleFavorite={toggleFavorite}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -234,13 +193,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              key={poi.id}
-                              poi={poi}
-                              isFavorite={favorites.has(poi.id)}
-                              favoriteId={favorites.get(poi.id) || null}
-                              onToggleFavorite={toggleFavorite}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -263,13 +216,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              key={poi.id}
-                              poi={poi}
-                              isFavorite={favorites.has(poi.id)}
-                              favoriteId={favorites.get(poi.id) || null}
-                              onToggleFavorite={toggleFavorite}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -290,13 +237,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              key={poi.id}
-                              poi={poi}
-                              isFavorite={favorites.has(poi.id)}
-                              favoriteId={favorites.get(poi.id) || null}
-                              onToggleFavorite={toggleFavorite}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -317,13 +258,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              key={poi.id}
-                              poi={poi}
-                              isFavorite={favorites.has(poi.id)}
-                              favoriteId={favorites.get(poi.id) || null}
-                              onToggleFavorite={toggleFavorite}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
