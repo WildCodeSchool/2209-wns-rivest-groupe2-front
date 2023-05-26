@@ -66,7 +66,7 @@ const POICard = (props: POICardProps) => {
         <CardBody className="p-0 flex flex-col justify-center items-center relative">
           <div className="relative w-full">
             <img
-              src={pictureUrl ? pictureUrl : noImage}
+              src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
               alt={name}
               className="h-[100px] w-[90%] m-auto bg-cover bg-center"
             />
