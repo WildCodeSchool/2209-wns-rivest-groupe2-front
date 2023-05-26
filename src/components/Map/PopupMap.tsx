@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import styles from '../../styles/popUpMap.module.css';
 import noImage from '../../asset/img/no-image-icon.png';
 
+const image_url = process.env.REACT_APP_IMAGE_URL;
+
 function PopUpMap({
   name,
   address,
@@ -17,7 +19,7 @@ function PopUpMap({
     <div className={styles.popupContainer}>
       <img
         className={styles.poiImage}
-        src={pictureUrl ? pictureUrl : noImage}
+        src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
         alt={`${name} picture`}
       />
       <p className={styles.poiName}>{name}</p>
