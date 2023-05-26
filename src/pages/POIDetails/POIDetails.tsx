@@ -15,35 +15,13 @@ const POIDetails = () => {
   const thisPOI = data?.getAllPoi?.find(
     (poi: { id: number }) => poi.id === Number(id)
   );
-  const [favorites, setFavorites] = useState(new Map<number, number>());
+
   const { user } = useContext(UserContext);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
   if (!thisPOI) return <p>Pas de point d'interet</p>;
-
-  function handleAddFavorite(poiId: number, favoriteId: number) {
-    setFavorites((prevFavorites) =>
-      new Map(prevFavorites).set(poiId, favoriteId)
-    );
-  }
-
-  function handleRemoveFavorite(poiId: number) {
-    setFavorites((prevFavorites) => {
-      const newFavorites = new Map(prevFavorites);
-      newFavorites.delete(poiId);
-      return newFavorites;
-    });
-  }
-
-  function toggleFavorite(poiId: number, favoriteId: number | null) {
-    if (favoriteId === null) {
-      handleRemoveFavorite(poiId);
-    } else {
-      handleAddFavorite(poiId, favoriteId);
-    }
-  }
 
   return (
     <div className="bg-white mb-[100px]">
@@ -188,13 +166,7 @@ const POIDetails = () => {
                   style={{ cursor: 'pointer' }}
                 >
                   <li className="h-[200px] w-[150px] border-solid border rounded-xl mb-12">
-                    <POICard
-                      key={poi.id}
-                      poi={poi}
-                      isFavorite={favorites.has(poi.id)}
-                      favoriteId={favorites.get(poi.id) || null}
-                      onToggleFavorite={toggleFavorite}
-                    />
+                    <POICard key={poi.id} poi={poi} />
                   </li>
                 </Link>
               ))}

@@ -16,9 +16,6 @@ import { FavoriteButton } from './FavoriteButton';
 
 interface POICardProps {
   poi: IPOICard;
-  isFavorite: boolean;
-  favoriteId: number | null;
-  onToggleFavorite: (poiId: number, favoriteId: number | null) => void;
 }
 
 export function goodWrittenType(type: string) {
