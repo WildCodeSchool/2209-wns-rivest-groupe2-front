@@ -1,10 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/contexts/userContext';
-import {
-  COMMENT_POI_MUTATION,
-  UPDATE_COMMENT_POI_MUTATION,
-} from 'src/services/mutations/commentMutations';
+import { COMMENT_POI_MUTATION } from 'src/services/mutations/commentMutations';
 import { GET_USER_COMMENT_POI_QUERY } from 'src/services/queries/commentQueries';
 import { HiPencilSquare } from 'react-icons/hi2';
 import StarRating from './StarRating';
@@ -61,7 +58,7 @@ const POIComment: React.FC<POIDetailsProps> = ({
     },
   });
 
-  const [updatePOIComment] = useMutation(UPDATE_COMMENT_POI_MUTATION, {
+  const [updatePOIComment] = useMutation(COMMENT_POI_MUTATION, {
     variables: {
       poiId,
       userId,
