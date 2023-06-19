@@ -35,7 +35,6 @@ const POIMap = ({ userId }: { userId?: number }) => {
         }
       );
       setFavorites(initialFavorites);
-      console.log('Initial favorites:', initialFavorites);
     }
   }, [userFavoritesData, userId]);
 

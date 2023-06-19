@@ -6,7 +6,9 @@ interface IPropsUpdate {
   imgUrl: string;
   updateUrl: string;
   deleteUrl: string;
-  updateBackendUrlImg: (imgUrl: string | null) => Promise<any>;
+  updateBackendUrlImg: (
+    data: Array<{ status: string; filename: string }>
+  ) => Promise<any>;
 }
 
 const image_url = process.env.REACT_APP_IMAGE_URL;
@@ -49,7 +51,7 @@ const UpdateImage = ({
           Authorization: token,
         },
       });
-      await updateBackendUrlImg(null);
+      await updateBackendUrlImg([{ status: '', filename: '' }]);
     } catch (err) {
       console.error(err);
     }

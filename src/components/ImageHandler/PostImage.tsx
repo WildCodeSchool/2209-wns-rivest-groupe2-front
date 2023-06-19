@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import DragAndDrop from './DragAndDrop';
+import { ImagesProps } from 'src/types/POIType';
 
 const image_url = process.env.REACT_APP_IMAGE_URL;
 
@@ -11,38 +12,44 @@ const PostImage = ({
 }: {
   type: 'avatar' | 'poi';
   postUrl: string;
-  updateBackendUrlImg: (imgUrl: string | null) => Promise<any>;
+  updateBackendUrlImg: (
+    data: Array<{ status: string; filename: string }>
+  ) => Promise<any>;
 }) => {
-  const [selectedImage, setSelectedImage] = useState<{
-    image: Blob | null;
-    imageUrl: string;
-    preview: string | null;
-  }>({
-    image: null,
-    imageUrl: '',
-    preview: null,
-  });
-
-  const resetImage = () => {
-    setSelectedImage({
-      image: null,
-      imageUrl: '',
-      preview: null,
-    });
+  const [selectedImage, setSelectedImage] = useState<Array<ImagesProps>>([]);
+  const [imagesCount, setImagesCount] = useState<number>(0);
+  const resetImage = (id: number) => {
+    const newImageArray = selectedImage.filter((image) => image.id !== id);
+    setSelectedImage(newImageArray);
   };
 
   const handleImageChange = (event: any) => {
-    setSelectedImage({
-      ...selectedImage,
-      image: event.target.files[0],
-      preview: URL.createObjectURL(event.target.files[0]),
-    });
+    const filesAmount = event.target.files.length;
+    for (let i = 0; i < filesAmount; i++) {
+      const image = {
+        image: event.target.files[i],
+        preview: URL.createObjectURL(event.target.files[i]),
+        id: selectedImage.length + i + 1,
+        imageUrl: null,
+      };
+      setSelectedImage((selectedImage) => [...selectedImage, image]);
+    }
   };
+
+  console.log(selectedImage);
 
   const handleImageUpload = async () => {
     const formData = new FormData();
-    if (selectedImage.image)
-      formData.append('file', selectedImage.image, selectedImage.image.name);
+
+    if (selectedImage.length > 0) {
+      for (let i = 0; i < selectedImage.length; i++) {
+        formData.append(
+          'file',
+          selectedImage[i].image,
+          selectedImage[i].image.name
+        );
+      }
+    }
 
     const token = localStorage.getItem('token');
     try {
@@ -52,8 +59,13 @@ const PostImage = ({
         },
       });
       console.log(data);
-      await updateBackendUrlImg(data.filename);
-      setSelectedImage({ ...selectedImage, imageUrl: data.filename });
+      await updateBackendUrlImg(data);
+      setSelectedImage(
+        selectedImage.map((item, i) => ({
+          ...item,
+          imageUrl: data[i].filename,
+        }))
+      );
     } catch (err) {
       console.error(err);
     }
@@ -64,7 +76,7 @@ const PostImage = ({
       <DragAndDrop
         handleImageUpload={handleImageUpload}
         handleImageChange={handleImageChange}
-        image={selectedImage}
+        images={selectedImage}
         reset={resetImage}
         type={type}
       />
