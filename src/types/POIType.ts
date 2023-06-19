@@ -10,6 +10,7 @@ export interface IPOICard {
   pictureUrl: string;
   description: string;
   type: string;
+  averageRate?: number;
   rate?: number;
   setOpenModalAddPlace?: any;
   openModalAddPlace?: boolean;

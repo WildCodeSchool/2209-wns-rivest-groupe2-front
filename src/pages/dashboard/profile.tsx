@@ -14,18 +14,15 @@ import { useContext, useState, useEffect, useRef } from 'react';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import POIMap from 'src/components/POIMap';
 
-
-
-
 export function Profile() {
   const { user } = useContext(UserContext);
   const [isEditMode, setIsEditMode] = useState(false);
-  
+
   const POIData = useQuery(GET_POI_QUERY);
-  
+
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
-  
+
   useEffect(() => {
     const element = textRef.current;
     if (element?.clientHeight) {
@@ -36,9 +33,6 @@ export function Profile() {
       }
     }
   }, []);
-
-  
-  
 
   return (
     <>
@@ -69,7 +63,6 @@ export function Profile() {
             </div>
           </div>
           <div className="gird-cols-1 mb-12 grid gap-6 px-4 xl:grid-cols-3">
-            
             <ProfileInfoCard
               title="Profile Information"
               // description={user?.description ? user.description : 'Please enter a description'}
@@ -139,13 +132,13 @@ export function Profile() {
                 Point of interests - Migth interest you
               </Typography>
               <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              <POIMap userId={user?.id} />
+                <POIMap />
               </ul>
               <Typography variant="h6" color="blue-gray" className="mb-2">
                 Vos lieux favoris
               </Typography>
               <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              <POIMap userId={user?.id} />
+                <POIMap />
               </ul>
             </div>
           </div>
