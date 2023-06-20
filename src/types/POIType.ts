@@ -54,27 +54,6 @@ export type IFormInput = {
   secondHoursClose: string;
 };
 
-export type IDataFromApi = {
-  latitude: number;
-  longitude: number;
-  type: string;
-  name: string;
-  number: string;
-  postal_code: string;
-  street: string;
-  confidence: number;
-  region: string;
-  region_code: string;
-  county: null;
-  locality: string;
-  administrative_area: string;
-  neighbourhood: string;
-  country: string;
-  country_code: string;
-  continent: string;
-  label: string;
-};
-
 export interface IPOIData {
   id: number;
   name: string;
@@ -103,3 +82,9 @@ export interface IFavorite {
   };
 }
 
+export type ImagesProps = {
+  image: Blob;
+  imageUrl: string | null;
+  preview: string;
+  id: number;
+};
