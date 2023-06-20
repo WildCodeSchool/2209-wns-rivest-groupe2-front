@@ -50,12 +50,9 @@ const POIList = () => {
     }
   }, [getPoiData, category]);
 
-  useEffect(() => {
-    setFilteredCount(filteredPois.length);
-  }, [filteredPois.length]);
-
   if (getPoiLoading) return <p>Chargement...</p>;
   if (getPoiError) return <p>{getPoiError.message}</p>;
+
   return (
     <>
       <div className="mt-5 h-full w-full">
@@ -126,22 +123,7 @@ const POIList = () => {
                           value={poi.id}
                           onClick={() => setZoomPoi(poi)}
                         >
-                          <POICard
-                            name={poi.name}
-                            address={poi.address}
-                            postal={poi.postal}
-                            city={poi.city}
-                            pictureUrl={poi.pictureUrl}
-                            description={poi.description}
-                            type={poi.type}
-                            id={poi.id}
-                            websiteURL={poi.websiteURL}
-                            daysOpen={poi.daysOpen}
-                            hoursOpen={poi.hoursOpen}
-                            hoursClose={poi.hoursClose}
-                            setOpenModalAddPlace={setOpenModalAddPlace}
-                            openModalAddPlace={openModalAddPlace}
-                          />
+                          <POICard key={poi.id} poi={poi} />
                         </li>
                       ))}
                   </ul>
@@ -161,22 +143,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -197,22 +164,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -233,22 +185,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -271,22 +208,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -307,22 +229,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>
@@ -343,22 +250,7 @@ const POIList = () => {
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
                           >
-                            <POICard
-                              name={poi.name}
-                              address={poi.address}
-                              postal={poi.postal}
-                              city={poi.city}
-                              pictureUrl={poi.pictureUrl}
-                              description={poi.description}
-                              type={poi.type}
-                              id={poi.id}
-                              websiteURL={poi.websiteURL}
-                              daysOpen={poi.daysOpen}
-                              hoursOpen={poi.hoursOpen}
-                              hoursClose={poi.hoursClose}
-                              setOpenModalAddPlace={setOpenModalAddPlace}
-                              openModalAddPlace={openModalAddPlace}
-                            />
+                            <POICard key={poi.id} poi={poi} />
                           </li>
                         ))}
                     </ul>

@@ -1,13 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import ModalHours from './ModalHours';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import axios from 'axios';
 import { map } from 'lodash';
-import type { IFormInput, IDataFromApi } from 'src/types/POIType';
+import ImageHandler from '../ImageHandler/ImageHandler';
+import type { IFormInput } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
-import { BsFillCameraFill } from 'react-icons/bs';
 import { CREATE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 
 const defaultDays = {
@@ -20,10 +20,14 @@ const defaultDays = {
   sunday: false,
 };
 
-const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
+type Props = {
+  setOpenModalAddPlace: any;
+};
+
+const ModalAddPlace = (props: Props) => {
+  const { setOpenModalAddPlace } = props;
   const { user } = useContext(UserContext);
   const [openModalHours, setOpenModalHours] = useState(false);
-  const [dataFromApi, setDataFromApi] = useState<IDataFromApi>();
   const [selectedDays, setSelectedDays] = useState(defaultDays);
   const methods = useForm<IFormInput>();
   const {
@@ -34,36 +38,17 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
     formState: { errors },
   } = methods;
 
-  const options = {
-    method: 'GET',
-    url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
-    params: {
-      address:
-        getValues('address') && getValues('postal') && getValues('city')
-          ? getValues('address') +
-            ' ' +
-            getValues('postal') +
-            ' ' +
-            getValues('city')
-          : '',
-    },
-    headers: {
-      'X-RapidAPI-Key': process.env.REACT_APP_GEOCODING_ACCESS_KEY,
-      'X-RapidAPI-Host': process.env.REACT_APP_GEOCODING_ACCESS_HOST,
-    },
-  };
+  let pictureUrlArray: string[] = [];
 
-  useEffect(() => {
-    if (options.params.address && options.params.address.length > 0) {
-      try {
-        axios.request(options).then((response) => {
-          setDataFromApi(response.data.Results[0]);
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }, [options.params.address]);
+  const updateBackendUrlImg = async (
+    data: Array<{ status: string; filename: string } | null>
+  ) => {
+    data.forEach((element) => {
+      if (element?.filename) pictureUrlArray.push(element.filename);
+    });
+
+    return Promise.resolve();
+  };
 
   const [createPoi] = useMutation(CREATE_POI_MUTATION, {
     context: {
@@ -74,48 +59,79 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
     refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = (formData) => {
-    const coordinatesGPS = dataFromApi && [
-      dataFromApi.latitude,
-      dataFromApi.longitude,
-    ];
-
-    const daysOpenToSend = map(selectedDays, (value, key) => {
-      if (value) return key;
-      return;
-    }).filter((value) => value !== undefined);
-
-    createPoi({
-      variables: {
-        data: {
-          name: formData.name,
-          address: formData.address,
-          postal: formData.postal,
-          type: formData.type,
-          coordinates: coordinatesGPS,
-          websiteURL: formData.websiteURL,
-          description: formData.description,
-          city: formData.city,
-          daysOpen: daysOpenToSend,
-          hoursOpen:
-            formData.firstHoursOpen && formData.secondHoursOpen
-              ? [formData.firstHoursOpen, formData.secondHoursOpen]
-              : formData.firstHoursOpen && !formData.secondHoursOpen
-              ? [formData.firstHoursOpen]
-              : '',
-          hoursClose:
-            formData.firstHoursClose && formData.secondHoursClose
-              ? [formData.firstHoursClose, formData.secondHoursClose]
-              : formData.firstHoursClose && !formData.secondHoursClose
-              ? [formData.firstHoursClose]
-              : '',
-        },
+  const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
+    const options = {
+      method: 'GET',
+      url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
+      params: {
+        address:
+          getValues('address') && getValues('postal') && getValues('city')
+            ? getValues('address') +
+              ' ' +
+              getValues('postal') +
+              ' ' +
+              getValues('city')
+            : '',
       },
-    });
+      headers: {
+        'X-RapidAPI-Key': process.env.REACT_APP_GEOCODING_ACCESS_KEY,
+        'X-RapidAPI-Host': process.env.REACT_APP_GEOCODING_ACCESS_HOST,
+      },
+    };
+    try {
+      await axios
+        .request(options)
+        .then((response) => {
+          const dataFromApi = response.data.Results[0];
 
-    alert("Point d'intérêt créé avec succès");
-    reset();
-    setOpenModalAddPlace(false);
+          const coordinatesGPS = dataFromApi && [
+            dataFromApi.latitude,
+            dataFromApi.longitude,
+          ];
+
+          const daysOpenToSend = map(selectedDays, (value, key) => {
+            if (value) return key;
+            return;
+          }).filter((value) => value !== undefined);
+
+          createPoi({
+            variables: {
+              data: {
+                name: formData.name,
+                address: formData.address,
+                postal: formData.postal,
+                type: formData.type,
+                coordinates: coordinatesGPS,
+                websiteURL: formData.websiteURL,
+                description: formData.description,
+                city: formData.city,
+                daysOpen: daysOpenToSend,
+                hoursOpen:
+                  formData.firstHoursOpen && formData.secondHoursOpen
+                    ? [formData.firstHoursOpen, formData.secondHoursOpen]
+                    : formData.firstHoursOpen && !formData.secondHoursOpen
+                    ? [formData.firstHoursOpen]
+                    : '',
+                hoursClose:
+                  formData.firstHoursClose && formData.secondHoursClose
+                    ? [formData.firstHoursClose, formData.secondHoursClose]
+                    : formData.firstHoursClose && !formData.secondHoursClose
+                    ? [formData.firstHoursClose]
+                    : '',
+                pictureUrl: pictureUrlArray,
+              },
+            },
+          });
+        })
+        .then(() => {
+          alert("Point d'intérêt créé avec succès");
+          reset();
+          setOpenModalAddPlace(false);
+        });
+    } catch (error: any) {
+      console.log(error);
+      alert(`Erreur lors de la création du point d'intérêt: ${error.message}`);
+    }
   };
 
   return (
@@ -123,11 +139,12 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
       className="mt-7 ml-4 border-2 rounded-md"
       style={{
         position: 'absolute',
-        top: '180px',
-        left: '25%',
+        top: '50%',
+        left: '50%',
         height: '65%',
-        width: '50%',
+        width: '40%',
         backgroundColor: 'white',
+        transform: 'translate(-50%, -50%)',
       }}
     >
       <div
@@ -349,13 +366,13 @@ const ModalAddPlace = ({ setOpenModalAddPlace }: any) => {
                     *{errors.websiteURL.message}
                   </p>
                 )}
-                <button
-                  type="button"
-                  className="h-[50px] w-[200px] text-opalblue px-[15px] py-[4px] flex justify-center items-center mb-4 border-2 border-opalblue rounded-2xl"
-                >
-                  <BsFillCameraFill width={40} />
-                  <p className="pl-2">Ajouter une photo</p>
-                </button>
+                <div className="py-[4px]">
+                  <ImageHandler
+                    type="poi"
+                    /* imgUrl={coverUrl} */
+                    updateBackendUrlImg={updateBackendUrlImg}
+                  />
+                </div>
                 <div className="flex justify-end">
                   <button
                     type="button"

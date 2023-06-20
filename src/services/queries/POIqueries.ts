@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_POI_QUERY = gql`
-  query GetAllPois {
+  query GetAllPoi {
     getAllPoi {
       id
       name
@@ -10,6 +10,7 @@ export const GET_POI_QUERY = gql`
       type
       coordinates
       creationDate
+      averageRate
       pictureUrl
       websiteURL
       description

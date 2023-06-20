@@ -9,12 +9,3 @@ mutation CommentPOI($comment: String!, $userId: Float!, $poiId: Float!) {
     }
   }
   `
-export const UPDATE_COMMENT_POI_MUTATION = gql`
-mutation UpdatePOIComment($comment: String!, $userId: Float!, $poiId: Float!) {
-    updatePOIComment(comment: $comment, userId: $userId, poiId: $poiId) {
-      id
-      createDate
-      text
-    }
-  }
-  `

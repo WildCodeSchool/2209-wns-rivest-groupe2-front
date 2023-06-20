@@ -2,6 +2,7 @@ import { Point } from 'leaflet';
 import { LatLngExpression } from 'leaflet';
 
 export interface IPOICard {
+  id: number;
   name: string;
   address: string;
   postal: string;
@@ -9,8 +10,8 @@ export interface IPOICard {
   pictureUrl: string;
   description: string;
   type: string;
+  averageRate?: number;
   rate?: number;
-  id: number;
   setOpenModalAddPlace?: any;
   openModalAddPlace?: boolean;
   websiteURL?: string;
@@ -53,27 +54,6 @@ export type IFormInput = {
   secondHoursClose: string;
 };
 
-export type IDataFromApi = {
-  latitude: number;
-  longitude: number;
-  type: string;
-  name: string;
-  number: string;
-  postal_code: string;
-  street: string;
-  confidence: number;
-  region: string;
-  region_code: string;
-  county: null;
-  locality: string;
-  administrative_area: string;
-  neighbourhood: string;
-  country: string;
-  country_code: string;
-  continent: string;
-  label: string;
-};
-
 export interface IPOIData {
   id: number;
   name: string;
@@ -91,3 +71,20 @@ export interface IPOIData {
   hoursOpen: string[];
   hoursClose: string[];
 }
+
+export interface IFavorite {
+  id: number;
+  user: {
+    id: number;
+  };
+  pointOfInterest: {
+    id: number;
+  };
+}
+
+export type ImagesProps = {
+  image: Blob;
+  imageUrl: string | null;
+  preview: string;
+  id: number;
+};
