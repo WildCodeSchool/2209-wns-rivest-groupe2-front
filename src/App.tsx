@@ -14,6 +14,8 @@ import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
 import RequireAuth from './components/RequireAuth';
 import Profile from './pages/dashboard/profile';
+import ConfirmUserPage from './pages/ConfirmPage';
+import EmailSentConfirmationPage from './pages/EmailSentConfirmationPage ';
 
 const App = () => {
   return (
@@ -23,6 +25,15 @@ const App = () => {
         <Route path="/" element={<BaseLayout />}>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route
+            path="/confirmation-email-sent"
+            element={<EmailSentConfirmationPage />}
+          />
+          <Route
+            path="/confirmation-email/:uuid"
+            element={<ConfirmUserPage />}
+          />
+
           <Route path="/payment" element={<Payment />} />
           <Route path="/point-of-interest/list" element={<POIList />} />
           <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />

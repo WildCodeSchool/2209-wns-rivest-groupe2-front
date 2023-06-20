@@ -11,8 +11,36 @@ import {
   setOpenConfigurator,
 } from '../contexts/index';
 
+const initialState = {
+  openSidenav: false,
+  sidenavColor: 'blue',
+  sidenavType: 'dark',
+  transparentNavbar: true,
+  fixedNavbar: false,
+  openConfigurator: false,
+};
+
+type ControllerType = {
+  openSidenav: boolean;
+  sidenavColor: string;
+  sidenavType: string;
+  transparentNavbar: boolean;
+  fixedNavbar: boolean;
+  openConfigurator: boolean;
+};
+
+type ActionType = {
+  type: string;
+  value: any;
+};
+
+type DispatchType = (action: ActionType) => void;
+
 export function Dashboard() {
-  const [controller, dispatch] = useMaterialTailwindController();
+  const [controller, dispatch] = useMaterialTailwindController() as [
+    ControllerType,
+    DispatchType
+  ];
   const { sidenavType } = controller;
 
   return (
@@ -36,14 +64,17 @@ export function Dashboard() {
           <Cog6ToothIcon className="h-5 w-5" />
         </IconButton>
         <Routes>
-          {routes.map(
-            ({ layout, pages }) =>
-              layout === 'dashboard' &&
-              pages.map(({ path, element }) => (
-                <Route path={path} element={element} />
-              ))
-          )}
+          {
+            routes.flatMap(({ layout, pages }) =>
+              layout === 'dashboard'
+                ? pages.map(({ path, element }) => (
+                    <Route key={path} path={path} element={element} />
+                  ))
+                : []
+            ) as React.ReactNode[]
+          }
         </Routes>
+
         <div className="text-blue-gray-600">
           <Footer />
         </div>

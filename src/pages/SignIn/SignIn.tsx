@@ -1,31 +1,14 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { gql, useLazyQuery } from '@apollo/client';
-import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/client';
+import { useState, useContext, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { UserContext } from '../../contexts/userContext';
 import { ISignIn } from 'src/types/ISignIn';
 import signin from '../../asset/img/bg-signin.jpg';
-
-// MUTATION APOLLO
-export const GET_TOKEN = gql`
-  query Query($password: String!, $email: String!) {
-    getToken(password: $password, email: $email) {
-      token
-      userFromDB {
-        id
-        email
-        username
-        firstname
-        lastname
-        profilePicture
-        type
-      }
-    } 
-  }
-`;
+import { GET_TOKEN } from 'src/services/queries/userQueries';
 
 // YUP SCHEMA
 const schema = yup
@@ -47,6 +30,9 @@ const schema = yup
 const SignIn = () => {
   // SHOW - HIDE PASSWORD
   const [passwordShown, setPasswordShown] = useState(false);
+  const [verificationError, setVerificationError] = useState(false);
+  const [authError, setAuthError] = useState('');
+
   const handleShowPassword = () => {
     setPasswordShown(!passwordShown);
   };
@@ -58,13 +44,18 @@ const SignIn = () => {
   // MUTATION - SUBMISSION
   const [login] = useLazyQuery(GET_TOKEN, {
     onCompleted(data) {
-      localStorage.setItem('token', data.getToken.token);
-      localStorage.setItem('user', JSON.stringify(data.getToken.userFromDB));
-      setUser(data.getToken.userFromDB);
-      navigate(-1)
+      if (data.getToken.userFromDB.isVerified === false) {
+        setVerificationError(true);
+      } else {
+        localStorage.setItem('token', data.getToken.token);
+        localStorage.setItem('user', JSON.stringify(data.getToken.userFromDB));
+        setUser(data.getToken.userFromDB);
+        navigate(-1);
+      }
     },
     onError(error: any) {
       console.log(error);
+      setAuthError('Identifiant incorrect');
     },
   });
 
@@ -86,7 +77,11 @@ const SignIn = () => {
     <>
       <div className="bg-gray-200 h-[90vh] w-screen relative overflow-hidden">
         <div className="text-black w-full h-full flex flex-col justify-center items-center bg-primary-dark">
-        <img src={signin} alt="icon site" className="absolute object-cover h-full w-full"/>
+          <img
+            src={signin}
+            alt="icon site"
+            className="absolute object-cover h-full w-full"
+          />
           <div className="row-span-2 col-span-1 relative w-3/4 md:w-2/3 lg:w-1/3 ">
             <div className="bg-deep-blue rounded-lg px-6 py-6 mx-auto z-10 flex flex-col items-center lg:w-4/5 lg:mb-8 lg:px-12 lg:py-12">
               <span className="box-sizing:border-box;display:inline-block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:relative;max-width:100%"></span>
@@ -108,6 +103,7 @@ const SignIn = () => {
                     id="email"
                     {...register('email')}
                     placeholder="Email"
+                    onChange={() => setAuthError('')}
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
                   {errors.email && (
@@ -122,6 +118,7 @@ const SignIn = () => {
                     id="password"
                     {...register('password')}
                     placeholder="Mot de passe"
+                    onChange={() => setAuthError('')}
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
                   <i
@@ -140,6 +137,14 @@ const SignIn = () => {
                     </span>
                   )}
                 </div>
+                {verificationError && (
+                  <div className="text-red-600 mb-4">
+                    Veuillez confirmer votre email
+                  </div>
+                )}
+                {authError && (
+                  <div className="text-red-600 mb-4">{authError}</div>
+                )}
                 <div className="flex flex-col mb-6">
                   <Link
                     to="#"
