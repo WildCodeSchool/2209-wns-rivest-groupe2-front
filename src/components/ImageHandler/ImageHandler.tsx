@@ -4,24 +4,22 @@ import UpdateImage from './UpdateImage';
 interface IPropsImageHandler {
   type: 'avatar' | 'poi';
   imgUrl?: string | null | undefined;
-  updateBackendUrlImg: (imgUrl: string | null) => Promise<any>;
-  lastPoiId: number | null;
+  updateBackendUrlImg: (
+    data: Array<{ status: string; filename: string }>
+  ) => Promise<any>;
 }
 
 const ImageHandler = ({
   type,
   imgUrl,
   updateBackendUrlImg,
-  lastPoiId,
 }: IPropsImageHandler) => {
   const dataFilename = imgUrl ? imgUrl.split('/').at(-1) : null;
-  const poiId = lastPoiId ? lastPoiId + 1 : null;
-  const url = urlAPI(type, dataFilename, poiId);
+  const url = urlAPI(type, dataFilename);
 
   function urlAPI(
     type: 'avatar' | 'poi',
-    filename: string | undefined | null,
-    poiId: number | null
+    filename: string | undefined | null
   ): {
     postUrl: string;
     updateUrl: string;
@@ -38,9 +36,9 @@ const ImageHandler = ({
         deleteUrl = `/delete/avatars/${filename}`;
         break;
       case 'poi':
-        postUrl = `/upload/pois/${poiId}`;
-        updateUrl = `/update/pois/${poiId}/${filename}`;
-        deleteUrl = `/delete/pois/${poiId}/${filename}`;
+        postUrl = `/upload/pois`;
+        updateUrl = `/update/pois/${filename}`;
+        deleteUrl = `/delete/pois/${filename}`;
         break;
     }
     return { postUrl, updateUrl, deleteUrl };

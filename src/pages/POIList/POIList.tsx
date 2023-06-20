@@ -28,7 +28,6 @@ const POIList = () => {
   const [cultePois, setCultePois] = useState<IPOIData[] | []>([]);
   const [hotelPois, setHotelPois] = useState<IPOIData[] | []>([]);
   const [museumPois, setMuseumPois] = useState<IPOIData[] | []>([]);
-  const [lastPoiId, setLastPoiId] = useState<number | null>(null);
 
   useEffect(() => {
     if (getPoiData?.getAllPoi) {
@@ -50,13 +49,6 @@ const POIList = () => {
       }
     }
   }, [getPoiData, category]);
-
-  useEffect(() => {
-    setFilteredCount(filteredPois.length);
-    if (filteredPois.length > 0) {
-      setLastPoiId(filteredPois[filteredPois.length - 1].id);
-    }
-  }, [filteredPois.length]);
 
   if (getPoiLoading) return <p>Chargement...</p>;
   if (getPoiError) return <p>{getPoiError.message}</p>;
@@ -281,10 +273,7 @@ const POIList = () => {
         </div>
       </div>
       {openModalAddPlace && (
-        <ModalAddPlace
-          setOpenModalAddPlace={setOpenModalAddPlace}
-          lastPoiId={lastPoiId}
-        />
+        <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} />
       )}
     </>
   );
