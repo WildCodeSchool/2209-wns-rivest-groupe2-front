@@ -3,15 +3,11 @@ import {
   UserCircleIcon,
   TableCellsIcon,
   BellIcon,
-  ArrowRightOnRectangleIcon,
-  UserPlusIcon,
 } from '@heroicons/react/24/solid';
 import { DashboardHome } from './pages/dashboard/home';
 import { Profile } from './pages/dashboard/profile';
 import { Tables } from './pages/dashboard/tables';
 import { Notifications } from './pages/dashboard/notifications';
-import { SignIn } from './pages/auth/sign-in';
-import { SignUp } from './pages/auth/sign-up';
 
 const icon = {
   className: 'w-5 h-5 text-inherit',
@@ -47,7 +43,6 @@ export const routes = [
       },
     ],
   },
-
 ];
 
 export default routes;

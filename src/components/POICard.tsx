@@ -9,7 +9,7 @@ import noImage from '../asset/img/no-image-icon.png';
 import { IPOICard } from 'src/types/POIType';
 import StarRating from 'src/components/StarRating';
 import { UserContext } from 'src/contexts/userContext';
-import { useContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AverageRatingStar } from './AverageRatingStar';
 import { FavoriteButton } from './FavoriteButton';
