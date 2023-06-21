@@ -1,18 +1,19 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import gql from 'graphql-tag';
 import POICard from 'src/components/POICard';
-import { Link } from 'react-router-dom';
 import POIComment from 'src/components/Comment';
-import Gallery from 'src/components/Gallery';
-import registerBackground from 'src/asset/img/kelsey-curtis--27u_GzlAFw-unsplash.jpg';
 import { Typography } from '@material-tailwind/react';
-
 import { UserContext } from 'src/contexts/userContext';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import bgBar from 'src/asset/img/bg-bar.jpg';
+import bgChurch from 'src/asset/img/bg-church.jpg';
+import bgFastfood from 'src/asset/img/bg-fastfood.jpg';
+import bgHotel from 'src/asset/img/bg-hotel.jpg';
+import bgMuseum from 'src/asset/img/bg-museum.jpg';
+import bgRestaurant from 'src/asset/img/bg-restaurant.jpg';
 
 const POIDetails = () => {
   const { loading, error, data } = useQuery(GET_POI_QUERY);
@@ -28,13 +29,12 @@ const POIDetails = () => {
 
   if (!thisPOI) return <p>Pas de point d'interet</p>;
 
-  const similarPOIs = data?.getAllPoi
+  const otherPOIs = data?.getAllPoi
     ?.filter((poi: { id: number }) => poi.id !== Number(id))
-    .slice(0, 6);
+    .slice(0, 4);
 
   const categoryBackgroundStyle = {
-    // backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
-    backgroundImage: `url(${registerBackground})`,
+    backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     paddingTop: '5em',
@@ -45,28 +45,34 @@ const POIDetails = () => {
   function getCategoryBackgroundImage(type: any) {
     // Define the background images for each category type
     switch (type) {
-      case 'hotel':
-        return 'hotel-background.jpg';
       case 'restaurant':
-        return 'restaurant-background.jpg';
+        return bgRestaurant;
+      case 'fast-food':
+        return bgFastfood;
+      case 'bar':
+        return bgBar;
+      case 'lieu de culte':
+        return bgChurch;
+      case 'hotel':
+        return bgHotel;
+      case 'musee':
+        return bgMuseum;
       default:
-        return 'bg-register.jpg';
+        return bgRestaurant;
     }
   }
 
   return (
     <div className="bg-white">
-      {/* Category Background */}
-      <div className="category-background" style={categoryBackgroundStyle}>
+      <div style={categoryBackgroundStyle}>
         <Typography
           variant="h1"
           className="mb-8 center text-white capitalize text-center"
         >
           {thisPOI.type}
         </Typography>
-        <div className="container mx-auto bg-white drop-shadow-2xl">
-          {/* Navigation */}
-          <nav aria-label="Breadcrumb">
+        <div className="mx-auto bg-white drop-shadow-2xl">
+          <nav aria-label="Breadcrumb" className="py-3">
             <ol
               role="list"
               className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
@@ -95,8 +101,8 @@ const POIDetails = () => {
               <li>
                 <div className="flex items-center">
                   <a
-                    href="#"
-                    className="mr-2 text-sm font-medium text-gray-900"
+                    href="/point-of-interest/list"
+                    className="mr-2 text-sm font-medium text-gray-900 capitalize"
                   >
                     {thisPOI.type}
                   </a>
@@ -115,19 +121,16 @@ const POIDetails = () => {
               </li>
               <li className="text-sm">
                 <a
-                  href="#"
+                  href=""
                   aria-current="page"
-                  className="font-medium text-gray-500 hover:text-gray-600"
+                  className="font-medium capitalize text-gray-500 hover:text-gray-600"
                 >
                   {thisPOI.name}
                 </a>
               </li>
             </ol>
           </nav>
-          {/* Image gallery */}
-          {/* <Gallery pictureUrls={thisPOI.pictureUrls}/>  */}
-          {/* POI Detail */}
-          <div className="product-detail-desc ">
+          <div>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
               <div className="col-span-1 lg:col-span-3 px-10">
                 <POIInfo
@@ -149,47 +152,25 @@ const POIDetails = () => {
                 />
               </div>
             </div>
-            <div className="mx-auto px-4 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24">
-              <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-                <h2>Information</h2>
-              </div>
-            </div>
-            {/* <!-- Options --> */}
-            <div className="mt-4 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Comments</h2>
-              {/* <!-- Comments --> */}
-              <div className="col-span-1 lg:col-span-3 px-10">
-                <POIComment poiId={1} userId={7} />
-              </div>
+
+            <div className="mt-4">
               {user && <POIComment poiId={thisPOI.id} userId={user.id} />}
             </div>
           </div>
 
-          {/* <!-- POI similaires -->  */}
           <div className="mt-4 mb-8 lg:row-span-3 lg:mt-10">
             <h2 className="col-span-1 lg:col-span-3 px-10">
-              Autres lieux similaires
+              Vous aimerez peut-être...
             </h2>
-            <div className="flex flex-row items-stretch">
-              {similarPOIs && (
-                <ul
-                  id="poi-similar"
-                  className="flex justify-around py-4 w-4/5 my-3.5"
-                >
-                  {similarPOIs.map((poi: IPOIData) => (
-                    <Link
-                      key={poi.id}
-                      to={`/point-of-interest/${poi.id}/${poi.name}`}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <li className="h-[200px] w-[150px] border-solid border rounded-xl mb-12">
-                        <POICard key={poi.id} poi={poi} />
-                      </li>
-                    </Link>
-                  ))}
-                </ul>
-              )}
-            </div>
+            {otherPOIs && (
+              <ul id="poi-similar" className="flex justify-around py-4 my-3.5">
+                {otherPOIs.map((poi: IPOIData) => (
+                  <li className="h-[350px] w-[250px] border-solid border rounded-xl mb-12">
+                    <POICard key={poi.id} poi={poi} />
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </div>

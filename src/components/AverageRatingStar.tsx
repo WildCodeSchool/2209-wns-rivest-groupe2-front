@@ -23,7 +23,7 @@ export const AverageRatingStar: React.FC<AverageRatingStarProps> = ({
     <div className="relative w-8 h-8">
       <AiFillStar
         size={32}
-        color="yellow"
+        color="gold"
         className="absolute"
         style={{ stroke: 'black', strokeWidth: '10px' }}
       />

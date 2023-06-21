@@ -43,7 +43,11 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
 
   return (
     <button onClick={() => toggleFavoriteMutation()} className={className}>
-      {isFavorite ? <FaHeart color="red" /> : <FaRegHeart />}
+      {isFavorite ? (
+        <FaHeart style={{ width: 20, height: 20 }} />
+      ) : (
+        <FaRegHeart style={{ width: 20, height: 20 }} />
+      )}
     </button>
   );
 };

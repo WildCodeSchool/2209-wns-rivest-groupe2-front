@@ -112,13 +112,13 @@ const POIList = () => {
               <>
                 {category !== '' ? (
                   <ul
-                    id="poi-list-bar"
+                    id="poi-list"
                     className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                   >
                     {filteredPois &&
                       filteredPois.map((poi: IPOIData) => (
                         <li
-                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          className="h-[350px] w-[250px] border-solid border rounded-xl"
                           key={poi.id}
                           value={poi.id}
                           onClick={() => setZoomPoi(poi)}
@@ -138,7 +138,7 @@ const POIList = () => {
                       {barPois &&
                         barPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[350px] w-[250px] border-solid border rounded-xl"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -153,13 +153,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Fast Food</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-fastfood"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {fastFoodPois &&
                         fastFoodPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[350px] w-[250px] border-solid border rounded-xl"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -174,13 +174,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Hôtels</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-hotel"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {hotelPois &&
                         hotelPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[350px] w-[250px] border-solid border rounded-xl"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -197,13 +197,13 @@ const POIList = () => {
                       Les Lieux de culte
                     </h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-culte"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {cultePois &&
                         cultePois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[350px] w-[250px] border-solid border rounded-xl"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -218,13 +218,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Musées</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-museum"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {museumPois &&
                         museumPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[350px] w-[250px] border-solid border rounded-xl"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -239,13 +239,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Restaurants</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-restaurant"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {restaurantPois &&
                         restaurantPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[350px] w-[250px] border-solid border rounded-xl"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}

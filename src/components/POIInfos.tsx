@@ -38,35 +38,20 @@ export default function POIInfos(props: IPOIData) {
             {name}
           </Typography>
         </div>
-        {/* Reviews */}
-        <div className="mt-6 text-center">
-          <a
-            href="#"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            117 likes
-          </a>
-        </div>
         <div>
           <Typography variant="h4" className="text-center">
-            {address}
+            {address} {postal} {city}
           </Typography>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Typography variant="h3" className="text-center mb-4">
-            {name}
-          </Typography>
-        </div>
-        <h3 className="sr-only">Reviews</h3>
         <div className="flex items-center">
           <div className="flex items-center">
             {/* <!-- Heroicon name: heart filled --> */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              fill="currentColor"
+              fill="red"
               className="w-6 h-6"
             >
               <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
@@ -77,7 +62,7 @@ export default function POIInfos(props: IPOIData) {
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={1.5}
-              stroke="currentColor"
+              stroke="red"
               className="w-6 h-6"
             >
               <path
@@ -87,32 +72,14 @@ export default function POIInfos(props: IPOIData) {
               />
             </svg>
           </div>
-          <a
+          {/* <a
             href="#"
             className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
           >
             117 likes
-          </a>
-        </div>
-        <div>
-          <img
-            src={pictureUrl ? pictureUrl : noImage}
-            alt={name}
-            className="w-full h-auto"
-          />
-        </div>
-        <div>
-          <img
-            src={pictureUrl ? pictureUrl : noImage}
-            alt={name}
-            className="w-full h-auto"
-          />
+          </a> */}
         </div>
       </div>
-      {/* Reviews */}
-      {/* <div className="mt-6 text-center">
-            <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">117 likes</a>
-        </div> */}
     </div>
   );
 }

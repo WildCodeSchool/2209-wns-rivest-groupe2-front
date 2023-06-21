@@ -79,11 +79,11 @@ const StarRating: React.FC<StarRatingProps> = ({
       }
     >
       {currentRating !== undefined ? (
-        <>
+        <div className="h-9 flex items-center">
           {Array.from({ length: currentRating }).map((_, i) => (
             <span
               key={i}
-              className="text-yellow-500 cursor-pointer"
+              className="text-yellow-500 cursor-pointer text-xl"
               onClick={() => handleRatingClick(i + 1)}
             >
               &#9733;
@@ -92,25 +92,25 @@ const StarRating: React.FC<StarRatingProps> = ({
           {Array.from({ length: 5 - currentRating }).map((_, i) => (
             <span
               key={i + currentRating}
-              className="text-gray-500 cursor-pointer"
+              className="text-gray-500 cursor-pointer text-xl"
               onClick={() => handleRatingClick(i + currentRating + 1)}
             >
               &#9733;
             </span>
           ))}
-        </>
+        </div>
       ) : (
-        <>
+        <div className="h-9 flex items-center">
           {Array.from({ length: 5 }).map((_, i) => (
             <span
               key={i}
-              className="text-gray-500 cursor-pointer"
+              className="text-gray-500 cursor-pointer text-xl"
               onClick={() => handleRatingClick(i + 1)}
             >
               &#9734;
             </span>
           ))}
-        </>
+        </div>
       )}
     </div>
   );
