@@ -126,11 +126,11 @@ const POIComment: React.FC<POIDetailsProps> = ({
   return (
     <div>
       <div className={className ? className : 'mt-4'}>
-        <h2 className="text-lg font-bold">Comments</h2>
+        <h2 className="text-lg font-bold">Commentaires</h2>
         {editingComment ? (
           <form onSubmit={handleCommentSubmit} className="mt-4">
             <label htmlFor="currentComment" className="block font-medium">
-              Update your comment
+              Modifiez votre commentaire
             </label>
             <textarea
               id="currentComment"
@@ -140,14 +140,14 @@ const POIComment: React.FC<POIDetailsProps> = ({
               onChange={handleCommentChange}
             />
             <button type="submit" className="bg-blue-500 text-white p-2 mt-2">
-              Save
+              Enregistrer
             </button>
             <button
               type="button"
               className="bg-gray-300 text-gray-700 p-2 ml-2 mt-2"
               onClick={() => setEditingComment(false)}
             >
-              Cancel
+              Annuler
             </button>
           </form>
         ) : isFirstCommentSent ? (
@@ -166,13 +166,13 @@ const POIComment: React.FC<POIDetailsProps> = ({
               className="bg-gray-300 text-gray-700 p-2 mt-2"
               onClick={handleEditClick}
             >
-              <HiPencilSquare size={16} className="inline-block mr-1" /> Edit
+              <HiPencilSquare size={16} className="inline-block mr-1" /> Editer
             </button>
           </div>
         ) : (
           <form onSubmit={handleCommentSubmit} className="mt-4">
             <label htmlFor="currentComment" className="block font-medium">
-              Add a comment
+              Ajouter un commentaire
             </label>
             <textarea
               id="currentComment"
@@ -182,7 +182,7 @@ const POIComment: React.FC<POIDetailsProps> = ({
               onChange={handleCommentChange}
             />
             <button type="submit" className="bg-blue-500 text-white p-2 mt-2">
-              Submit
+              Soumetre
             </button>
           </form>
         )}
