@@ -2,30 +2,12 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { UserContext } from '../../contexts/userContext';
 import { ISignUp } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
-
-// MUTATION APOLLO
-const CREATE_USER = gql`
-  mutation Mutation($email: String!, $password: String!) {
-    createUser(email: $email, password: $password) {
-      token
-      userFromDB {
-        id
-        email
-        username
-        firstname
-        lastname
-        profilePicture
-        type
-      }
-    }
-  }
-`;
+import { CREATE_USER } from 'src/services/mutations/userMutations';
 
 // YUP SCHEMA
 const schema = yup
@@ -58,17 +40,13 @@ const SignUp = () => {
     setPasswordConfirmShown(!passwordConfirmShown);
   };
 
-  // MUTATION - SUBMISSION
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
 
   const [signUp] = useMutation(CREATE_USER, {
-    // onCompleted(data: { createUser: string }) {
     onCompleted(data) {
       localStorage.setItem('token', data.createUser.token);
       localStorage.setItem('user', JSON.stringify(data.createUser.userFromDB));
-      setUser(data.createUser.userFromDB);
-      navigate('/point-of-interest/list');
+      navigate('/confirmation-email-sent');
     },
     onError(error: any) {
       console.log(error);
@@ -94,12 +72,6 @@ const SignUp = () => {
       },
     });
   };
-
-  // const onSubmit: SubmitHandler<ISignUp> = async (data: any) => {
-  //   signUp({
-  //     variables: data,
-  //   });
-  // };
 
   return (
     <>
