@@ -50,6 +50,10 @@ const POIList = () => {
     }
   }, [getPoiData, category]);
 
+  useEffect(() => {
+    setFilteredCount(filteredPois.length);
+  }, [filteredPois.length]);
+
   if (getPoiLoading) return <p>Chargement...</p>;
   if (getPoiError) return <p>{getPoiError.message}</p>;
 

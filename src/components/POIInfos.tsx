@@ -29,8 +29,14 @@ export default function POIInfos(props: IPOIData) {
         />
       </div>
       <div className="h-full w-[100%] row-span-2">
-        <img src={pictureUrl ? pictureUrl : noImage} alt={name} />
-        <img src={pictureUrl ? pictureUrl : noImage} alt={name} />
+        <img
+          src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
+          alt={name}
+        />
+        <img
+          src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
+          alt={name}
+        />
       </div>
       <div className="row-span-3 content-center py-10">
         <div>

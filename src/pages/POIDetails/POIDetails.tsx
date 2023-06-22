@@ -67,11 +67,11 @@ const POIDetails = () => {
       <div style={categoryBackgroundStyle}>
         <Typography
           variant="h1"
-          className="mb-8 center text-white capitalize text-center"
+          className="center text-white capitalize text-center"
         >
           {thisPOI.type}
         </Typography>
-        <div className="mx-auto bg-white drop-shadow-2xl">
+        <div className="mx-auto mb-16 bg-white drop-shadow-2xl">
           <nav aria-label="Breadcrumb" className="py-3">
             <ol
               role="list"
@@ -84,27 +84,6 @@ const POIDetails = () => {
                     className="mr-2 text-sm font-medium text-gray-900"
                   >
                     Paris
-                  </a>
-                  <svg
-                    width="16"
-                    height="20"
-                    viewBox="0 0 16 20"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                    aria-hidden="true"
-                    className="h-5 w-4 text-gray-300"
-                  >
-                    <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                  </svg>
-                </div>
-              </li>
-              <li>
-                <div className="flex items-center">
-                  <a
-                    href="/point-of-interest/list"
-                    className="mr-2 text-sm font-medium text-gray-900 capitalize"
-                  >
-                    {thisPOI.type}
                   </a>
                   <svg
                     width="16"
@@ -159,17 +138,22 @@ const POIDetails = () => {
           </div>
 
           <div className="mt-4 mb-8 lg:row-span-3 lg:mt-10">
-            <h2 className="col-span-1 lg:col-span-3 px-10">
-              Vous aimerez peut-être...
-            </h2>
-            {otherPOIs && (
-              <ul id="poi-similar" className="flex justify-around py-4 my-3.5">
-                {otherPOIs.map((poi: IPOIData) => (
-                  <li className="h-[350px] w-[250px] border-solid border rounded-xl mb-12">
-                    <POICard key={poi.id} poi={poi} />
-                  </li>
-                ))}
-              </ul>
+            {otherPOIs.length > 0 && (
+              <>
+                <h2 className="col-span-1 lg:col-span-3 px-10">
+                  Vous aimerez peut-être...
+                </h2>
+                <ul
+                  id="poi-similar"
+                  className="flex justify-around py-4 my-3.5"
+                >
+                  {otherPOIs.map((poi: IPOIData) => (
+                    <li className="h-[350px] w-[250px] border-solid border rounded-xl mb-12">
+                      <POICard key={poi.id} poi={poi} />
+                    </li>
+                  ))}
+                </ul>
+              </>
             )}
           </div>
         </div>
