@@ -7,7 +7,7 @@ export interface IPOICard {
   address: string;
   postal: string;
   city: string;
-  pictureUrl: string;
+  pictureUrl: string[];
   description: string;
   type: string;
   averageRate?: number;
@@ -42,7 +42,7 @@ export type IFormInput = {
   type: POIType;
   coordinates: Point;
   creationDate: Date;
-  pictureUrl: string;
+  pictureUrl: string[];
   websiteURL: string;
   description: string;
   priceRange: EPriceRange;
@@ -54,6 +54,16 @@ export type IFormInput = {
   secondHoursClose: string;
 };
 
+export type POIComment = {
+  id: number;
+  createDate: string;
+  text: string;
+  user: {
+    id: number;
+    email: string;
+    username: string | null;
+  };
+};
 export interface IPOIData {
   id: number;
   name: string;
@@ -61,7 +71,7 @@ export interface IPOIData {
   postal: string;
   type: string;
   coordinates: LatLngExpression;
-  pictureUrl: string;
+  pictureUrl: string[];
   websiteURL: string;
   description: string;
   creationDate: string;
@@ -70,6 +80,8 @@ export interface IPOIData {
   daysOpen: string[];
   hoursOpen: string[];
   hoursClose: string[];
+  averageRate?: number;
+  comments: POIComment[] | [];
 }
 
 export interface IFavorite {

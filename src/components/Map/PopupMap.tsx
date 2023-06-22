@@ -12,7 +12,7 @@ function PopUpMap({
 }: {
   name: string;
   address: string;
-  pictureUrl: string;
+  pictureUrl: string[];
   id: number;
 }) {
   return (

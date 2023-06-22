@@ -1,91 +1,191 @@
+import { useContext, useEffect, useState } from 'react';
+import { UserContext } from 'src/contexts/userContext';
 import { Typography } from '@material-tailwind/react';
-import { IPOIData } from 'src/types/POIType';
-import noImage from '../asset/img/no-image-icon.png';
+import { IFavorite, IPOIData } from 'src/types/POIType';
+import moment from 'moment';
+import { AverageRatingStar } from './AverageRatingStar';
+import POIImage from './POIImage';
+import { FavoriteButton } from './FavoriteButton';
+import { useQuery } from '@apollo/client';
+import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
+
+interface POIInfoProps {
+  poi: IPOIData;
+}
 
 const image_url = process.env.REACT_APP_IMAGE_URL;
 
-export default function POIInfos(props: IPOIData) {
+export default function POIInfos(props: POIInfoProps) {
   const {
+    id,
     name,
     address,
     postal,
     city,
     pictureUrl,
     description,
-    type,
     creationDate,
-    priceRange,
     daysOpen,
     hoursOpen,
     hoursClose,
-  } = props;
+    averageRate,
+  } = props.poi;
+  const { user } = useContext(UserContext);
+
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  const { data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
+    variables: { userId: user?.id },
+  });
+
+  useEffect(() => {
+    if (data) {
+      const userFavorites = data.getUserFavorites.map(
+        (favorite: IFavorite) => favorite.pointOfInterest.id
+      );
+      setIsFavorite(userFavorites.includes(id));
+    }
+  }, [data]);
+
+  const firstImage: string[] =
+    pictureUrl.length > 0 ? pictureUrl.slice(0, 1) : [];
+  const otherImages: string[] =
+    pictureUrl.length > 1 ? pictureUrl.slice(1) : [];
+
+  function getDaysOpen(
+    daysOpen: string[],
+    hoursOpen: string[],
+    hoursClose: string[]
+  ): {
+    value: string;
+    name: string;
+    hoursOpen: string | string[];
+    hoursClose: string | string[];
+  }[] {
+    const days = [
+      { value: 'monday', name: 'Lundi' },
+      { value: 'tuesday', name: 'Mardi' },
+      { value: 'wednesday', name: 'Mercredi' },
+      { value: 'thursday', name: 'Jeudi' },
+      { value: 'friday', name: 'Vendredi' },
+      { value: 'saturday', name: 'Samedi' },
+      { value: 'sunday', name: 'Dimanche' },
+    ];
+    const returnElement: {
+      value: string;
+      name: string;
+      hoursOpen: string | string[];
+      hoursClose: string | string[];
+    }[] = days.map((day) => {
+      const isOpen = daysOpen.find((element) => element === day.value);
+      const newData = {
+        value: day.value,
+        name: day.name,
+        hoursOpen: isOpen ? hoursOpen : ['Fermé'],
+        hoursClose: isOpen ? hoursClose : ['Fermé'],
+      };
+      return newData;
+    });
+    return returnElement;
+  }
+
   return (
-    <div className="grid grid-cols-[1fr_0.5fr_1.5fr]">
-      <div className="h-full row-span-1 justify-between ">
-        <img
-          src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
-          alt={name}
-          className="h-[100%] items-center"
-        />
+    <>
+      <div>
+        <Typography variant="h2" className="pr-3">
+          {name}
+        </Typography>
+        <Typography variant="h4">
+          {address}, {postal} {city}
+        </Typography>
       </div>
-      <div className="h-full w-[100%] row-span-2">
-        <img
-          src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
-          alt={name}
+      <div className="relative flex items-center">
+        <AverageRatingStar
+          averageRate={averageRate}
+          className="flex justify-start pr-4"
         />
-        <img
-          src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
-          alt={name}
-        />
-      </div>
-      <div className="row-span-3 content-center py-10">
+        <Typography className="underline">
+          Créé le {moment(creationDate).format('DD-MM-YYYY')}
+        </Typography>
         <div>
-          <Typography variant="h2" className="text-center">
-            {name}
-          </Typography>
-        </div>
-        <div>
-          <Typography variant="h4" className="text-center">
-            {address} {postal} {city}
-          </Typography>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="flex items-center">
-          <div className="flex items-center">
-            {/* <!-- Heroicon name: heart filled --> */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="red"
-              className="w-6 h-6"
-            >
-              <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-            </svg>
-            {/* <!-- Heroicon name: heart empty --> */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="red"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+          {user &&
+            (!isFavorite ? (
+              <div className="absolute -top-4 right-1 flex items-center p-3 bg-white border rounded">
+                <p>Ajouter à vos favoris</p>
+                <FavoriteButton
+                  userId={user?.id}
+                  poiId={id}
+                  className="text-black pl-3"
+                  width="20px"
+                  height="20px"
+                />
+              </div>
+            ) : (
+              <FavoriteButton
+                userId={user?.id}
+                poiId={id}
+                className="absolute top-0 right-1 text-red-500"
+                width="30px"
+                height="30px"
               />
-            </svg>
-          </div>
-          {/* <a
-            href="#"
-            className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            117 likes
-          </a> */}
+            ))}
         </div>
       </div>
-    </div>
+      {pictureUrl.length > 1 ? (
+        <div className="relative">
+          <div className="grid gap-4 grid-cols-4 grid-rows-2 grid-flow-row">
+            <POIImage
+              backgroundImage={`url(${image_url}${firstImage[0]})`}
+              className="col-span-2 row-span-2"
+              height="316px"
+            />
+            {otherImages &&
+              otherImages.map((image) => (
+                <POIImage
+                  backgroundImage={`url(${image_url}${image})`}
+                  height="150px"
+                  key={image}
+                />
+              ))}
+          </div>
+        </div>
+      ) : pictureUrl.length === 1 ? (
+        <POIImage
+          backgroundImage={`url(${image_url}${pictureUrl[0]})`}
+          className="col-span-2 row-span-2"
+          height="316px"
+        />
+      ) : null}
+      <div className="w-[80%] mx-auto">
+        {description && (
+          <div className="pt-8 pb-5">
+            <Typography variant="h4">Description du lieu</Typography>
+            <p className="pt-2">{description}</p>
+          </div>
+        )}
+        <div className="pt-8 pb-5">
+          <Typography variant="h4">Horaires d'ouverture</Typography>
+          <div className="w-full py-5">
+            {getDaysOpen(daysOpen, hoursOpen, hoursClose).map((day) => (
+              <div className="flex justify-between" key={day.value}>
+                <ul>
+                  <li>{day.name}</li>
+                </ul>
+                <ul>
+                  <li>
+                    {day.hoursOpen[0] === 'Fermé'
+                      ? day.hoursOpen[0]
+                      : `${day.hoursOpen[0]} - ${day.hoursClose[0]}`}
+                    {day.hoursOpen.length > 1
+                      ? `, ${day.hoursOpen[1]} - ${day.hoursClose[1]}`
+                      : null}
+                  </li>
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

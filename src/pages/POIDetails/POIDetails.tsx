@@ -4,7 +4,7 @@ import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import POICard from 'src/components/POICard';
-import POIComment from 'src/components/Comment';
+import POIComments from 'src/components/POIComments';
 import { Typography } from '@material-tailwind/react';
 import { UserContext } from 'src/contexts/userContext';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
@@ -14,6 +14,7 @@ import bgFastfood from 'src/asset/img/bg-fastfood.jpg';
 import bgHotel from 'src/asset/img/bg-hotel.jpg';
 import bgMuseum from 'src/asset/img/bg-museum.jpg';
 import bgRestaurant from 'src/asset/img/bg-restaurant.jpg';
+import { comment } from 'postcss';
 
 const POIDetails = () => {
   const { loading, error, data } = useQuery(GET_POI_QUERY);
@@ -21,6 +22,7 @@ const POIDetails = () => {
   const thisPOI = data?.getAllPoi?.find(
     (poi: { id: number }) => poi.id === Number(id)
   );
+  console.log(thisPOI);
 
   const { user } = useContext(UserContext);
 
@@ -37,7 +39,6 @@ const POIDetails = () => {
     backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    paddingTop: '5em',
     paddingLeft: '10em',
     paddingRight: '10em',
   };
@@ -67,15 +68,15 @@ const POIDetails = () => {
       <div style={categoryBackgroundStyle}>
         <Typography
           variant="h1"
-          className="center text-white capitalize text-center"
+          className="center py-4 text-white capitalize text-center"
         >
           {thisPOI.type}
         </Typography>
-        <div className="mx-auto mb-16 bg-white drop-shadow-2xl">
-          <nav aria-label="Breadcrumb" className="py-3">
+        <div className="mx-auto bg-white drop-shadow-2xl">
+          <nav aria-label="Breadcrumb" className="py-3 px-2">
             <ol
               role="list"
-              className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+              className="flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
             >
               <li>
                 <div className="flex items-center">
@@ -110,30 +111,11 @@ const POIDetails = () => {
             </ol>
           </nav>
           <div>
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-              <div className="col-span-1 lg:col-span-3 px-10">
-                <POIInfo
-                  id={thisPOI.id}
-                  name={thisPOI.name}
-                  address={thisPOI.address}
-                  postal={thisPOI.postal}
-                  city={thisPOI.city}
-                  pictureUrl={thisPOI.pictureUrl}
-                  description={thisPOI.description}
-                  type={thisPOI.type}
-                  coordinates={thisPOI.coordinates}
-                  websiteURL={thisPOI.websiteURL}
-                  creationDate={thisPOI.creationDate}
-                  priceRange={thisPOI.priceRange}
-                  daysOpen={thisPOI.daysOpen}
-                  hoursOpen={thisPOI.hoursOpen}
-                  hoursClose={thisPOI.hoursClose}
-                />
-              </div>
+            <div className="col-span-1 lg:col-span-3 px-10">
+              <POIInfo poi={thisPOI} />
             </div>
-
-            <div className="mt-4">
-              {user && <POIComment poiId={thisPOI.id} userId={user.id} />}
+            <div className="mt-4 mx-auto px-10">
+              <POIComments comments={thisPOI.comments} poiId={thisPOI.id} />
             </div>
           </div>
 
@@ -148,7 +130,10 @@ const POIDetails = () => {
                   className="flex justify-around py-4 my-3.5"
                 >
                   {otherPOIs.map((poi: IPOIData) => (
-                    <li className="h-[350px] w-[250px] border-solid border rounded-xl mb-12">
+                    <li
+                      key={poi.id}
+                      className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
+                    >
                       <POICard key={poi.id} poi={poi} />
                     </li>
                   ))}

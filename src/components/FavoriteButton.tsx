@@ -9,12 +9,16 @@ interface FavoriteButtonProps {
   userId: number | null | undefined;
   poiId: number;
   className?: string;
+  width: string;
+  height: string;
 }
 
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   userId,
   poiId,
   className,
+  width,
+  height,
 }) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
@@ -44,9 +48,9 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   return (
     <button onClick={() => toggleFavoriteMutation()} className={className}>
       {isFavorite ? (
-        <FaHeart style={{ width: 20, height: 20 }} />
+        <FaHeart style={{ width, height }} />
       ) : (
-        <FaRegHeart style={{ width: 20, height: 20 }} />
+        <FaRegHeart style={{ width, height }} />
       )}
     </button>
   );

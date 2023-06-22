@@ -14,11 +14,20 @@ export const GET_POI_QUERY = gql`
       pictureUrl
       websiteURL
       description
-      priceRange
       city
       daysOpen
       hoursOpen
       hoursClose
+      comments {
+        id
+        createDate
+        text
+        user {
+          id
+          email
+          username
+        }
+      }
     }
   }
 `;
