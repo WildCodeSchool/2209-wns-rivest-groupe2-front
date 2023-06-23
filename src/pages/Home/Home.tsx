@@ -35,7 +35,7 @@ const Home = () => {
           <DialogContentText>
             Bonjour et bienvenue sur City Guide, Cherchez un lieu qui vous plaît
             à visiter et cliquez dessus pour en savoir plus sur celui-ci ! Bonne
-            visites
+            visite !
           </DialogContentText>
         </DialogContent>
         <DialogActions>

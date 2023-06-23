@@ -12,35 +12,33 @@ import { CREATE_USER } from 'src/services/mutations/userMutations';
 // YUP SCHEMA
 const schema = yup
   .object({
-    firstname: yup
+    username: yup
       .string()
-      .required('Please enter a first name.')
+      .required('Merci de renseigner un identifiant.')
       .matches(
         /^[aA-zZ\s]+$/,
-        'Only alphabets are allowed for the first name.'
+        `Veuillez n'utiliser que des lettres de l'alphabet.`
       ),
-
-    lastname: yup
-      .string()
-      .required('Please enter a last name.')
-      .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for the last name.'),
 
     email: yup
       .string()
-      .email('Please enter a valid email.')
-      .required('Please enter an email.'),
+      .email('Veuillez renseigner un email valide.')
+      .required('Veuillez renseigner un email valide.'),
 
     password: yup
       .string()
-      .required('Please enter a password.')
+      .required('Veuillez renseigner un mot de passe.')
       .matches(
         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
-        'Should have one uppercase letter, one lowercase letter, one number. Should have min 8 and max 25 characters.'
+        'Doit contenir une majuscule, une minuscule, un nombre et au minimum et faire entre 8 et 25 caractères.'
       ),
 
     confirmPassword: yup
       .string()
-      .oneOf([yup.ref('password'), null], 'Passwords do not match.'),
+      .oneOf(
+        [yup.ref('password'), null],
+        'Les mots de passe doivent être identiques.'
+      ),
   })
   .required();
 
@@ -77,13 +75,13 @@ const SignUp = () => {
   });
 
   const onSubmit: SubmitHandler<ISignUp> = async (fields: {
-    firstname: string;
-    lastname: string;
+    username: string;
     email: string;
     password: string;
   }) => {
     signUp({
       variables: {
+        username: fields.username,
         email: fields.email,
         password: fields.password,
       },
@@ -131,28 +129,14 @@ const SignUp = () => {
                 <div className="flex flex-col mb-8 relative">
                   <input
                     type="text"
-                    id="firsname"
-                    {...register('firstname')}
-                    placeholder="Prénom"
+                    id="username"
+                    {...register('username')}
+                    placeholder="Identifiant"
                     className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   />
-                  {errors.firstname && (
+                  {errors.username && (
                     <span className="text-sm text-red-600">
-                      {errors.firstname.message}
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-col mb-8 relative">
-                  <input
-                    type="text"
-                    id="lastname"
-                    {...register('lastname')}
-                    placeholder="Nom"
-                    className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
-                  />
-                  {errors.lastname && (
-                    <span className="text-sm text-red-600">
-                      {errors.lastname.message}
+                      {errors.username.message}
                     </span>
                   )}
                 </div>
