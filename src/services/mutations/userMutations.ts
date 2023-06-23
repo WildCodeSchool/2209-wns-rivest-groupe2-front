@@ -32,3 +32,9 @@ mutation Mutation($email: String!, $password: String!) {
   }
 }
 `;
+
+export const DELETE_USER = gql`
+mutation DeleteUser($deleteUserId: Float!) {
+  deleteUser(id: $deleteUserId)
+}
+`
