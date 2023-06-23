@@ -13,10 +13,42 @@ import { UserContext } from 'src/contexts/userContext';
 import { useContext, useState, useEffect, useRef } from 'react';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import POIMap from 'src/components/POIMap';
+import { useMutation } from '@apollo/client';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import { DELETE_USER } from 'src/services/mutations/userMutations';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export function Profile() {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [deleteUser, { loading: deleteLoading, error: deleteError }] =
+    useMutation(DELETE_USER);
+
+  const navigate = useNavigate();
+
+  const handleDeleteUser = async () => {
+    try {
+      await deleteUser({ variables: { deleteUserId: user?.id } });
+      setOpenDeleteDialog(false);
+      localStorage.removeItem('user');
+      setUser(null);
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleDeleteDialogOpen = () => {
+    setOpenDeleteDialog(true);
+  };
 
   const POIData = useQuery(GET_POI_QUERY);
 
@@ -33,6 +65,12 @@ export function Profile() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (user === null) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   return (
     <>
@@ -64,19 +102,12 @@ export function Profile() {
           </div>
           <div className="gird-cols-1 mb-12 grid gap-6 px-4 xl:grid-cols-3">
             <ProfileInfoCard
-              title="Profile Information"
-              // description={user?.description ? user.description : 'Please enter a description'}
+              title="Informations de profil"
               details={{
-                firstname: user ? user.firstname : 'undefined',
-                lastname: user ? user.lastname : 'undefined',
+                "Nom d'utilisateur": user ? user.username : 'undefined',
+                prénom: user ? user.firstname : 'undefined',
+                nom: user ? user.lastname : 'undefined',
                 email: user ? user.email : 'undefined',
-                /*                 'social': (
-                  <div className="flex items-center gap-4">
-                    <i className="fa-brands fa-facebook text-blue-700" />
-                    <i className="fa-brands fa-twitter text-blue-400" />
-                    <i className="fa-brands fa-instagram text-purple-500" />
-                  </div>
-                ),  */
               }}
               action={
                 <Tooltip content="Edit Profile">
@@ -109,24 +140,7 @@ export function Profile() {
               }
               isEditMode={isEditMode}
             />
-            {/* <div>
-              <Typography variant="h6" color="blue-gray" className="mb-3">
-                Platform Settings
-              </Typography>
-              <ul className="flex flex-col gap-6">
-                {conversationsData.map((props) => (
-                  <MessageCard
-                    key={props.name}
-                    {...props}
-                    action={
-                      <Button variant="text" size="sm">
-                        reply
-                      </Button>
-                    }
-                  />
-                ))}
-              </ul>
-            </div> */}
+
             <div className="pl-2 xl:col-span-2">
               <Typography variant="h6" color="blue-gray" className="mb-2">
                 Point of interests - Migth interest you
@@ -143,6 +157,33 @@ export function Profile() {
             </div>
           </div>
         </CardBody>
+        <div className="p-4">
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleDeleteDialogOpen}
+            className="text-xs float-left"
+          >
+            Supprimer votre compte
+          </Button>
+          <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
+            <DialogContent>
+              <DialogContentText>
+                Attention, vous allez supprimer votre compte !
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleDeleteDialogClose}>Annuler</Button>
+              <Button
+                onClick={handleDeleteUser}
+                disabled={deleteLoading}
+                color="error"
+              >
+                Supprimer
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </Card>
     </>
   );

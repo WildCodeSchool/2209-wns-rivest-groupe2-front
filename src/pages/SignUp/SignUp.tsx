@@ -12,10 +12,24 @@ import { CREATE_USER } from 'src/services/mutations/userMutations';
 // YUP SCHEMA
 const schema = yup
   .object({
+    firstname: yup
+      .string()
+      .required('Please enter a first name.')
+      .matches(
+        /^[aA-zZ\s]+$/,
+        'Only alphabets are allowed for the first name.'
+      ),
+
+    lastname: yup
+      .string()
+      .required('Please enter a last name.')
+      .matches(/^[aA-zZ\s]+$/, 'Only alphabets are allowed for the last name.'),
+
     email: yup
       .string()
       .email('Please enter a valid email.')
       .required('Please enter an email.'),
+
     password: yup
       .string()
       .required('Please enter a password.')
@@ -23,6 +37,7 @@ const schema = yup
         /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
         'Should have one uppercase letter, one lowercase letter, one number. Should have min 8 and max 25 characters.'
       ),
+
     confirmPassword: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords do not match.'),
@@ -62,6 +77,8 @@ const SignUp = () => {
   });
 
   const onSubmit: SubmitHandler<ISignUp> = async (fields: {
+    firstname: string;
+    lastname: string;
     email: string;
     password: string;
   }) => {
@@ -108,6 +125,34 @@ const SignUp = () => {
                   {errors.email && (
                     <span className="text-sm text-red-600">
                       {errors.email.message}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col mb-8 relative">
+                  <input
+                    type="text"
+                    id="firsname"
+                    {...register('firstname')}
+                    placeholder="Prénom"
+                    className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
+                  />
+                  {errors.firstname && (
+                    <span className="text-sm text-red-600">
+                      {errors.firstname.message}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col mb-8 relative">
+                  <input
+                    type="text"
+                    id="lastname"
+                    {...register('lastname')}
+                    placeholder="Nom"
+                    className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
+                  />
+                  {errors.lastname && (
+                    <span className="text-sm text-red-600">
+                      {errors.lastname.message}
                     </span>
                   )}
                 </div>

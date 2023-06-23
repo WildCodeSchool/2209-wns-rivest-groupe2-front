@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { ChartPieIcon, UserIcon } from '@heroicons/react/24/solid';
 import { Navbar } from '../widgets/layout/navbar';
-import { Footer } from '../widgets/layout/footer';
 import routes from '../routes';
 
 export function Auth() {
@@ -32,10 +31,6 @@ export function Auth() {
             : []
         )}
       </Routes>
-
-      <div className="container absolute bottom-8 left-2/4 z-10 mx-auto -translate-x-2/4 text-white">
-        <Footer />
-      </div>
     </div>
   );
 }

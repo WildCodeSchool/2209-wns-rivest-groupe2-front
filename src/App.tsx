@@ -10,7 +10,6 @@ import TownCreation from './pages/TownCreation/TownCreation';
 import Dashboard from './layouts/dashboard';
 import Auth from './layouts/auth';
 import BaseLayout from './layouts/baseLayout';
-import DashboardHome from './pages/dashboard/home';
 import POIList from './pages/POIList/POIList';
 import RequireAuth from './components/RequireAuth';
 import Profile from './pages/dashboard/profile';
@@ -42,7 +41,6 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['freeUser']} />}>
-          <Route path="/" element={<DashboardHome />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/profile/" element={<Profile />} />
           <Route path="/auth/*" element={<Auth />} />
