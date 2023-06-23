@@ -105,9 +105,9 @@ export function Profile() {
               title="Informations de profil"
               details={{
                 "Nom d'utilisateur": user ? user.username : 'undefined',
-                prénom: user ? user.firstname : 'undefined',
-                nom: user ? user.lastname : 'undefined',
-                email: user ? user.email : 'undefined',
+                Prénom: user ? user.firstname : 'undefined',
+                Nom: user ? user.lastname : 'undefined',
+                Email: user ? user.email : 'undefined',
               }}
               action={
                 <Tooltip content="Edit Profile">
