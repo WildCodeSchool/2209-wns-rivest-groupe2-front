@@ -11,7 +11,6 @@ export interface IPOICard {
   description: string;
   type: string;
   averageRate?: number;
-  rate?: number;
   setOpenModalAddPlace?: any;
   openModalAddPlace?: boolean;
   websiteURL?: string;
@@ -54,10 +53,11 @@ export type IFormInput = {
   secondHoursClose: string;
 };
 
-export type POIComment = {
+export type POICommentType = {
   id: number;
   createDate: string;
   text: string;
+  rate: number;
   user: {
     id: number;
     email: string;
@@ -81,7 +81,7 @@ export interface IPOIData {
   hoursOpen: string[];
   hoursClose: string[];
   averageRate?: number;
-  comments: POIComment[] | [];
+  comments: POICommentType[] | [];
 }
 
 export interface IFavorite {

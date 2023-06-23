@@ -8,6 +8,7 @@ import POIImage from './POIImage';
 import { FavoriteButton } from './FavoriteButton';
 import { useQuery } from '@apollo/client';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
+import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
 
 interface POIInfoProps {
   poi: IPOIData;
@@ -33,9 +34,14 @@ export default function POIInfos(props: POIInfoProps) {
   const { user } = useContext(UserContext);
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [commentsCount, setCommentsCount] = useState(0);
 
   const { data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
     variables: { userId: user?.id },
+  });
+
+  const { data: countCommentData } = useQuery(GET_COMMENTS_NUMBER_PER_POI, {
+    variables: { poiId: Number(id) },
   });
 
   useEffect(() => {
@@ -46,6 +52,13 @@ export default function POIInfos(props: POIInfoProps) {
       setIsFavorite(userFavorites.includes(id));
     }
   }, [data]);
+
+  useEffect(() => {
+    if (countCommentData)
+      setCommentsCount(countCommentData.getNumberOfCommentsPerPOI);
+  }, [countCommentData]);
+
+  console.log(commentsCount);
 
   const firstImage: string[] =
     pictureUrl.length > 0 ? pictureUrl.slice(0, 1) : [];
@@ -92,10 +105,10 @@ export default function POIInfos(props: POIInfoProps) {
   return (
     <>
       <div>
-        <Typography variant="h2" className="pr-3">
+        <Typography variant="h1" className="pr-3">
           {name}
         </Typography>
-        <Typography variant="h4">
+        <Typography variant="h2">
           {address}, {postal} {city}
         </Typography>
       </div>
@@ -104,13 +117,16 @@ export default function POIInfos(props: POIInfoProps) {
           averageRate={averageRate}
           className="flex justify-start pr-4"
         />
+        <Typography className="pr-4">
+          {commentsCount} {commentsCount > 1 ? 'commentaires' : 'commentaire'}
+        </Typography>
         <Typography className="underline">
           Créé le {moment(creationDate).format('DD-MM-YYYY')}
         </Typography>
         <div>
           {user &&
             (!isFavorite ? (
-              <div className="absolute -top-4 right-1 flex items-center p-3 bg-white border rounded">
+              <div className="absolute -top-8 right-1 flex items-center p-3 bg-white border rounded">
                 <p>Ajouter à vos favoris</p>
                 <FavoriteButton
                   userId={user?.id}
@@ -156,16 +172,18 @@ export default function POIInfos(props: POIInfoProps) {
           height="316px"
         />
       ) : null}
-      <div className="w-[80%] mx-auto">
-        {description && (
-          <div className="pt-8 pb-5">
-            <Typography variant="h4">Description du lieu</Typography>
-            <p className="pt-2">{description}</p>
-          </div>
-        )}
-        <div className="pt-8 pb-5">
-          <Typography variant="h4">Horaires d'ouverture</Typography>
-          <div className="w-full py-5">
+      <div className="w-[80%] mx-auto mt-6">
+        <div className="pt-8">
+          <Typography variant="h2">Description du lieu</Typography>
+          <p className="pt-2">
+            {description.length > 0
+              ? description
+              : 'Pas de description renseignée'}
+          </p>
+        </div>
+        <div className="pt-8 mt-6">
+          <Typography variant="h2">Horaires d'ouverture</Typography>
+          <div className="w-full pt-5">
             {getDaysOpen(daysOpen, hoursOpen, hoursClose).map((day) => (
               <div className="flex justify-between" key={day.value}>
                 <ul>

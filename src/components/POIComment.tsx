@@ -2,20 +2,42 @@ import { useMutation, useQuery } from '@apollo/client';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/contexts/userContext';
 import { COMMENT_POI_MUTATION } from 'src/services/mutations/commentMutations';
-import { GET_USER_COMMENT_POI_QUERY } from 'src/services/queries/commentQueries';
+import {
+  GET_COMMENTS_NUMBER_PER_POI,
+  GET_USER_COMMENT_POI_QUERY,
+} from 'src/services/queries/commentQueries';
+import { DELETE_COMMENT } from 'src/services/queries/commentQueries';
 import { HiPencilSquare } from 'react-icons/hi2';
 import StarRating from './StarRating';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Button,
+  DialogTitle,
+} from '@mui/material';
+import { DialogHeader } from '@material-tailwind/react';
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 
 interface POIDetailsProps {
   className?: string;
   poiId: number;
   userId: number;
+  type: 'delete' | 'update' | 'create';
+  openDeleteDialog: boolean;
+  handleDeleteDialogClose: () => void;
+  commentId?: number;
 }
 
 const POIComment: React.FC<POIDetailsProps> = ({
   className = '',
   poiId,
   userId,
+  type,
+  openDeleteDialog,
+  handleDeleteDialogClose,
+  commentId,
 }) => {
   const [currentComment, setCurrentComment] = useState<string | undefined>('');
   const [editingComment, setEditingComment] = useState(false);
@@ -36,6 +58,15 @@ const POIComment: React.FC<POIDetailsProps> = ({
       setIsFirstCommentSent(true);
     }
   }, [userCommentData]);
+
+  const [deleteComment] = useMutation(DELETE_COMMENT, {
+    refetchQueries: [
+      { query: GET_POI_QUERY },
+      'getAllPoi',
+      { query: GET_COMMENTS_NUMBER_PER_POI, variables: { poiId } },
+      'getNumberOfCommentsPerPOI',
+    ],
+  });
 
   const [commentPOI] = useMutation(COMMENT_POI_MUTATION, {
     variables: {
@@ -82,6 +113,21 @@ const POIComment: React.FC<POIDetailsProps> = ({
     },
   });
 
+  const handleCommentDelete = async () => {
+    try {
+      await deleteComment({
+        variables: {
+          commentId: commentId,
+          userId,
+        },
+      });
+      handleDeleteDialogClose();
+    } catch (error: any) {
+      console.log(error);
+      alert(`Erreur lors de la suppression du commentaire: ${error.message}`);
+    }
+  };
+
   const handleCommentSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ) => {
@@ -125,7 +171,7 @@ const POIComment: React.FC<POIDetailsProps> = ({
 
   return (
     <div>
-      <div className={className ? className : 'mt-4'}>
+      {/* <div className={className ? className : 'mt-4'}>
         <h2 className="text-lg font-bold">Commentaires</h2>
         {editingComment ? (
           <form onSubmit={handleCommentSubmit} className="mt-4">
@@ -186,7 +232,32 @@ const POIComment: React.FC<POIDetailsProps> = ({
             </button>
           </form>
         )}
-      </div>
+      </div> */}
+      {type === 'delete' && (
+        <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
+          <DialogTitle
+            sx={{
+              textAlign: 'center',
+              backgroundColor: 'rgb(254, 74, 74)',
+              color: 'white',
+              marginBottom: '15px',
+            }}
+          >
+            Suppresion commentaire
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Etes-vous sûr de vouloir supprimer votre commentaire ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteDialogClose}>Annuler</Button>
+            <Button onClick={handleCommentDelete} color="error">
+              Supprimer
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 };

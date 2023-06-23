@@ -25,7 +25,7 @@ const MapModule = ({
   zoomPoi,
 }: {
   poiData: IPOIData[];
-  zoomPoi: IPOIData | void;
+  zoomPoi?: IPOIData | void;
 }) => {
   const parisPosition: LatLngExpression = [48.88, 2.33];
   const zoom: number = 12;

@@ -22,6 +22,7 @@ export const GET_POI_QUERY = gql`
         id
         createDate
         text
+        rate
         user {
           id
           email

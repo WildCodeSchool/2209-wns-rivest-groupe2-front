@@ -52,9 +52,8 @@ const POICard = (props: POICardProps) => {
   const { user } = useContext(UserContext);
   const [toggleHover, setToggleHover] = useState<boolean>(false);
 
-  console.log(props.poi);
   return (
-    <Card className="h-full">
+    <Card className="h-full relative">
       <CardHeader>
         <div className="w-full">
           <Typography variant="h5" className="text-center w-[90%]">
@@ -123,7 +122,7 @@ const POICard = (props: POICardProps) => {
           </Typography>
         </div>
       </CardBody>
-      <CardFooter divider className="w-full h-10">
+      <CardFooter divider className="w-full h-20 absolute bottom-0 left-0">
         <Typography variant="small" className="text-center text-xs">
           {`${address}, ${postal} ${city}`}
         </Typography>

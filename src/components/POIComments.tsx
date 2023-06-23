@@ -1,48 +1,122 @@
-import { useMutation, useQuery } from '@apollo/client';
-import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from 'src/contexts/userContext';
-import { COMMENT_POI_MUTATION } from 'src/services/mutations/commentMutations';
-import { GET_USER_COMMENT_POI_QUERY } from 'src/services/queries/commentQueries';
-import { HiPencilSquare } from 'react-icons/hi2';
+import React, { useContext, useState } from 'react';
 import StarRating from './StarRating';
-import { POIComment } from 'src/types/POIType';
+import { POICommentType } from 'src/types/POIType';
 import { Typography } from '@material-tailwind/react';
 import moment from 'moment';
+import { AverageRatingStar } from './AverageRatingStar';
+import { UserContext } from 'src/contexts/userContext';
+import { map } from 'lodash';
+import { FiEdit } from 'react-icons/fi';
+import { AiOutlineDelete } from 'react-icons/ai';
+import POIComment from './POIComment';
 
 interface POICommentsProps {
   className?: string;
-  comments: POIComment[] | [];
+  comments: POICommentType[] | [];
   poiId: number;
+  averageRate: number;
+  commentsCount: number;
+  type: string;
 }
 
 const POIComments: React.FC<POICommentsProps> = ({
   className = '',
   comments,
   poiId,
+  averageRate,
+  commentsCount,
+  type,
 }) => {
+  const { user } = useContext(UserContext);
+
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const handleDeleteDialogClose = () => {
+    setOpenDeleteDialog(false);
+  };
+
+  const handleDeleteDialogOpen = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const userComment = comments.find((comment) => comment?.user.id === user?.id);
+  const otherComments = comments.filter(
+    (comment) => comment?.user.id !== user?.id
+  );
   console.log(comments);
   return (
-    <div>
-      <div className={className ? className : 'mt-4 w-[80%] mx-auto'}>
-        <Typography variant="h4">Commentaires</Typography>
-        {comments.length === 0 ? (
-          <p>Pas de commentaires renseignés pour le moment</p>
-        ) : (
-          comments.map((comment) => (
-            <div key={comment.id}>
+    <div className={className ? className : 'my-4 w-[80%] mx-auto pt-8'}>
+      <Typography variant="h2">Commentaires</Typography>
+      {comments.length === 0 ? (
+        <Typography className="mt-4 mb-6">
+          Pas de commentaires renseignés pour le moment
+        </Typography>
+      ) : (
+        <div className="pt-4">
+          <div className="flex justify-between items-center w-[80%] mx-auto">
+            <div className="flex flex-col my-6 justify-center items-center">
+              <Typography variant="h3" className="font-bold pb-3">
+                Note moyenne
+              </Typography>
+              <AverageRatingStar
+                averageRate={averageRate}
+                className="flex justify-start pr-1 pb-3"
+                starSize="text-5xl"
+                textColor="black"
+              />
+              <Typography className="font-semibold">
+                basé sur {commentsCount}{' '}
+                {commentsCount > 1 ? 'commentaires' : 'commentaire'}
+              </Typography>
+            </div>
+            {user && user.id && (
+              <div className="flex flex-col justify-center text-center">
+                <Typography variant="h4" className="pb-2">
+                  Evaluer ce {type}
+                </Typography>
+                <Typography className="pb-4">
+                  Partagez votre avis avec les autres utilisateurs
+                </Typography>
+                <button type="button" className="p-2 border-2 rounded-xl">
+                  Ajouter un commentaire
+                </button>
+              </div>
+            )}
+          </div>
+
+          {user && userComment && (
+            <div>
               <div className="flex justify-between items-center text-gray-500">
                 <StarRating
                   className="flex items-center justify-left"
-                  poiId={poiId}
-                  userId={comment.user.id}
+                  userRate={userComment.rate}
                 />
-                <Typography>
-                  {moment(comment.createDate).format('DD-MM-YYYY')}
-                </Typography>
+                <div className="flex w-20 p-3 justify-between border-2 rounded-full">
+                  <FiEdit
+                    style={{ width: 20, height: 20, cursor: 'pointer' }}
+                  />
+                  <AiOutlineDelete
+                    onClick={handleDeleteDialogOpen}
+                    style={{ width: 20, height: 20, cursor: 'pointer' }}
+                  />
+                  <POIComment
+                    openDeleteDialog={openDeleteDialog}
+                    handleDeleteDialogClose={handleDeleteDialogClose}
+                    type="delete"
+                    poiId={poiId}
+                    userId={user.id}
+                    commentId={userComment.id}
+                  />
+                </div>
               </div>
-              <Typography className="font-bold">{comment.text}</Typography>
-              <Typography className="font-medium text-gray-500">
-                {comment.user?.username || comment.user.email}
+              <Typography className="font-bold pt-2">
+                {userComment.text}
+              </Typography>
+              <Typography className="font-medium pt-4">
+                {userComment.user?.username || userComment.user.email}
+              </Typography>
+              <Typography className="text-gray-500">
+                Le {moment(userComment.createDate).format('DD-MM-YYYY')}
               </Typography>
               <div
                 style={{
@@ -53,11 +127,37 @@ const POIComments: React.FC<POICommentsProps> = ({
                 }}
               />
             </div>
-          ))
-        )}
-
-        {/*  */}
-      </div>
+          )}
+          {otherComments &&
+            map(otherComments, (comment) => (
+              <div key={comment.id}>
+                <div className="flex justify-between items-center text-gray-500">
+                  <StarRating
+                    className="flex items-center justify-left"
+                    userRate={comment.rate}
+                  />
+                </div>
+                <Typography className="font-bold pt-2">
+                  {comment.text}
+                </Typography>
+                <Typography className="font-medium pt-4">
+                  {comment.user?.username || comment.user.email}
+                </Typography>
+                <Typography className="text-gray-500">
+                  Le {moment(comment.createDate).format('DD-MM-YYYY')}
+                </Typography>
+                <div
+                  style={{
+                    height: 2,
+                    width: '80%',
+                    margin: '20px auto',
+                    backgroundColor: 'rgb(198, 198, 198)',
+                  }}
+                />
+              </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 };

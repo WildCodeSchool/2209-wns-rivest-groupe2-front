@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
@@ -14,15 +14,21 @@ import bgFastfood from 'src/asset/img/bg-fastfood.jpg';
 import bgHotel from 'src/asset/img/bg-hotel.jpg';
 import bgMuseum from 'src/asset/img/bg-museum.jpg';
 import bgRestaurant from 'src/asset/img/bg-restaurant.jpg';
-import { comment } from 'postcss';
+import MapModule from 'src/components/Map/MapModule';
+import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
 
 const POIDetails = () => {
+  const [commentsCount, setCommentsCount] = useState(0);
+
   const { loading, error, data } = useQuery(GET_POI_QUERY);
   const { id } = useParams();
   const thisPOI = data?.getAllPoi?.find(
     (poi: { id: number }) => poi.id === Number(id)
   );
-  console.log(thisPOI);
+
+  /*   useEffect(() => {
+    setCommentsCount(countCommentData?.getNumberOfCommentsPerPOI);
+  }, [countCommentData?.getNumberOfCommentsPerPOI]); */
 
   const { user } = useContext(UserContext);
 
@@ -111,34 +117,44 @@ const POIDetails = () => {
             </ol>
           </nav>
           <div>
-            <div className="col-span-1 lg:col-span-3 px-10">
+            <div className="px-10">
               <POIInfo poi={thisPOI} />
             </div>
-            <div className="mt-4 mx-auto px-10">
-              <POIComments comments={thisPOI.comments} poiId={thisPOI.id} />
+            <div className="mt-6 mx-auto px-10">
+              <POIComments
+                averageRate={thisPOI.averageRate}
+                commentsCount={commentsCount}
+                comments={thisPOI.comments}
+                poiId={thisPOI.id}
+                type={thisPOI.type}
+              />
+            </div>
+            <div className="mt-6 px-10 mx-auto">
+              <div className="my-4 w-[80%] mx-auto pt-8">
+                <Typography variant="h2">
+                  Où se trouve le {thisPOI.type}
+                </Typography>
+                <div className="h-[500px] w-[100%]">
+                  <MapModule poiData={[thisPOI]} />
+                </div>
+              </div>
             </div>
           </div>
-
-          <div className="mt-4 mb-8 lg:row-span-3 lg:mt-10">
+          <div className="mt-6 mx-auto px-10">
             {otherPOIs.length > 0 && (
-              <>
-                <h2 className="col-span-1 lg:col-span-3 px-10">
-                  Vous aimerez peut-être...
-                </h2>
-                <ul
-                  id="poi-similar"
-                  className="flex justify-around py-4 my-3.5"
-                >
+              <div className="my-4 w-[80%] mx-auto">
+                <Typography variant="h2">Vous aimerez peut-être...</Typography>
+                <ul id="poi-similar" className="flex justify-start py-4 my-3.5">
                   {otherPOIs.map((poi: IPOIData) => (
                     <li
                       key={poi.id}
-                      className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
+                      className="h-[400px] w-[250px] border-solid border rounded-xl mt-4 mb-12 mr-4"
                     >
                       <POICard key={poi.id} poi={poi} />
                     </li>
                   ))}
                 </ul>
-              </>
+              </div>
             )}
           </div>
         </div>

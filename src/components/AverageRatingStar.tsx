@@ -4,12 +4,14 @@ import { useContext } from 'react';
 interface AverageRatingStarProps {
   averageRate: number | null | undefined;
   className?: string;
+  starSize?: string;
+  textColor?: string;
 }
 
 export const AverageRatingStar: React.FC<AverageRatingStarProps> = (
   props: AverageRatingStarProps
 ) => {
-  const { averageRate, className } = props;
+  const { averageRate, className, starSize, textColor } = props;
   const { user } = useContext(UserContext);
 
   if (averageRate === null || averageRate === undefined) {
@@ -27,16 +29,39 @@ export const AverageRatingStar: React.FC<AverageRatingStarProps> = (
     >
       {numberRate !== 0 ? (
         <div className="h-9 flex items-center">
-          <p className="text-gray-500 text-sm pr-1">{displayRate}</p>
+          <p
+            className={`${
+              textColor
+                ? textColor + ' font-bold text-4xl'
+                : 'text-gray-500 text-sm'
+            } pr-1`}
+          >
+            {displayRate}
+          </p>
+          <p
+            className={`${
+              textColor ? textColor + ' text-3xl' : 'text-gray-500 text-sm'
+            } pr-1`}
+          >
+            {' '}
+            / 5
+          </p>
           {Array.from({ length: Math.floor(numberRate) }).map((_, i) => (
-            <span key={i} className="text-yellow-500 cursor-pointer text-xl">
+            <span
+              key={i}
+              className={`text-yellow-500 cursor-pointer ${
+                starSize ? starSize : 'text-xl'
+              }`}
+            >
               &#9733;
             </span>
           ))}
           {Array.from({ length: 5 - Math.floor(numberRate) }).map((_, i) => (
             <span
               key={i + numberRate}
-              className="text-gray-500 cursor-pointer text-xl"
+              className={`"text-gray-500 cursor-pointer ${
+                starSize ? starSize : 'text-xl'
+              }`}
             >
               &#9733;
             </span>
