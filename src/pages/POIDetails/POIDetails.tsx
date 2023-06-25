@@ -26,9 +26,13 @@ const POIDetails = () => {
     (poi: { id: number }) => poi.id === Number(id)
   );
 
-  /*   useEffect(() => {
+  const { data: countCommentData } = useQuery(GET_COMMENTS_NUMBER_PER_POI, {
+    variables: { poiId: Number(id) },
+  });
+
+  useEffect(() => {
     setCommentsCount(countCommentData?.getNumberOfCommentsPerPOI);
-  }, [countCommentData?.getNumberOfCommentsPerPOI]); */
+  }, [countCommentData?.getNumberOfCommentsPerPOI]);
 
   const { user } = useContext(UserContext);
 
@@ -118,7 +122,7 @@ const POIDetails = () => {
           </nav>
           <div>
             <div className="px-10">
-              <POIInfo poi={thisPOI} />
+              <POIInfo poi={thisPOI} commentsCount={commentsCount} />
             </div>
             <div className="mt-6 mx-auto px-10">
               <POIComments

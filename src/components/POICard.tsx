@@ -99,14 +99,6 @@ const POICard = (props: POICardProps) => {
           </Typography>
           <div>
             <AverageRatingStar averageRate={averageRate} />
-
-            {/* {user?.id && (
-                <StarRating
-                  className="border-2 flex items-center justify-center cursor-default"
-                  userId={user?.id}
-                  poiId={id}
-                />
-              )} */}
           </div>
 
           <Typography>

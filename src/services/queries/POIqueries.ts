@@ -21,6 +21,7 @@ export const GET_POI_QUERY = gql`
       comments {
         id
         createDate
+        updateDate
         text
         rate
         user {

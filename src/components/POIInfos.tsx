@@ -12,6 +12,7 @@ import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries
 
 interface POIInfoProps {
   poi: IPOIData;
+  commentsCount: number;
 }
 
 const image_url = process.env.REACT_APP_IMAGE_URL;
@@ -31,17 +32,13 @@ export default function POIInfos(props: POIInfoProps) {
     hoursClose,
     averageRate,
   } = props.poi;
+  const { commentsCount } = props;
   const { user } = useContext(UserContext);
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [commentsCount, setCommentsCount] = useState(0);
 
   const { data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
     variables: { userId: user?.id },
-  });
-
-  const { data: countCommentData } = useQuery(GET_COMMENTS_NUMBER_PER_POI, {
-    variables: { poiId: Number(id) },
   });
 
   useEffect(() => {
@@ -52,13 +49,6 @@ export default function POIInfos(props: POIInfoProps) {
       setIsFavorite(userFavorites.includes(id));
     }
   }, [data]);
-
-  useEffect(() => {
-    if (countCommentData)
-      setCommentsCount(countCommentData.getNumberOfCommentsPerPOI);
-  }, [countCommentData]);
-
-  console.log(commentsCount);
 
   const firstImage: string[] =
     pictureUrl.length > 0 ? pictureUrl.slice(0, 1) : [];

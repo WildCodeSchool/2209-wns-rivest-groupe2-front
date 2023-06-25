@@ -30,27 +30,65 @@ const POIComments: React.FC<POICommentsProps> = ({
   const { user } = useContext(UserContext);
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
-  const handleDeleteDialogClose = () => {
-    setOpenDeleteDialog(false);
-  };
-
-  const handleDeleteDialogOpen = () => {
-    setOpenDeleteDialog(true);
-  };
-
-  const userComment = comments.find((comment) => comment?.user.id === user?.id);
+  const userComment = comments.filter(
+    (comment) => comment?.user.id === user?.id
+  );
   const otherComments = comments.filter(
     (comment) => comment?.user.id !== user?.id
   );
-  console.log(comments);
+
+  console.log(userComment);
+
   return (
     <div className={className ? className : 'my-4 w-[80%] mx-auto pt-8'}>
       <Typography variant="h2">Commentaires</Typography>
       {comments.length === 0 ? (
-        <Typography className="mt-4 mb-6">
-          Pas de commentaires renseignés pour le moment
-        </Typography>
+        <div
+          className={user && user.id ? 'flex justify-between items-center' : ''}
+        >
+          <Typography className="mt-4 mb-6 justify-self-start">
+            Pas de commentaires renseignés pour le moment
+          </Typography>
+          {user && user.id && (
+            <>
+              <div
+                style={{
+                  width: 2,
+                  height: 150,
+                  /* margin: '20px auto', */
+                  backgroundColor: 'rgb(198, 198, 198)',
+                }}
+              />
+              <div className="flex flex-col justify-center text-center">
+                <Typography variant="h4" className="pb-2">
+                  Evaluer ce {type}
+                </Typography>
+                <Typography className="pb-4">
+                  Partagez votre avis avec les autres utilisateurs
+                </Typography>
+                <button
+                  type="button"
+                  onClick={() => setOpenCreateDialog(true)}
+                  className="p-2 border-2 rounded-xl"
+                >
+                  Ajouter un commentaire
+                </button>
+                {openCreateDialog && (
+                  <POIComment
+                    openCreateDialog={openCreateDialog}
+                    handleCreateDialogClose={() => setOpenCreateDialog(false)}
+                    type="create"
+                    poiId={poiId}
+                    userId={user.id}
+                  />
+                )}
+              </div>
+            </>
+          )}
+        </div>
       ) : (
         <div className="pt-4">
           <div className="flex justify-between items-center w-[80%] mx-auto">
@@ -70,66 +108,120 @@ const POIComments: React.FC<POICommentsProps> = ({
               </Typography>
             </div>
             {user && user.id && (
-              <div className="flex flex-col justify-center text-center">
-                <Typography variant="h4" className="pb-2">
-                  Evaluer ce {type}
-                </Typography>
-                <Typography className="pb-4">
-                  Partagez votre avis avec les autres utilisateurs
-                </Typography>
-                <button type="button" className="p-2 border-2 rounded-xl">
-                  Ajouter un commentaire
-                </button>
-              </div>
+              <>
+                <div
+                  style={{
+                    width: 2,
+                    height: 150,
+                    backgroundColor: 'rgb(198, 198, 198)',
+                  }}
+                />
+                <div className="flex flex-col justify-center text-center">
+                  <Typography variant="h4" className="pb-2">
+                    Evaluer ce {type}
+                  </Typography>
+                  <Typography className="pb-4">
+                    Partagez votre avis avec les autres utilisateurs
+                  </Typography>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenCreateDialog(true);
+                    }}
+                    className="p-2 border-2 rounded-xl"
+                  >
+                    Ajouter un commentaire
+                  </button>
+                  {openCreateDialog && (
+                    <POIComment
+                      openCreateDialog={openCreateDialog}
+                      handleCreateDialogClose={() => {
+                        setOpenCreateDialog(false);
+                      }}
+                      type="create"
+                      poiId={poiId}
+                      userId={user.id}
+                    />
+                  )}
+                </div>
+              </>
             )}
           </div>
 
-          {user && userComment && (
-            <div>
-              <div className="flex justify-between items-center text-gray-500">
-                <StarRating
-                  className="flex items-center justify-left"
-                  userRate={userComment.rate}
-                />
-                <div className="flex w-20 p-3 justify-between border-2 rounded-full">
-                  <FiEdit
-                    style={{ width: 20, height: 20, cursor: 'pointer' }}
+          {user &&
+            userComment.length > 0 &&
+            userComment.map((comment, index) => (
+              <div key={index}>
+                <div className="flex justify-between items-center text-gray-500">
+                  <StarRating
+                    className="flex items-center justify-left"
+                    userRate={comment.rate}
                   />
-                  <AiOutlineDelete
-                    onClick={handleDeleteDialogOpen}
-                    style={{ width: 20, height: 20, cursor: 'pointer' }}
-                  />
-                  <POIComment
-                    openDeleteDialog={openDeleteDialog}
-                    handleDeleteDialogClose={handleDeleteDialogClose}
-                    type="delete"
-                    poiId={poiId}
-                    userId={user.id}
-                    commentId={userComment.id}
-                  />
+                  <div className="flex w-20 p-3 justify-between border-2 rounded-full">
+                    <FiEdit
+                      style={{ width: 20, height: 20, cursor: 'pointer' }}
+                      onClick={() => setOpenUpdateDialog(true)}
+                    />
+                    {openUpdateDialog && (
+                      <POIComment
+                        key={comment.id}
+                        openUpdateDialog={openUpdateDialog}
+                        handleUpdateDialogClose={() =>
+                          setOpenUpdateDialog(false)
+                        }
+                        type="update"
+                        poiId={poiId}
+                        userId={user.id}
+                        userRate={comment.rate}
+                        userComment={comment.text}
+                        commentId={comment.id}
+                      />
+                    )}
+                    <AiOutlineDelete
+                      onClick={() => setOpenDeleteDialog(true)}
+                      style={{ width: 20, height: 20, cursor: 'pointer' }}
+                    />
+                    {openDeleteDialog && (
+                      <POIComment
+                        key={comment.id}
+                        openDeleteDialog={openDeleteDialog}
+                        handleDeleteDialogClose={() =>
+                          setOpenDeleteDialog(false)
+                        }
+                        type="delete"
+                        poiId={poiId}
+                        userId={user.id}
+                        commentId={comment.id}
+                      />
+                    )}
+                  </div>
                 </div>
+                <Typography className="font-bold pt-2">
+                  {comment.text}
+                </Typography>
+                <Typography className="font-medium pt-4">
+                  {comment.user?.username || comment.user.email}
+                </Typography>
+                <Typography className="text-gray-500">
+                  Créé le{' '}
+                  {moment(comment.createDate).format('DD-MM-YYYY à HH:MM')}
+                  {comment.updateDate
+                    ? ', Modifié le ' +
+                      moment(comment.updateDate).format('DD-MM-YYYY à HH:MM')
+                    : null}
+                </Typography>
+                <div
+                  style={{
+                    height: 2,
+                    width: '80%',
+                    margin: '20px auto',
+                    backgroundColor: 'rgb(198, 198, 198)',
+                  }}
+                />
               </div>
-              <Typography className="font-bold pt-2">
-                {userComment.text}
-              </Typography>
-              <Typography className="font-medium pt-4">
-                {userComment.user?.username || userComment.user.email}
-              </Typography>
-              <Typography className="text-gray-500">
-                Le {moment(userComment.createDate).format('DD-MM-YYYY')}
-              </Typography>
-              <div
-                style={{
-                  height: 2,
-                  width: '80%',
-                  margin: '20px auto',
-                  backgroundColor: 'rgb(198, 198, 198)',
-                }}
-              />
-            </div>
-          )}
+            ))}
           {otherComments &&
-            map(otherComments, (comment) => (
+            otherComments.map((comment) => (
               <div key={comment.id}>
                 <div className="flex justify-between items-center text-gray-500">
                   <StarRating
@@ -144,7 +236,12 @@ const POIComments: React.FC<POICommentsProps> = ({
                   {comment.user?.username || comment.user.email}
                 </Typography>
                 <Typography className="text-gray-500">
-                  Le {moment(comment.createDate).format('DD-MM-YYYY')}
+                  Créé le{' '}
+                  {moment(comment.createDate).format('DD-MM-YYYY à HH:MM')}
+                  {comment.updateDate
+                    ? ', Modifié le ' +
+                      moment(comment.updateDate).format('DD-MM-YYYY à HH:MM')
+                    : null}
                 </Typography>
                 <div
                   style={{

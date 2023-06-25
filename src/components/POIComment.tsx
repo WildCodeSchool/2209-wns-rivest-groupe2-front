@@ -1,7 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/contexts/userContext';
-import { COMMENT_POI_MUTATION } from 'src/services/mutations/commentMutations';
+import {
+  COMMENT_POI_MUTATION,
+  UPDATE_COMMENT_POI_MUTATION,
+} from 'src/services/mutations/commentMutations';
 import {
   GET_COMMENTS_NUMBER_PER_POI,
   GET_USER_COMMENT_POI_QUERY,
@@ -25,9 +28,15 @@ interface POIDetailsProps {
   poiId: number;
   userId: number;
   type: 'delete' | 'update' | 'create';
-  openDeleteDialog: boolean;
-  handleDeleteDialogClose: () => void;
+  openDeleteDialog?: boolean;
+  handleDeleteDialogClose?: () => void;
+  openUpdateDialog?: boolean;
+  handleUpdateDialogClose?: () => void;
+  openCreateDialog?: boolean;
+  handleCreateDialogClose?: () => void;
   commentId?: number;
+  userRate?: number;
+  userComment?: string;
 }
 
 const POIComment: React.FC<POIDetailsProps> = ({
@@ -37,11 +46,21 @@ const POIComment: React.FC<POIDetailsProps> = ({
   type,
   openDeleteDialog,
   handleDeleteDialogClose,
+  openCreateDialog,
+  handleCreateDialogClose,
+  openUpdateDialog,
+  handleUpdateDialogClose,
   commentId,
+  userRate,
+  userComment,
 }) => {
   const [currentComment, setCurrentComment] = useState<string | undefined>('');
-  const [editingComment, setEditingComment] = useState(false);
-  const [isFirstCommentSent, setIsFirstCommentSent] = useState(false);
+  const [currentRate, setcurrentRate] = useState<number>(0);
+
+  useEffect(() => {
+    if (userComment) setCurrentComment(userComment);
+    if (userRate) setcurrentRate(userRate);
+  }, [userComment, userRate]);
 
   const { user } = useContext(UserContext);
 
@@ -51,13 +70,6 @@ const POIComment: React.FC<POIDetailsProps> = ({
       variables: { userId, poiId },
     }
   );
-
-  useEffect(() => {
-    if (userCommentData?.getUserCommentForPOI) {
-      setCurrentComment(userCommentData.getUserCommentForPOI.text);
-      setIsFirstCommentSent(true);
-    }
-  }, [userCommentData]);
 
   const [deleteComment] = useMutation(DELETE_COMMENT, {
     refetchQueries: [
@@ -69,81 +81,68 @@ const POIComment: React.FC<POIDetailsProps> = ({
   });
 
   const [commentPOI] = useMutation(COMMENT_POI_MUTATION, {
-    variables: {
-      poiId,
-      userId,
+    context: {
+      headers: {
+        authorization: `Bearer ${user?.id}`,
+      },
     },
-    update(cache, { data: { commentPOI } }) {
-      const { getUserCommentForPOI } = cache.readQuery({
-        query: GET_USER_COMMENT_POI_QUERY,
-        variables: { userId, poiId },
-      }) as { getUserCommentForPOI: { comment: string } };
-      cache.writeQuery({
-        query: GET_USER_COMMENT_POI_QUERY,
-        variables: { userId, poiId },
-        data: {
-          getUserCommentForPOI: { ...getUserCommentForPOI, ...commentPOI },
-        },
-      });
-      setCurrentComment(commentPOI.comment);
-    },
+    refetchQueries: [
+      { query: GET_POI_QUERY },
+      'getAllPoi',
+      { query: GET_COMMENTS_NUMBER_PER_POI, variables: { poiId } },
+      'getNumberOfCommentsPerPOI',
+    ],
   });
 
-  const [updatePOIComment] = useMutation(COMMENT_POI_MUTATION, {
-    variables: {
-      poiId,
-      userId,
+  const [updateCommentPOI] = useMutation(UPDATE_COMMENT_POI_MUTATION, {
+    context: {
+      headers: {
+        authorization: `Bearer ${user?.id}`,
+      },
     },
-    update(cache, { data: { updatePOIComment } }) {
-      const { getUserCommentForPOI } = cache.readQuery({
-        query: GET_USER_COMMENT_POI_QUERY,
-        variables: { userId, poiId },
-      }) as { getUserCommentForPOI: { comment: string } };
-      cache.writeQuery({
-        query: GET_USER_COMMENT_POI_QUERY,
-        variables: { userId, poiId },
-        data: {
-          getUserCommentForPOI: {
-            ...getUserCommentForPOI,
-            ...updatePOIComment,
-          },
-        },
-      });
-      setCurrentComment(updatePOIComment.comment);
-    },
+    refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
   });
 
   const handleCommentDelete = async () => {
     try {
       await deleteComment({
         variables: {
-          commentId: commentId,
+          commentId,
           userId,
         },
       });
-      handleDeleteDialogClose();
+      handleDeleteDialogClose && handleDeleteDialogClose();
     } catch (error: any) {
       console.log(error);
       alert(`Erreur lors de la suppression du commentaire: ${error.message}`);
     }
   };
 
-  const handleCommentSubmit = async (
-    event: React.FormEvent<HTMLFormElement>
-  ) => {
-    event.preventDefault();
+  const handleCommentSubmit = async () => {
     const variables = {
       comment: currentComment,
+      rate: currentRate,
       userId,
       poiId,
     };
     try {
-      if (currentComment) {
-        await updatePOIComment({ variables });
+      if (userComment) {
+        await updateCommentPOI({
+          variables: {
+            comment: currentComment,
+            rate: currentRate,
+            commentId,
+            userId,
+            poiId,
+          },
+        });
       } else {
-        const result = await commentPOI({ variables });
-        setCurrentComment(result.data.commentPOI.comment);
+        await commentPOI({ variables });
       }
+      handleCreateDialogClose && handleCreateDialogClose();
+      handleUpdateDialogClose && handleUpdateDialogClose();
+      setCurrentComment(undefined);
+      setcurrentRate(0);
     } catch (error) {
       console.log(error);
     }
@@ -151,9 +150,6 @@ const POIComment: React.FC<POIDetailsProps> = ({
     if (userCommentLoading) {
       return <div>Loading user comment...</div>;
     }
-    setCurrentComment(undefined);
-    setEditingComment(false);
-    setIsFirstCommentSent(true);
   };
 
   // ============================ HANDLE COMMENT CHANGE ============================
@@ -161,12 +157,6 @@ const POIComment: React.FC<POIDetailsProps> = ({
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setCurrentComment(event.target.value);
-  };
-
-  // ============================ HANDLE EDIT CLICK ============================
-  const handleEditClick = () => {
-    setEditingComment(true);
-    setIsFirstCommentSent(false);
   };
 
   return (
@@ -233,7 +223,7 @@ const POIComment: React.FC<POIDetailsProps> = ({
           </form>
         )}
       </div> */}
-      {type === 'delete' && (
+      {type === 'delete' && openDeleteDialog && handleDeleteDialogClose ? (
         <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
           <DialogTitle
             sx={{
@@ -246,7 +236,12 @@ const POIComment: React.FC<POIDetailsProps> = ({
             Suppresion commentaire
           </DialogTitle>
           <DialogContent>
-            <DialogContentText>
+            <DialogContentText
+              sx={{
+                margin: '1rem 2rem',
+                padding: '1rem 2rem',
+              }}
+            >
               Etes-vous sûr de vouloir supprimer votre commentaire ?
             </DialogContentText>
           </DialogContent>
@@ -257,7 +252,96 @@ const POIComment: React.FC<POIDetailsProps> = ({
             </Button>
           </DialogActions>
         </Dialog>
-      )}
+      ) : type === 'create' && openCreateDialog && handleCreateDialogClose ? (
+        <Dialog open={openCreateDialog} onClose={handleCreateDialogClose}>
+          <DialogTitle
+            sx={{
+              textAlign: 'center',
+              backgroundColor: 'rgb(0, 134, 179)',
+              color: 'white',
+              marginBottom: '15px',
+            }}
+          >
+            Ajout d'un commentaire
+          </DialogTitle>
+          <DialogContent>
+            <form
+              onSubmit={handleCommentSubmit}
+              className="mx-8 px-8 my-4 py-4"
+            >
+              <label htmlFor="currentComment" className="block font-medium">
+                <textarea
+                  id="currentComment"
+                  name="currentComment"
+                  rows={4}
+                  cols={50}
+                  className="border-2 border-gray-200 p-2 w-full mt-2"
+                  value={currentComment}
+                  onChange={handleCommentChange}
+                />
+              </label>
+              <StarRating
+                className="flex items-center justify-left"
+                userRate={currentRate}
+                setUserRate={setcurrentRate}
+                isEditing={true}
+              />
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCreateDialogClose}>Annuler</Button>
+            <Button type="submit" onClick={handleCommentSubmit}>
+              Ajouter
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : type === 'update' &&
+        userRate &&
+        openUpdateDialog &&
+        handleUpdateDialogClose ? (
+        <Dialog open={openUpdateDialog} onClose={handleUpdateDialogClose}>
+          <DialogTitle
+            sx={{
+              textAlign: 'center',
+              backgroundColor: 'rgb(0, 134, 179)',
+              color: 'white',
+              marginBottom: '15px',
+            }}
+          >
+            Modification d'un commentaire
+          </DialogTitle>
+          <DialogContent>
+            <form
+              onSubmit={handleCommentSubmit}
+              className="mx-8 px-8 my-4 py-4"
+            >
+              <label htmlFor="currentComment" className="block font-medium">
+                <textarea
+                  id="currentComment"
+                  name="currentComment"
+                  rows={4}
+                  cols={50}
+                  className="border-2 border-gray-200 p-2 w-full mt-2"
+                  value={currentComment}
+                  onChange={handleCommentChange}
+                />
+              </label>
+              <StarRating
+                className="flex items-center justify-left"
+                userRate={currentRate}
+                setUserRate={setcurrentRate}
+                isEditing={true}
+              />
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleUpdateDialogClose}>Annuler</Button>
+            <Button type="submit" onClick={handleCommentSubmit}>
+              Modifier
+            </Button>
+          </DialogActions>
+        </Dialog>
+      ) : null}
     </div>
   );
 };

@@ -56,6 +56,7 @@ export type IFormInput = {
 export type POICommentType = {
   id: number;
   createDate: string;
+  updateDate: string | null;
   text: string;
   rate: number;
   user: {
