@@ -8,7 +8,6 @@ import POIImage from './POIImage';
 import { FavoriteButton } from './FavoriteButton';
 import { useQuery } from '@apollo/client';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
-import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
 
 interface POIInfoProps {
   poi: IPOIData;

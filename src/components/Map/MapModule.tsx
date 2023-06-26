@@ -1,4 +1,4 @@
-import L, { LatLngExpression } from 'leaflet';
+import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { IPOIData } from 'src/types/POIType';
 import { Legend } from './MapLegend';

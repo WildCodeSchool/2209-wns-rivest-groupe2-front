@@ -46,7 +46,7 @@ const StarRating: React.FC<StarRatingProps> = ({
           {Array.from({ length: 5 - userRate }).map((_, i) => (
             <span
               key={i + userRate}
-              onClick={() => setUserRate(i + 1)}
+              onClick={() => setUserRate(i + userRate + 1)}
               className="text-gray-500 cursor-pointer text-xl"
             >
               &#9733;

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
@@ -6,7 +6,6 @@ import { useQuery } from '@apollo/client';
 import POICard from 'src/components/POICard';
 import POIComments from 'src/components/POIComments';
 import { Typography } from '@material-tailwind/react';
-import { UserContext } from 'src/contexts/userContext';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import bgBar from 'src/asset/img/bg-bar.jpg';
 import bgChurch from 'src/asset/img/bg-church.jpg';
@@ -34,8 +33,6 @@ const POIDetails = () => {
     setCommentsCount(countCommentData?.getNumberOfCommentsPerPOI);
   }, [countCommentData?.getNumberOfCommentsPerPOI]);
 
-  const { user } = useContext(UserContext);
-
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
@@ -54,7 +51,6 @@ const POIDetails = () => {
   };
 
   function getCategoryBackgroundImage(type: any) {
-    // Define the background images for each category type
     switch (type) {
       case 'restaurant':
         return bgRestaurant;

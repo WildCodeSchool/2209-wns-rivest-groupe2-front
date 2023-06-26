@@ -1,13 +1,10 @@
 import React, { useContext, useState } from 'react';
-import StarRating from './StarRating';
 import { POICommentType } from 'src/types/POIType';
 import { Typography } from '@material-tailwind/react';
-import moment from 'moment';
 import { AverageRatingStar } from './AverageRatingStar';
 import { UserContext } from 'src/contexts/userContext';
-import { map } from 'lodash';
-import { FiEdit } from 'react-icons/fi';
-import { AiOutlineDelete } from 'react-icons/ai';
+import { sortBy } from 'lodash';
+import POICommentModal from './POICommentModal';
 import POIComment from './POIComment';
 
 interface POICommentsProps {
@@ -29,9 +26,7 @@ const POIComments: React.FC<POICommentsProps> = ({
 }) => {
   const { user } = useContext(UserContext);
 
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
   const userComment = comments.filter(
     (comment) => comment?.user.id === user?.id
@@ -39,8 +34,6 @@ const POIComments: React.FC<POICommentsProps> = ({
   const otherComments = comments.filter(
     (comment) => comment?.user.id !== user?.id
   );
-
-  console.log(userComment);
 
   return (
     <div className={className ? className : 'my-4 w-[80%] mx-auto pt-8'}>
@@ -77,7 +70,7 @@ const POIComments: React.FC<POICommentsProps> = ({
                   Ajouter un commentaire
                 </button>
                 {openCreateDialog && (
-                  <POIComment
+                  <POICommentModal
                     openCreateDialog={openCreateDialog}
                     handleCreateDialogClose={() => setOpenCreateDialog(false)}
                     type="create"
@@ -133,7 +126,7 @@ const POIComments: React.FC<POICommentsProps> = ({
                     Ajouter un commentaire
                   </button>
                   {openCreateDialog && (
-                    <POIComment
+                    <POICommentModal
                       openCreateDialog={openCreateDialog}
                       handleCreateDialogClose={() => {
                         setOpenCreateDialog(false);
@@ -150,107 +143,22 @@ const POIComments: React.FC<POICommentsProps> = ({
 
           {user &&
             userComment.length > 0 &&
-            userComment.map((comment, index) => (
-              <div key={index}>
-                <div className="flex justify-between items-center text-gray-500">
-                  <StarRating
-                    className="flex items-center justify-left"
-                    userRate={comment.rate}
+            sortBy(userComment, (comment) => comment.createDate)
+              .reverse()
+              .map((comment) => (
+                <div key={comment.id}>
+                  <POIComment
+                    comment={comment}
+                    isUserComment={true}
+                    poiId={poiId}
+                    userId={user.id}
                   />
-                  <div className="flex w-20 p-3 justify-between border-2 rounded-full">
-                    <FiEdit
-                      style={{ width: 20, height: 20, cursor: 'pointer' }}
-                      onClick={() => setOpenUpdateDialog(true)}
-                    />
-                    {openUpdateDialog && (
-                      <POIComment
-                        key={comment.id}
-                        openUpdateDialog={openUpdateDialog}
-                        handleUpdateDialogClose={() =>
-                          setOpenUpdateDialog(false)
-                        }
-                        type="update"
-                        poiId={poiId}
-                        userId={user.id}
-                        userRate={comment.rate}
-                        userComment={comment.text}
-                        commentId={comment.id}
-                      />
-                    )}
-                    <AiOutlineDelete
-                      onClick={() => setOpenDeleteDialog(true)}
-                      style={{ width: 20, height: 20, cursor: 'pointer' }}
-                    />
-                    {openDeleteDialog && (
-                      <POIComment
-                        key={comment.id}
-                        openDeleteDialog={openDeleteDialog}
-                        handleDeleteDialogClose={() =>
-                          setOpenDeleteDialog(false)
-                        }
-                        type="delete"
-                        poiId={poiId}
-                        userId={user.id}
-                        commentId={comment.id}
-                      />
-                    )}
-                  </div>
                 </div>
-                <Typography className="font-bold pt-2">
-                  {comment.text}
-                </Typography>
-                <Typography className="font-medium pt-4">
-                  {comment.user?.username || comment.user.email}
-                </Typography>
-                <Typography className="text-gray-500">
-                  Créé le{' '}
-                  {moment(comment.createDate).format('DD-MM-YYYY à HH:MM')}
-                  {comment.updateDate
-                    ? ', Modifié le ' +
-                      moment(comment.updateDate).format('DD-MM-YYYY à HH:MM')
-                    : null}
-                </Typography>
-                <div
-                  style={{
-                    height: 2,
-                    width: '80%',
-                    margin: '20px auto',
-                    backgroundColor: 'rgb(198, 198, 198)',
-                  }}
-                />
-              </div>
-            ))}
+              ))}
           {otherComments &&
             otherComments.map((comment) => (
               <div key={comment.id}>
-                <div className="flex justify-between items-center text-gray-500">
-                  <StarRating
-                    className="flex items-center justify-left"
-                    userRate={comment.rate}
-                  />
-                </div>
-                <Typography className="font-bold pt-2">
-                  {comment.text}
-                </Typography>
-                <Typography className="font-medium pt-4">
-                  {comment.user?.username || comment.user.email}
-                </Typography>
-                <Typography className="text-gray-500">
-                  Créé le{' '}
-                  {moment(comment.createDate).format('DD-MM-YYYY à HH:MM')}
-                  {comment.updateDate
-                    ? ', Modifié le ' +
-                      moment(comment.updateDate).format('DD-MM-YYYY à HH:MM')
-                    : null}
-                </Typography>
-                <div
-                  style={{
-                    height: 2,
-                    width: '80%',
-                    margin: '20px auto',
-                    backgroundColor: 'rgb(198, 198, 198)',
-                  }}
-                />
+                <POIComment comment={comment} isUserComment={false} />
               </div>
             ))}
         </div>
