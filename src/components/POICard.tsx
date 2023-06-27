@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@material-tailwind/react';
 import noImage from '../asset/img/no-image-icon.png';
-import { IPOICard } from 'src/types/POIType';
+import { IPOICard, IPOIData } from 'src/types/POIType';
 
 export function goodWrittenType(type: string) {
   switch (type) {

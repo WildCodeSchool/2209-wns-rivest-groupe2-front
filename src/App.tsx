@@ -27,17 +27,17 @@ const App = () => {
           <Route path="/payment" element={<Payment />} />
           <Route path="/point-of-interest/list" element={<POIList />} />
           <Route path="/point-of-interest/creation" element={<POICreation />} />
-          <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
           <Route path="/profil/:id" element={<Profil />} />
           <Route path="/town/creation" element={<TownCreation />} />
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route element={<RequireAuth allowedRoles={['freeUser']} />}>
+        <Route element={<RequireAuth allowedRoles={['free_user', 'city_admin', 'super_user', 'admin']} />}>
           <Route path="/" element={<DashboardHome />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/profile/" element={<Profile />} />
           <Route path="/auth/*" element={<Auth />} />
           <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+          <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
         </Route>
       </Routes>
     </>

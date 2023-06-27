@@ -6,8 +6,9 @@ import { gql, useMutation } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { UserContext } from '../../contexts/userContext';
-import { ISignUp } from 'src/types/ISignUp';
+import { ISignUp, IDecodedToken } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
+import jwtDecode from 'jwt-decode';
 
 // MUTATION APOLLO
 const CREATE_USER = gql`
@@ -21,7 +22,6 @@ const CREATE_USER = gql`
         firstname
         lastname
         profilePicture
-        type
       }
     }
   }
@@ -63,11 +63,16 @@ const SignUp = () => {
   const { setUser } = useContext(UserContext);
 
   const [signUp] = useMutation(CREATE_USER, {
-    // onCompleted(data: { createUser: string }) {
     onCompleted(data) {
-      localStorage.setItem('token', data.createUser.token);
-      localStorage.setItem('user', JSON.stringify(data.createUser.userFromDB));
-      setUser(data.createUser.userFromDB);
+      const token = data.createUser.token;
+      const decodedToken = jwtDecode(token) as IDecodedToken;
+      const userDataWithRole = {
+        ...data.createUser.userFromDB,
+        role: decodedToken.role
+      };
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(userDataWithRole));
+      setUser(userDataWithRole);
       navigate('/point-of-interest/list');
     },
     onError(error: any) {
@@ -95,12 +100,6 @@ const SignUp = () => {
     });
   };
 
-  // const onSubmit: SubmitHandler<ISignUp> = async (data: any) => {
-  //   signUp({
-  //     variables: data,
-  //   });
-  // };
-
   return (
     <>
       <div className="bg-blue-900 h-[90vh] w-screen relative">
@@ -113,14 +112,6 @@ const SignUp = () => {
           <div className="row-span-2 col-span-1 relative w-3/4 md:w-2/3 lg:w-1/3">
             <div className="bg-deep-blue rounded-lg px-6 py-6 mx-auto z-10 flex flex-col items-center lg:w-4/5 lg:mb-8 lg:px-12 lg:py-12">
               <span className="box-sizing:border-box;display:inline-block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:relative;max-width:100%"></span>
-              {/* <p className="text-gray-300 text-center text-l my-2">
-                Sign up with
-              </p>
-              <div className="flex items-center my-4 space-x-8 w-full">
-                <hr className="grow w-full h-px bg-gray-500 border-none" />
-                <div className="text-gray-500 text-center text-xsm">or</div>
-                <hr className="grow w-full h-px bg-gray-500 border-none" />
-              </div> */}
               <div className="text-gray-300 font-luckiest tracking-widest text-center text-xl md:text-2xl lg:text-2xl mb-10 mt-6">
                 Create Account
               </div>

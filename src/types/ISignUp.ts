@@ -3,3 +3,9 @@ export interface ISignUp {
     password: string;
     confirmPassword: string;
 }
+
+export interface IDecodedToken {
+    email: string;
+    role: string;
+    iat: number;
+  }

@@ -13,7 +13,7 @@ const RequireAuth = ({ allowedRoles }:IAllowedRoles) => {
   const location = useLocation();
 
   //SPLIT ROLES TO CHECK WITH ALLOWEDROLES FROM APP
-  let roles: any = user?.type.split(" ");
+  let roles: any = user?.role.split(" ");
   
   //OUTLET REPRESENT ANY CHILD OF REQUIREAUTH COMPONENT
   return roles.find((role: any)=> allowedRoles?.includes(role)) ? (

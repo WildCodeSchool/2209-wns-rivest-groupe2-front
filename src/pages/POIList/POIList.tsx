@@ -52,7 +52,7 @@ const POIList = () => {
         <button
           className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
           onClick={() => setOpenModalAddPlace(!openModalAddPlace)}
-          style={{ visibility: user?.type ? 'initial' : 'hidden' }}
+          style={{ visibility: user?.role ? 'initial' : 'hidden' }}
         >
           {!openModalAddPlace ? 'Ajouter votre lieu' : "Annuler l'ajout"}
         </button>
@@ -88,7 +88,7 @@ const POIList = () => {
       <div className="flex pt-5 h-full">
         <div className="h-[72vh] overflow-auto w-[50%]">
           {openModalAddPlace ? (
-            <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} />
+            <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} lastPoiId={null} />
           ) : data.getAllPoi.length === 0 || filteredPois.length === 0 ? (
             <p className="py-4 w-4/5 my-3.5 mx-auto">
               Pas de point d'intérêt renseigné pour l'instant.
