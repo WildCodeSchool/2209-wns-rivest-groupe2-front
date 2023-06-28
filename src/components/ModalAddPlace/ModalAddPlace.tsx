@@ -15,6 +15,7 @@ export type DaysOpenProps = {
   value: string;
   name: string;
   isOpen: boolean;
+  selected: boolean;
   hoursOpen: string[];
   hoursClose: string[];
 };
@@ -25,6 +26,7 @@ const defaultDays: DaysOpenProps[] = [
     value: 'monday',
     name: 'Lundi',
     isOpen: false,
+    selected: false,
     hoursOpen: [],
     hoursClose: [],
   },
@@ -33,6 +35,7 @@ const defaultDays: DaysOpenProps[] = [
     value: 'tuesday',
     name: 'Mardi',
     isOpen: false,
+    selected: false,
     hoursOpen: [],
     hoursClose: [],
   },
@@ -41,6 +44,7 @@ const defaultDays: DaysOpenProps[] = [
     value: 'wednesday',
     name: 'Mercredi',
     isOpen: false,
+    selected: false,
     hoursOpen: [],
     hoursClose: [],
   },
@@ -49,6 +53,7 @@ const defaultDays: DaysOpenProps[] = [
     value: 'thursday',
     name: 'Jeudi',
     isOpen: false,
+    selected: false,
     hoursOpen: [],
     hoursClose: [],
   },
@@ -57,6 +62,7 @@ const defaultDays: DaysOpenProps[] = [
     value: 'friday',
     name: 'Vendredi',
     isOpen: false,
+    selected: false,
     hoursOpen: [],
     hoursClose: [],
   },
@@ -65,6 +71,7 @@ const defaultDays: DaysOpenProps[] = [
     value: 'saturday',
     name: 'Samedi',
     isOpen: false,
+    selected: false,
     hoursOpen: [],
     hoursClose: [],
   },
@@ -73,6 +80,7 @@ const defaultDays: DaysOpenProps[] = [
     value: 'sunday',
     name: 'Dimanche',
     isOpen: false,
+    selected: false,
     hoursOpen: [],
     hoursClose: [],
   },
@@ -407,7 +415,7 @@ const ModalAddPlace = (props: Props) => {
                   }
                 >
                   <input
-                    type="text"
+                    type="url"
                     {...register('websiteURL', {
                       pattern: {
                         value:

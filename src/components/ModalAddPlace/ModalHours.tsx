@@ -5,14 +5,20 @@ import ModalUpdateHours from './ModalUpdateHours';
 import { DaysOpenProps } from './ModalAddPlace';
 import { map } from 'lodash';
 
+type ModalHoursProps = {
+  setOpenModalHours: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedDays: DaysOpenProps[];
+  setSelectedDays: React.Dispatch<React.SetStateAction<DaysOpenProps[]>>;
+};
+
 const ModalHours = ({
   setOpenModalHours,
   selectedDays,
   setSelectedDays,
-}: any) => {
+}: ModalHoursProps) => {
   const methods = useFormContext();
   const [openModalUpdateHours, setOpenModalUpdateHours] = useState(false);
-
+  console.log('selectedDays', selectedDays);
   return (
     <div className="relative mt-7 h-[100%]">
       {openModalUpdateHours ? (
@@ -35,104 +41,17 @@ const ModalHours = ({
               </ul>
               <div className="flex h-full">
                 <ul className="px-3">
-                  <li className="py-2">
-                    {selectedDays.monday &&
-                    methods.getValues('firstHoursOpen') !== undefined
-                      ? `${methods.getValues(
-                          'firstHoursOpen'
-                        )} - ${methods.getValues('firstHoursClose')}`
-                      : 'Fermé'}
-                    {selectedDays.monday &&
-                    methods.getValues('secondHoursOpen') !== undefined
-                      ? `, ${methods.getValues(
-                          'secondHoursOpen'
-                        )} - ${methods.getValues('secondHoursClose')}`
-                      : null}
-                  </li>
-                  <li className="py-2">
-                    {selectedDays.tuesday &&
-                    methods.getValues('firstHoursOpen') !== undefined
-                      ? `${methods.getValues(
-                          'firstHoursOpen'
-                        )} - ${methods.getValues('firstHoursClose')}`
-                      : 'Fermé'}
-                    {selectedDays.tuesday &&
-                    methods.getValues('secondHoursOpen') !== undefined
-                      ? `, ${methods.getValues(
-                          'secondHoursOpen'
-                        )} - ${methods.getValues('secondHoursClose')}`
-                      : null}
-                  </li>
-                  <li className="py-2">
-                    {selectedDays.wednesday &&
-                    methods.getValues('firstHoursOpen') !== undefined
-                      ? `${methods.getValues(
-                          'firstHoursOpen'
-                        )} - ${methods.getValues('firstHoursClose')}`
-                      : 'Fermé'}
-                    {selectedDays.wednesday &&
-                    methods.getValues('secondHoursOpen') !== undefined
-                      ? `, ${methods.getValues(
-                          'secondHoursOpen'
-                        )} - ${methods.getValues('secondHoursClose')}`
-                      : null}
-                  </li>
-                  <li className="py-2">
-                    {selectedDays.thursday &&
-                    methods.getValues('firstHoursOpen') !== undefined
-                      ? `${methods.getValues(
-                          'firstHoursOpen'
-                        )} - ${methods.getValues('firstHoursClose')}`
-                      : 'Fermé'}
-                    {selectedDays.thursday &&
-                    methods.getValues('secondHoursOpen') !== undefined
-                      ? `, ${methods.getValues(
-                          'secondHoursOpen'
-                        )} - ${methods.getValues('secondHoursClose')}`
-                      : null}
-                  </li>
-                  <li className="py-2">
-                    {selectedDays.friday &&
-                    methods.getValues('firstHoursOpen') !== undefined
-                      ? `${methods.getValues(
-                          'firstHoursOpen'
-                        )} - ${methods.getValues('firstHoursClose')}`
-                      : 'Fermé'}
-                    {selectedDays.friday &&
-                    methods.getValues('secondHoursOpen') !== undefined
-                      ? `, ${methods.getValues(
-                          'secondHoursOpen'
-                        )} - ${methods.getValues('secondHoursClose')}`
-                      : null}
-                  </li>
-                  <li className="py-2">
-                    {selectedDays.saturday &&
-                    methods.getValues('firstHoursOpen') !== undefined
-                      ? `${methods.getValues(
-                          'firstHoursOpen'
-                        )} - ${methods.getValues('firstHoursClose')}`
-                      : 'Fermé'}
-                    {selectedDays.saturday &&
-                    methods.getValues('secondHoursOpen') !== undefined
-                      ? `, ${methods.getValues(
-                          'secondHoursOpen'
-                        )} - ${methods.getValues('secondHoursClose')}`
-                      : null}
-                  </li>
-                  <li className="py-2">
-                    {selectedDays.sunday &&
-                    methods.getValues('firstHoursOpen') !== undefined
-                      ? `${methods.getValues(
-                          'firstHoursOpen'
-                        )} - ${methods.getValues('firstHoursClose')}`
-                      : 'Fermé'}
-                    {selectedDays.sunday &&
-                    methods.getValues('secondHoursOpen') !== undefined
-                      ? `, ${methods.getValues(
-                          'secondHoursOpen'
-                        )} - ${methods.getValues('secondHoursClose')}`
-                      : null}
-                  </li>
+                  {selectedDays.map((day: DaysOpenProps) => (
+                    <li key={day.value} className="py-2">
+                      {day.hoursOpen.length === 0 ? 'Fermé' : day.hoursOpen[0]}
+                      {day.hoursClose.length === 0
+                        ? ''
+                        : ` - ${day.hoursClose[0]}`}
+                      {day.hoursOpen.length === 2 &&
+                        day.hoursClose.length === 2 &&
+                        `, ${day.hoursOpen[1]} - ${day.hoursClose[1]}`}
+                    </li>
+                  ))}
                 </ul>
                 <div className="px-3 flex flex-col">
                   <button
@@ -140,7 +59,7 @@ const ModalHours = ({
                     className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
                     onClick={() => {
                       setOpenModalUpdateHours(true);
-                      setSelectedDays({ ...selectedDays, monday: true });
+                      /* setSelectedDays({ ...selectedDays, monday: true }); */
                     }}
                   >
                     <BiPencil
@@ -154,7 +73,7 @@ const ModalHours = ({
                     className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
                     onClick={() => {
                       setOpenModalUpdateHours(true);
-                      setSelectedDays({ ...selectedDays, tuesday: true });
+                      /* setSelectedDays({ ...selectedDays, tuesday: true }); */
                     }}
                   >
                     <BiPencil
@@ -168,7 +87,7 @@ const ModalHours = ({
                     className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
                     onClick={() => {
                       setOpenModalUpdateHours(true);
-                      setSelectedDays({ ...selectedDays, wednesday: true });
+                      /* setSelectedDays({ ...selectedDays, wednesday: true }); */
                     }}
                   >
                     <BiPencil
@@ -182,7 +101,7 @@ const ModalHours = ({
                     className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
                     onClick={() => {
                       setOpenModalUpdateHours(true);
-                      setSelectedDays({ ...selectedDays, thursday: true });
+                      /* setSelectedDays({ ...selectedDays, thursday: true }); */
                     }}
                   >
                     <BiPencil
@@ -196,7 +115,7 @@ const ModalHours = ({
                     className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
                     onClick={() => {
                       setOpenModalUpdateHours(true);
-                      setSelectedDays({ ...selectedDays, friday: true });
+                      /* setSelectedDays({ ...selectedDays, friday: true }); */
                     }}
                   >
                     <BiPencil
@@ -210,7 +129,7 @@ const ModalHours = ({
                     className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
                     onClick={() => {
                       setOpenModalUpdateHours(true);
-                      setSelectedDays({ ...selectedDays, saturday: true });
+                      /* setSelectedDays({ ...selectedDays, saturday: true }); */
                     }}
                   >
                     <BiPencil
@@ -224,7 +143,7 @@ const ModalHours = ({
                     className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
                     onClick={() => {
                       setOpenModalUpdateHours(true);
-                      setSelectedDays({ ...selectedDays, sunday: true });
+                      /* setSelectedDays({ ...selectedDays, sunday: true }); */
                     }}
                   >
                     <BiPencil
@@ -242,7 +161,7 @@ const ModalHours = ({
                   setOpenModalUpdateHours(true);
                   setSelectedDays((selectedDays: DaysOpenProps[]) =>
                     map(selectedDays, (day) => {
-                      day.isOpen = true;
+                      day.selected = true;
                       return day;
                     })
                   );
@@ -268,7 +187,11 @@ const ModalHours = ({
                         day.value !== 'friday'
                     );
                     map(daysOpen, (day) => {
-                      day.isOpen = true;
+                      day.selected = true;
+                      return day;
+                    });
+                    map(daysClose, (day) => {
+                      day.selected = false;
                       return day;
                     });
                     return [daysOpen, daysClose].flat();
@@ -295,7 +218,11 @@ const ModalHours = ({
                         day.value !== 'saturday' && day.value !== 'sunday'
                     );
                     map(daysOpen, (day) => {
-                      day.isOpen = true;
+                      day.selected = true;
+                      return day;
+                    });
+                    map(daysClose, (day) => {
+                      day.selected = false;
                       return day;
                     });
                     return [daysClose, daysOpen].flat();
