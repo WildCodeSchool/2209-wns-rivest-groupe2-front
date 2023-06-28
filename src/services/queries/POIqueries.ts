@@ -14,10 +14,14 @@ export const GET_POI_QUERY = gql`
       pictureUrl
       websiteURL
       description
+      priceRange
       city
-      daysOpen
-      hoursOpen
-      hoursClose
+      openingHours {
+        id
+        dayOpen
+        hoursOpen
+        hoursClose
+      }
       comments {
         id
         createDate
@@ -50,14 +54,23 @@ export const GET_POI_BY_ID_QUERY = gql`
       description
       priceRange
       city
-      daysOpen
-      hoursOpen
-      hoursClose
-      getRates {
+      openingHours {
         id
-        rate
+        dayOpen
+        hoursOpen
+        hoursClose
+      }
+      comments {
+        id
         createDate
         updateDate
+        text
+        rate
+        user {
+          id
+          email
+          username
+        }
       }
     }
   }

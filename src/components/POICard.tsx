@@ -80,7 +80,7 @@ const POICard = (props: POICardProps) => {
               width: '100%',
               height: '150px',
               backgroundImage:
-                pictureUrl.length > 0
+                pictureUrl && pictureUrl.length > 0
                   ? `url(${image_url}${pictureUrl[0]})`
                   : `url(${noImage})`,
               transition: 'all 0.5s ease-in-out',

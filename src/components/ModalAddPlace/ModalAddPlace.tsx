@@ -10,15 +10,73 @@ import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
 import { CREATE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 
-const defaultDays = {
-  monday: false,
-  tuesday: false,
-  wednesday: false,
-  thursday: false,
-  friday: false,
-  saturday: false,
-  sunday: false,
+export type DaysOpenProps = {
+  id: number;
+  value: string;
+  name: string;
+  isOpen: boolean;
+  hoursOpen: string[];
+  hoursClose: string[];
 };
+
+const defaultDays: DaysOpenProps[] = [
+  {
+    id: 1,
+    value: 'monday',
+    name: 'Lundi',
+    isOpen: false,
+    hoursOpen: [],
+    hoursClose: [],
+  },
+  {
+    id: 2,
+    value: 'tuesday',
+    name: 'Mardi',
+    isOpen: false,
+    hoursOpen: [],
+    hoursClose: [],
+  },
+  {
+    id: 3,
+    value: 'wednesday',
+    name: 'Mercredi',
+    isOpen: false,
+    hoursOpen: [],
+    hoursClose: [],
+  },
+  {
+    id: 4,
+    value: 'thursday',
+    name: 'Jeudi',
+    isOpen: false,
+    hoursOpen: [],
+    hoursClose: [],
+  },
+  {
+    id: 5,
+    value: 'friday',
+    name: 'Vendredi',
+    isOpen: false,
+    hoursOpen: [],
+    hoursClose: [],
+  },
+  {
+    id: 6,
+    value: 'saturday',
+    name: 'Samedi',
+    isOpen: false,
+    hoursOpen: [],
+    hoursClose: [],
+  },
+  {
+    id: 7,
+    value: 'sunday',
+    name: 'Dimanche',
+    isOpen: false,
+    hoursOpen: [],
+    hoursClose: [],
+  },
+];
 
 type Props = {
   setOpenModalAddPlace: any;
@@ -28,7 +86,8 @@ const ModalAddPlace = (props: Props) => {
   const { setOpenModalAddPlace } = props;
   const { user } = useContext(UserContext);
   const [openModalHours, setOpenModalHours] = useState(false);
-  const [selectedDays, setSelectedDays] = useState(defaultDays);
+  const [selectedDays, setSelectedDays] =
+    useState<DaysOpenProps[]>(defaultDays);
   const methods = useForm<IFormInput>();
   const {
     register,

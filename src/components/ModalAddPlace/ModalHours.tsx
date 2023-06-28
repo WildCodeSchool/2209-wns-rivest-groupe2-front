@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { BiPencil } from 'react-icons/bi';
 import ModalUpdateHours from './ModalUpdateHours';
+import { DaysOpenProps } from './ModalAddPlace';
+import { map } from 'lodash';
 
 const ModalHours = ({
   setOpenModalHours,
@@ -25,13 +27,11 @@ const ModalHours = ({
           <div>
             <div className="flex justify-around pb-6">
               <ul>
-                <li className="py-2">Lundi</li>
-                <li className="py-2">Mardi</li>
-                <li className="py-2">Mercredi</li>
-                <li className="py-2">Jeudi</li>
-                <li className="py-2">Vendredi</li>
-                <li className="py-2">Samedi</li>
-                <li className="py-2">Dimanche</li>
+                {selectedDays.map((day: DaysOpenProps) => (
+                  <li key={day.value} className="py-2">
+                    {day.name}
+                  </li>
+                ))}
               </ul>
               <div className="flex h-full">
                 <ul className="px-3">
@@ -240,15 +240,12 @@ const ModalHours = ({
               <button
                 onClick={() => {
                   setOpenModalUpdateHours(true);
-                  setSelectedDays({
-                    monday: true,
-                    tuesday: true,
-                    wednesday: true,
-                    thursday: true,
-                    friday: true,
-                    saturday: true,
-                    sunday: true,
-                  });
+                  setSelectedDays((selectedDays: DaysOpenProps[]) =>
+                    map(selectedDays, (day) => {
+                      day.isOpen = true;
+                      return day;
+                    })
+                  );
                 }}
                 className="p-2 border-2 rounded-2xl bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
               >
@@ -257,13 +254,24 @@ const ModalHours = ({
               <button
                 onClick={() => {
                   setOpenModalUpdateHours(true);
-                  setSelectedDays({
-                    ...selectedDays,
-                    monday: true,
-                    tuesday: true,
-                    wednesday: true,
-                    thursday: true,
-                    friday: true,
+                  setSelectedDays((selectedDays: DaysOpenProps[]) => {
+                    const daysOpen = selectedDays.filter(
+                      (day) =>
+                        day.value !== 'saturday' && day.value !== 'sunday'
+                    );
+                    const daysClose = selectedDays.filter(
+                      (day) =>
+                        day.value !== 'monday' &&
+                        day.value !== 'tuesday' &&
+                        day.value !== 'wednesday' &&
+                        day.value !== 'thursday' &&
+                        day.value !== 'friday'
+                    );
+                    map(daysOpen, (day) => {
+                      day.isOpen = true;
+                      return day;
+                    });
+                    return [daysOpen, daysClose].flat();
                   });
                 }}
                 className="p-2 border-2 rounded-2xl bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
@@ -273,10 +281,24 @@ const ModalHours = ({
               <button
                 onClick={() => {
                   setOpenModalUpdateHours(true);
-                  setSelectedDays({
-                    ...selectedDays,
-                    saturday: true,
-                    sunday: true,
+                  setSelectedDays((selectedDays: DaysOpenProps[]) => {
+                    const daysOpen = selectedDays.filter(
+                      (day) =>
+                        day.value !== 'monday' &&
+                        day.value !== 'tuesday' &&
+                        day.value !== 'wednesday' &&
+                        day.value !== 'thursday' &&
+                        day.value !== 'friday'
+                    );
+                    const daysClose = selectedDays.filter(
+                      (day) =>
+                        day.value !== 'saturday' && day.value !== 'sunday'
+                    );
+                    map(daysOpen, (day) => {
+                      day.isOpen = true;
+                      return day;
+                    });
+                    return [daysClose, daysOpen].flat();
                   });
                 }}
                 className="p-2 border-2 rounded-2xl bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"

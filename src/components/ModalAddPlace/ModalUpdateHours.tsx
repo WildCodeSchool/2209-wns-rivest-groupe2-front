@@ -1,6 +1,8 @@
 import { Checkbox } from '@material-tailwind/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { DaysOpenProps } from './ModalAddPlace';
+import { map, sortBy } from 'lodash';
 
 const ModalUpdateHours = ({
   setOpenModalUpdateHours,
@@ -8,11 +10,11 @@ const ModalUpdateHours = ({
   setSelectedDays,
 }: any) => {
   const methods = useFormContext();
-  const [closedChecked, setClosedChecked] = useState(
-    methods.getValues('firstHoursOpen') !== undefined ? false : true
-  );
+  const [closedChecked, setClosedChecked] = useState(false);
   const [fullOpenChecked, setFullOpenChecked] = useState(false);
   const [addingNewHours, setAddingNewHours] = useState(false);
+
+  console.log('selectedDays', selectedDays);
 
   return (
     <div className="w-[90%] mx-auto">
@@ -20,106 +22,40 @@ const ModalUpdateHours = ({
         Sélectionner des jours et des horaires
       </h3>
       <div className="flex justify-evenly items-center my-4">
-        <button
-          type="button"
-          className={
-            selectedDays.monday
-              ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
-              : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
-          }
-          onClick={() =>
-            setSelectedDays({ ...selectedDays, monday: !selectedDays.monday })
-          }
-        >
-          L
-        </button>
-        <button
-          type="button"
-          className={
-            selectedDays.tuesday
-              ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
-              : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
-          }
-          onClick={() =>
-            setSelectedDays({ ...selectedDays, tuesday: !selectedDays.tuesday })
-          }
-        >
-          M
-        </button>
-        <button
-          type="button"
-          className={
-            selectedDays.wednesday
-              ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
-              : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
-          }
-          onClick={() =>
-            setSelectedDays({
-              ...selectedDays,
-              wednesday: !selectedDays.wednesday,
-            })
-          }
-        >
-          M
-        </button>
-        <button
-          type="button"
-          className={
-            selectedDays.thursday
-              ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
-              : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
-          }
-          onClick={() =>
-            setSelectedDays({
-              ...selectedDays,
-              thursday: !selectedDays.thursday,
-            })
-          }
-        >
-          J
-        </button>
-        <button
-          type="button"
-          className={
-            selectedDays.friday
-              ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
-              : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
-          }
-          onClick={() =>
-            setSelectedDays({ ...selectedDays, friday: !selectedDays.friday })
-          }
-        >
-          V
-        </button>
-        <button
-          type="button"
-          className={
-            selectedDays.saturday
-              ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
-              : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
-          }
-          onClick={() =>
-            setSelectedDays({
-              ...selectedDays,
-              saturday: !selectedDays.saturday,
-            })
-          }
-        >
-          S
-        </button>
-        <button
-          type="button"
-          className={
-            selectedDays.sunday
-              ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
-              : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
-          }
-          onClick={() =>
-            setSelectedDays({ ...selectedDays, sunday: !selectedDays.sunday })
-          }
-        >
-          D
-        </button>
+        {selectedDays.map((day: DaysOpenProps) => (
+          <button
+            key={day.id}
+            type="button"
+            className={
+              day.isOpen
+                ? 'w-[50px] h-[50px] border-2 text-light-blue-400 border-blue-50 rounded-full bg-light-blue-50'
+                : 'w-[50px] h-[50px] border-2 rounded-full bg-transparent'
+            }
+            onClick={() =>
+              setSelectedDays((selectedDays: DaysOpenProps[]) => {
+                const newSelectedDays = selectedDays.filter(
+                  (d) => d.value === day.value
+                );
+                const otherDays = selectedDays.filter(
+                  (d) => d.value !== day.value
+                );
+                const savedSelectedDays = map(newSelectedDays, (d) => {
+                  return {
+                    id: d.id,
+                    value: d.value,
+                    name: d.name,
+                    isOpen: !d.isOpen,
+                    hoursOpen: d.hoursOpen,
+                    hoursClose: d.hoursClose,
+                  };
+                });
+                return sortBy([savedSelectedDays, otherDays].flat(), ['id']);
+              })
+            }
+          >
+            {day.name.slice(0, 1)}
+          </button>
+        ))}
       </div>
       <div className="flex justify-around">
         <Checkbox
@@ -222,6 +158,7 @@ const ModalUpdateHours = ({
           <button
             type="button"
             onClick={() => {
+              methods.reset();
               setOpenModalUpdateHours(false);
             }}
             className="w-[150px] px-[15px] ml-[5%] py-2 mb-4 rounded-3xl border-2 bg-gray-500 hover:bg-white font-secondary text-white hover:text-gray-400 text-[1rem] text-center font-semibold mt-2"
