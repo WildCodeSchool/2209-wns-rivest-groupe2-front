@@ -7,17 +7,20 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ROLES_CITIES_QUERY } from '../services/queries/roleQueries';
 import { USER_ROLE_MUTATION } from '../services/mutations/userRoleMutation';
-import { IUser } from 'src/types/IUserContext';
+import { ICity } from 'src/types/ICity';
 import { IRole } from 'src/types/IRole';
 import { UserContext } from 'src/contexts/userContext';
+import { FaCity } from 'react-icons/fa';
 
 interface IFormInput {
   role: string;
   userId: number;
+  city:string;
 }
 
 export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
   const { loading, error, data } = useQuery(GET_ROLES_CITIES_QUERY);
+  console.log('================ data', data);
   const [
     updateUserRole,
     { data: mutationData, loading: mutationLoading, error: mutationError },
@@ -31,13 +34,15 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
   const { user: contextUser } = useContext(UserContext);
 
   console.log('UserContext', contextUser);
+  console.log('cities', cities);
 
   const { register, handleSubmit } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    console.log("data : ", data.city);
     try {
       const response = await updateUserRole({
-        variables: { role: data.role, userId: data.userId },
+        variables: { role: data.role, userId: data.userId, cityName: data.city },
       });
       console.log(response);
     } catch (error) {
@@ -83,49 +88,41 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
                   </option>
                   {roles &&
                     roles
-                      .filter((role: any) => {
-                        return (
-                          role.name !== userRole &&
-                          !(
-                            contextUser?.role === 'city_admin' &&
-                            role.name === 'admin'
-                          ) &&
-                          !(
-                            contextUser?.role === 'city_admin' &&
-                            role.name === 'city_admin'
-                          )
-                        );
-                      })
+                      // .filter((role: any) => {
+                      //   return (
+                      //     role.name !== userRole &&
+                      //     !(
+                      //       contextUser?.role === 'city_admin' &&
+                      //       role.name === 'admin'
+                      //     )
+                      //     // ) &&
+                      //     // !(
+                      //     //   contextUser?.role === 'city_admin' &&
+                      //     //   role.name === 'city_admin'
+                      //     // )
+                      //   );
+                      // })
                       .map((role: IRole, key: IRole) => (
                         <option value={role.name}>{role.name}</option>
                       ))}
                 </select>
                 {selectedRole === 'city_admin' && (
                   <select
-                    {...register('role')}
+                    {...register('city')}
                     placeholder="Email"
                     className="text-lg rounded bg-white border-blue-800 text-black bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
                   >
                     <option value="" disabled selected>
-                      Selectionner un role
+                      Selectionner une ville
                     </option>
-                    {roles &&
-                      roles
-                        .filter((role: any) => {
-                          return (
-                            role.name !== userRole &&
-                            !(
-                              contextUser?.role === 'city_admin' &&
-                              role.name === 'admin'
-                            ) &&
-                            !(
-                              contextUser?.role === 'city_admin' &&
-                              role.name === 'city_admin'
-                            )
-                          );
+                    {cities &&
+                      cities
+                        .filter((city: any) => {
+                          console.log("city.user : ", city.user);
+                          return (city.user === null)
                         })
-                        .map((role: IRole, key: IRole) => (
-                          <option value={role.name}>{role.name}</option>
+                        .map((city: ICity, key: IRole) => (
+                          <option value={city.name}>{city.name}</option>
                         ))}
                   </select>
                 )}

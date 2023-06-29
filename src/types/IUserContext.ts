@@ -6,6 +6,7 @@ export interface IUser {
   lastname: string;
   profilePicture: string;
   role: string;
+  city:string
 }
 
 export interface IUserContext {

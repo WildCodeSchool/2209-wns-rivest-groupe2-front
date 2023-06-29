@@ -1,12 +1,29 @@
 import { gql } from '@apollo/client';
 
+// export const USER_ROLE_MUTATION = gql`
+//   mutation UpdateUserRole($role: String!, $userId: String!) {
+//     updateUserRole(role: $role, userId: $userId) {
+//       id
+//       role {
+//         name
+//       }
+//     }
+//   }
+// `;
+
 export const USER_ROLE_MUTATION = gql`
-  mutation UpdateUserRole($role: String!, $userId: String!) {
-    updateUserRole(role: $role, userId: $userId) {
+mutation UpdateUserRoleAndCity($role: String!, $userId: String!, $cityName: String) {
+  updateUserRoleAndCity(role: $role, userId: $userId, cityName: $cityName) {
+    id
+    username
+    role {
       id
-      role {
-        name
-      }
+      name
+    }
+    cities {
+      id
+      name
     }
   }
+}
 `;
