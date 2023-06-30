@@ -1,6 +1,14 @@
 import { Point } from 'leaflet';
 import { LatLngExpression } from 'leaflet';
 
+export type OpeningHoursData = {
+  id: number;
+  value: string;
+  name: string;
+  hoursOpen: string[] | [];
+  hoursClose: string[] | [];
+};
+
 export interface IPOICard {
   id: number;
   name: string;
@@ -14,9 +22,7 @@ export interface IPOICard {
   setOpenModalAddPlace?: any;
   openModalAddPlace?: boolean;
   websiteURL?: string;
-  daysOpen?: string[];
-  hoursOpen?: string[];
-  hoursClose?: string[];
+  openingHours?: OpeningHoursData[];
 }
 
 enum POIType {
@@ -46,11 +52,7 @@ export type IFormInput = {
   description: string;
   priceRange: EPriceRange;
   city: string;
-  daysOpen: string;
-  firstHoursOpen: string;
-  firstHoursClose: string;
-  secondHoursOpen: string;
-  secondHoursClose: string;
+  openingHours: OpeningHoursData[];
 };
 
 export type POICommentType = {
@@ -65,6 +67,7 @@ export type POICommentType = {
     username: string | null;
   };
 };
+
 export interface IPOIData {
   id: number;
   name: string;
@@ -78,9 +81,7 @@ export interface IPOIData {
   creationDate: string;
   priceRange: string;
   city: string;
-  daysOpen: string[];
-  hoursOpen: string[];
-  hoursClose: string[];
+  openingHours: OpeningHoursData[];
   averageRate?: number;
   comments: POICommentType[] | [];
 }
@@ -100,4 +101,14 @@ export type ImagesProps = {
   imageUrl: string | null;
   preview: string;
   id: number;
+};
+
+export type DaysOpenProps = {
+  id: number;
+  value: string;
+  name: string;
+  isOpen: boolean;
+  selected: boolean;
+  hoursOpen: string[];
+  hoursClose: string[];
 };

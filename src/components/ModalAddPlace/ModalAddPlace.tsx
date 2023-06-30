@@ -9,82 +9,8 @@ import type { IFormInput } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
 import { CREATE_POI_MUTATION } from 'src/services/mutations/POIMutations';
-
-export type DaysOpenProps = {
-  id: number;
-  value: string;
-  name: string;
-  isOpen: boolean;
-  selected: boolean;
-  hoursOpen: string[];
-  hoursClose: string[];
-};
-
-const defaultDays: DaysOpenProps[] = [
-  {
-    id: 1,
-    value: 'monday',
-    name: 'Lundi',
-    isOpen: false,
-    selected: false,
-    hoursOpen: [],
-    hoursClose: [],
-  },
-  {
-    id: 2,
-    value: 'tuesday',
-    name: 'Mardi',
-    isOpen: false,
-    selected: false,
-    hoursOpen: [],
-    hoursClose: [],
-  },
-  {
-    id: 3,
-    value: 'wednesday',
-    name: 'Mercredi',
-    isOpen: false,
-    selected: false,
-    hoursOpen: [],
-    hoursClose: [],
-  },
-  {
-    id: 4,
-    value: 'thursday',
-    name: 'Jeudi',
-    isOpen: false,
-    selected: false,
-    hoursOpen: [],
-    hoursClose: [],
-  },
-  {
-    id: 5,
-    value: 'friday',
-    name: 'Vendredi',
-    isOpen: false,
-    selected: false,
-    hoursOpen: [],
-    hoursClose: [],
-  },
-  {
-    id: 6,
-    value: 'saturday',
-    name: 'Samedi',
-    isOpen: false,
-    selected: false,
-    hoursOpen: [],
-    hoursClose: [],
-  },
-  {
-    id: 7,
-    value: 'sunday',
-    name: 'Dimanche',
-    isOpen: false,
-    selected: false,
-    hoursOpen: [],
-    hoursClose: [],
-  },
-];
+import { DaysOpenProps } from 'src/types/POIType';
+import { defaultDays } from 'src/services/helpers/POIDefaultDays';
 
 type Props = {
   setOpenModalAddPlace: any;
@@ -146,6 +72,21 @@ const ModalAddPlace = (props: Props) => {
       },
     };
     try {
+      const daysOpen = selectedDays.map((day) => {
+        if (!day.isOpen)
+          return {
+            value: day.value,
+            name: day.name,
+            hoursOpen: ['Fermé'],
+            hoursClose: day.hoursClose,
+          };
+        return {
+          value: day.value,
+          name: day.name,
+          hoursOpen: day.hoursOpen,
+          hoursClose: day.hoursClose,
+        };
+      });
       await axios
         .request(options)
         .then((response) => {
@@ -155,11 +96,6 @@ const ModalAddPlace = (props: Props) => {
             dataFromApi.latitude,
             dataFromApi.longitude,
           ];
-
-          const daysOpenToSend = map(selectedDays, (value, key) => {
-            if (value) return key;
-            return;
-          }).filter((value) => value !== undefined);
 
           createPoi({
             variables: {
@@ -172,19 +108,7 @@ const ModalAddPlace = (props: Props) => {
                 websiteURL: formData.websiteURL,
                 description: formData.description,
                 city: formData.city,
-                daysOpen: daysOpenToSend,
-                hoursOpen:
-                  formData.firstHoursOpen && formData.secondHoursOpen
-                    ? [formData.firstHoursOpen, formData.secondHoursOpen]
-                    : formData.firstHoursOpen && !formData.secondHoursOpen
-                    ? [formData.firstHoursOpen]
-                    : '',
-                hoursClose:
-                  formData.firstHoursClose && formData.secondHoursClose
-                    ? [formData.firstHoursClose, formData.secondHoursClose]
-                    : formData.firstHoursClose && !formData.secondHoursClose
-                    ? [formData.firstHoursClose]
-                    : '',
+                openingHours: daysOpen,
                 pictureUrl: pictureUrlArray,
               },
             },

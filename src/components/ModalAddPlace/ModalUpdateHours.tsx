@@ -1,7 +1,7 @@
 import { Checkbox } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { DaysOpenProps } from './ModalAddPlace';
+import { DaysOpenProps } from 'src/types/POIType';
 import { map, sortBy } from 'lodash';
 
 export type ModalHoursProps = {

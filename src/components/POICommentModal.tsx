@@ -58,8 +58,6 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
     if (userRate) setcurrentRate(userRate);
   }, [userComment, userRate]);
 
-  console.log(userComment, userRate);
-
   const { user } = useContext(UserContext);
 
   const { loading: userCommentLoading, data: userCommentData } = useQuery(
@@ -155,8 +153,6 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
   ) => {
     setCurrentComment(event.target.value);
   };
-
-  console.log(openUpdateDialog);
 
   return (
     <div>

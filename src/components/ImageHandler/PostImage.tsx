@@ -17,7 +17,7 @@ const PostImage = ({
   ) => Promise<any>;
 }) => {
   const [selectedImage, setSelectedImage] = useState<Array<ImagesProps>>([]);
-  const [imagesCount, setImagesCount] = useState<number>(0);
+
   const resetImage = (id: number) => {
     const newImageArray = selectedImage.filter((image) => image.id !== id);
     setSelectedImage(newImageArray);

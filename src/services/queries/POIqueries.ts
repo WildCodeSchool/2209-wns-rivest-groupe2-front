@@ -18,7 +18,8 @@ export const GET_POI_QUERY = gql`
       city
       openingHours {
         id
-        dayOpen
+        value
+        name
         hoursOpen
         hoursClose
       }
@@ -56,7 +57,8 @@ export const GET_POI_BY_ID_QUERY = gql`
       city
       openingHours {
         id
-        dayOpen
+        value
+        name
         hoursOpen
         hoursClose
       }

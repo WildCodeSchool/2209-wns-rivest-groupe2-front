@@ -3,6 +3,7 @@ import { gql } from '@apollo/client';
 export const CREATE_POI_MUTATION = gql`
   mutation CreatePoi($data: CreatePoiInput!) {
     createPoi(data: $data) {
+      id
       name
       address
       postal
@@ -14,9 +15,12 @@ export const CREATE_POI_MUTATION = gql`
       description
       priceRange
       city
-      daysOpen
-      hoursOpen
-      hoursClose
+      openingHours {
+        value
+        name
+        hoursOpen
+        hoursClose
+      }
     }
   }
 `;

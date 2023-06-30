@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/contexts/userContext';
 import { Typography } from '@material-tailwind/react';
-import { IFavorite, IPOIData } from 'src/types/POIType';
+import { IFavorite, IPOIData, OpeningHoursData } from 'src/types/POIType';
 import moment from 'moment';
 import { AverageRatingStar } from './AverageRatingStar';
 import POIImage from './POIImage';
@@ -26,9 +26,7 @@ export default function POIInfos(props: POIInfoProps) {
     pictureUrl,
     description,
     creationDate,
-    daysOpen,
-    hoursOpen,
-    hoursClose,
+    openingHours,
     averageRate,
   } = props.poi;
   const { commentsCount } = props;
@@ -50,46 +48,9 @@ export default function POIInfos(props: POIInfoProps) {
   }, [data]);
 
   const firstImage: string[] =
-    pictureUrl.length > 0 ? pictureUrl.slice(0, 1) : [];
+    pictureUrl && pictureUrl.length > 0 ? pictureUrl.slice(0, 1) : [];
   const otherImages: string[] =
-    pictureUrl.length > 1 ? pictureUrl.slice(1) : [];
-
-  function getDaysOpen(
-    daysOpen: string[],
-    hoursOpen: string[],
-    hoursClose: string[]
-  ): {
-    value: string;
-    name: string;
-    hoursOpen: string | string[];
-    hoursClose: string | string[];
-  }[] {
-    const days = [
-      { value: 'monday', name: 'Lundi' },
-      { value: 'tuesday', name: 'Mardi' },
-      { value: 'wednesday', name: 'Mercredi' },
-      { value: 'thursday', name: 'Jeudi' },
-      { value: 'friday', name: 'Vendredi' },
-      { value: 'saturday', name: 'Samedi' },
-      { value: 'sunday', name: 'Dimanche' },
-    ];
-    const returnElement: {
-      value: string;
-      name: string;
-      hoursOpen: string | string[];
-      hoursClose: string | string[];
-    }[] = days.map((day) => {
-      const isOpen = daysOpen.find((element) => element === day.value);
-      const newData = {
-        value: day.value,
-        name: day.name,
-        hoursOpen: isOpen ? hoursOpen : ['Fermé'],
-        hoursClose: isOpen ? hoursClose : ['Fermé'],
-      };
-      return newData;
-    });
-    return returnElement;
-  }
+    pictureUrl && pictureUrl.length > 1 ? pictureUrl.slice(1) : [];
 
   return (
     <>
@@ -136,7 +97,7 @@ export default function POIInfos(props: POIInfoProps) {
             ))}
         </div>
       </div>
-      {pictureUrl.length > 1 ? (
+      {pictureUrl?.length > 1 ? (
         <div className="relative">
           <div className="grid gap-4 grid-cols-4 grid-rows-2 grid-flow-row">
             <POIImage
@@ -144,7 +105,7 @@ export default function POIInfos(props: POIInfoProps) {
               className="col-span-2 row-span-2"
               height="316px"
             />
-            {otherImages &&
+            {otherImages?.length > 0 &&
               otherImages.map((image) => (
                 <POIImage
                   backgroundImage={`url(${image_url}${image})`}
@@ -154,7 +115,7 @@ export default function POIInfos(props: POIInfoProps) {
               ))}
           </div>
         </div>
-      ) : pictureUrl.length === 1 ? (
+      ) : pictureUrl?.length === 1 ? (
         <POIImage
           backgroundImage={`url(${image_url}${pictureUrl[0]})`}
           className="col-span-2 row-span-2"
@@ -165,7 +126,7 @@ export default function POIInfos(props: POIInfoProps) {
         <div className="pt-8">
           <Typography variant="h2">Description du lieu</Typography>
           <p className="pt-2">
-            {description.length > 0
+            {description?.length > 0
               ? description
               : 'Pas de description renseignée'}
           </p>
@@ -173,23 +134,30 @@ export default function POIInfos(props: POIInfoProps) {
         <div className="pt-8 mt-6">
           <Typography variant="h2">Horaires d'ouverture</Typography>
           <div className="w-full pt-5">
-            {getDaysOpen(daysOpen, hoursOpen, hoursClose).map((day) => (
-              <div className="flex justify-between" key={day.value}>
-                <ul>
-                  <li>{day.name}</li>
-                </ul>
-                <ul>
-                  <li>
-                    {day.hoursOpen[0] === 'Fermé'
-                      ? day.hoursOpen[0]
-                      : `${day.hoursOpen[0]} - ${day.hoursClose[0]}`}
-                    {day.hoursOpen.length > 1
-                      ? `, ${day.hoursOpen[1]} - ${day.hoursClose[1]}`
-                      : null}
+            <div className="flex justify-around pb-6">
+              <ul>
+                {openingHours.map((day: OpeningHoursData) => (
+                  <li key={day.id} className="py-2">
+                    {day.name}
                   </li>
+                ))}
+              </ul>
+              <div className="flex h-full">
+                <ul className="px-3">
+                  {openingHours.map((day: OpeningHoursData) => (
+                    <li key={day.id} className="py-2">
+                      {day.hoursOpen[0]}
+                      {day.hoursClose.length === 0
+                        ? ''
+                        : ` - ${day.hoursClose[0]}`}
+                      {day.hoursOpen.length === 2 &&
+                        day.hoursClose.length === 2 &&
+                        `, ${day.hoursOpen[1]} - ${day.hoursClose[1]}`}
+                    </li>
+                  ))}
                 </ul>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </div>

@@ -90,17 +90,19 @@ const POICard = (props: POICardProps) => {
             onMouseLeave={() => setToggleHover(!toggleHover)}
           />
         </div>
-        <div className="w-[90%]">
-          <Typography className="text-center text-xs font-normal text-blue-gray-400 pt-[10px]">
-            {description &&
-              (description.length > 60
+        <div className="w-[90%] flex flex-col justify-evenly h-[130px]">
+          {description && (
+            <Typography className="text-center text-xs font-normal text-blue-gray-400 pt-[10px]">
+              {description.length > 60
                 ? `${description.slice(0, 60)}...`
-                : description)}
-          </Typography>
-          <div>
-            <AverageRatingStar averageRate={averageRate} />
-          </div>
-
+                : description}
+            </Typography>
+          )}
+          {averageRate && (
+            <div>
+              <AverageRatingStar averageRate={averageRate} />
+            </div>
+          )}
           <Typography>
             <Link
               key={id}

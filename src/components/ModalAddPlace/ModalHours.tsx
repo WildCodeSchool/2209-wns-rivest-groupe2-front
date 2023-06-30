@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 import { BiPencil } from 'react-icons/bi';
 import ModalUpdateHours from './ModalUpdateHours';
-import { DaysOpenProps } from './ModalAddPlace';
-import { map } from 'lodash';
+import { DaysOpenProps } from 'src/types/POIType';
+import { map, sortBy } from 'lodash';
 
 type ModalHoursProps = {
   setOpenModalHours: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,9 +15,8 @@ const ModalHours = ({
   selectedDays,
   setSelectedDays,
 }: ModalHoursProps) => {
-  const methods = useFormContext();
   const [openModalUpdateHours, setOpenModalUpdateHours] = useState(false);
-  console.log('selectedDays', selectedDays);
+
   return (
     <div className="relative mt-7 h-[100%]">
       {openModalUpdateHours ? (
@@ -54,104 +52,39 @@ const ModalHours = ({
                   ))}
                 </ul>
                 <div className="px-3 flex flex-col">
-                  <button
-                    type="button"
-                    className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
-                    onClick={() => {
-                      setOpenModalUpdateHours(true);
-                      /* setSelectedDays({ ...selectedDays, monday: true }); */
-                    }}
-                  >
-                    <BiPencil
-                      height={30}
-                      width={30}
-                      style={{ margin: 'auto' }}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
-                    onClick={() => {
-                      setOpenModalUpdateHours(true);
-                      /* setSelectedDays({ ...selectedDays, tuesday: true }); */
-                    }}
-                  >
-                    <BiPencil
-                      height={30}
-                      width={30}
-                      style={{ margin: 'auto' }}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
-                    onClick={() => {
-                      setOpenModalUpdateHours(true);
-                      /* setSelectedDays({ ...selectedDays, wednesday: true }); */
-                    }}
-                  >
-                    <BiPencil
-                      height={30}
-                      width={30}
-                      style={{ margin: 'auto' }}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
-                    onClick={() => {
-                      setOpenModalUpdateHours(true);
-                      /* setSelectedDays({ ...selectedDays, thursday: true }); */
-                    }}
-                  >
-                    <BiPencil
-                      height={30}
-                      width={30}
-                      style={{ margin: 'auto' }}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
-                    onClick={() => {
-                      setOpenModalUpdateHours(true);
-                      /* setSelectedDays({ ...selectedDays, friday: true }); */
-                    }}
-                  >
-                    <BiPencil
-                      height={30}
-                      width={30}
-                      style={{ margin: 'auto' }}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
-                    onClick={() => {
-                      setOpenModalUpdateHours(true);
-                      /* setSelectedDays({ ...selectedDays, saturday: true }); */
-                    }}
-                  >
-                    <BiPencil
-                      height={30}
-                      width={30}
-                      style={{ margin: 'auto' }}
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
-                    onClick={() => {
-                      setOpenModalUpdateHours(true);
-                      /* setSelectedDays({ ...selectedDays, sunday: true }); */
-                    }}
-                  >
-                    <BiPencil
-                      height={30}
-                      width={30}
-                      style={{ margin: 'auto' }}
-                    />
-                  </button>
+                  {selectedDays.map((day: DaysOpenProps) => (
+                    <button
+                      key={day.value}
+                      type="button"
+                      className="py-2 w-[40px] h-[40px] hover:rounded-full hover:bg-gray-200"
+                      onClick={() => {
+                        setOpenModalUpdateHours(true);
+                        setSelectedDays((selectedDays: DaysOpenProps[]) => {
+                          const daysOpen = selectedDays.filter(
+                            (d) => d.value === day.value
+                          );
+                          const daysClose = selectedDays.filter(
+                            (d) => d.value !== day.value
+                          );
+                          map(daysOpen, (day) => {
+                            day.selected = true;
+                            return day;
+                          });
+                          map(daysClose, (day) => {
+                            day.selected = false;
+                            return day;
+                          });
+                          return sortBy([daysOpen, daysClose].flat(), ['id']);
+                        });
+                      }}
+                    >
+                      <BiPencil
+                        height={30}
+                        width={30}
+                        style={{ margin: 'auto' }}
+                      />
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>

@@ -122,7 +122,7 @@ const POIList = () => {
                     {filteredPois &&
                       filteredPois.map((poi: IPOIData) => (
                         <li
-                          className="h-[400px] w-[250px] border-solid border rounded-xl"
+                          className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                           key={poi.id}
                           value={poi.id}
                           onClick={() => setZoomPoi(poi)}
@@ -142,7 +142,7 @@ const POIList = () => {
                       {barPois &&
                         barPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[400px] w-[250px] border-solid border rounded-xl"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -163,7 +163,7 @@ const POIList = () => {
                       {fastFoodPois &&
                         fastFoodPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[400px] w-[250px] border-solid border rounded-xl"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -184,7 +184,7 @@ const POIList = () => {
                       {hotelPois &&
                         hotelPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[400px] w-[250px] border-solid border rounded-xl"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -207,7 +207,7 @@ const POIList = () => {
                       {cultePois &&
                         cultePois.map((poi: IPOIData) => (
                           <li
-                            className="h-[400px] w-[250px] border-solid border rounded-xl"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -228,7 +228,7 @@ const POIList = () => {
                       {museumPois &&
                         museumPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[400px] w-[250px] border-solid border rounded-xl"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -249,7 +249,7 @@ const POIList = () => {
                       {restaurantPois &&
                         restaurantPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[400px] w-[250px] border-solid border rounded-xl"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
