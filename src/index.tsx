@@ -12,7 +12,6 @@ import './styles/index.css';
 import App from './App';
 import { MaterialTailwindControllerProvider } from './contexts/index';
 import { ThemeProvider } from '@material-tailwind/react';
-import './styles/index.css';
 import { UserProvider } from 'src/contexts/userContext';
 import { FavoriteRateProvider } from './contexts/favoriteRateContext';
 

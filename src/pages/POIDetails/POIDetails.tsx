@@ -15,6 +15,7 @@ import bgMuseum from 'src/asset/img/bg-museum.jpg';
 import bgRestaurant from 'src/asset/img/bg-restaurant.jpg';
 import MapModule from 'src/components/Map/MapModule';
 import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
+import PictureVizualization from 'src/components/PictureVizualization';
 
 const POIDetails = () => {
   const [commentsCount, setCommentsCount] = useState(0);

@@ -19,7 +19,8 @@ const POIComment: React.FC<POICommentProps> = (props: POICommentProps) => {
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
-  return userId && poiId ? (
+  if (!poiId) return null;
+  return userId ? (
     <>
       <div className="flex justify-between items-center text-gray-500">
         <StarRating
@@ -31,7 +32,6 @@ const POIComment: React.FC<POICommentProps> = (props: POICommentProps) => {
             <FiEdit style={{ width: 20, height: 20, cursor: 'pointer' }} />
           </button>
           <POICommentModal
-            key={comment.id}
             openUpdateDialog={openUpdateDialog}
             handleUpdateDialogClose={() => setOpenUpdateDialog(false)}
             type="update"
@@ -46,7 +46,6 @@ const POIComment: React.FC<POICommentProps> = (props: POICommentProps) => {
             style={{ width: 20, height: 20, cursor: 'pointer' }}
           />
           <POICommentModal
-            key={comment.id}
             openDeleteDialog={openDeleteDialog}
             handleDeleteDialogClose={() => setOpenDeleteDialog(false)}
             type="delete"
@@ -77,7 +76,7 @@ const POIComment: React.FC<POICommentProps> = (props: POICommentProps) => {
       />
     </>
   ) : (
-    <div key={comment.id}>
+    <div>
       <div className="flex justify-between items-center text-gray-500">
         <StarRating
           className="flex items-center justify-left"

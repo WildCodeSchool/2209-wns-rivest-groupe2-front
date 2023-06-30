@@ -1,0 +1,18 @@
+.image-gallery-wrapper {
+  margin-top: 5rem;
+  max-width: 60%;
+  width: 100%;
+  margin: 0 auto;
+  border: 1px solid rgb(68, 189, 190);
+  box-shadow: rgb(38, 122, 122) 1px 10px 10px 5px;
+}
+
+.image-gallery-slides {
+  height: 500px;
+  max-height: 100%;
+}
+
+/* .image-gallery-image {
+  object-fit: none !important;
+  object-position: center;
+} */
