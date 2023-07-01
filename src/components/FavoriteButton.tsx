@@ -11,6 +11,8 @@ interface FavoriteButtonProps {
   className?: string;
   width: string;
   height: string;
+  isFavorite: boolean;
+  setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
@@ -19,9 +21,9 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   className,
   width,
   height,
+  isFavorite,
+  setIsFavorite,
 }) => {
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-
   const { loading, error, data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
     variables: { userId },
   });

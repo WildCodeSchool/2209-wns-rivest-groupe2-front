@@ -11,7 +11,7 @@ const image_url = process.env.REACT_APP_IMAGE_URL;
 const PictureVizualization = (props: PictureVizualizationProps) => {
   const { poiImages } = props;
   const [images, setImages] = useState<{}[]>([]);
-  console.log(poiImages, images);
+
   useEffect(() => {
     const formatedImages = poiImages.map((image) => {
       return {
@@ -25,7 +25,13 @@ const PictureVizualization = (props: PictureVizualizationProps) => {
 
   return (
     <div className="image-gallery-wrapper">
-      <ImageGallery items={images} showIndex={true} />
+      <ImageGallery
+        items={images}
+        showIndex={true}
+        thumbnailPosition="right"
+        showBullets
+        showPlayButton={false}
+      />
     </div>
   );
 };

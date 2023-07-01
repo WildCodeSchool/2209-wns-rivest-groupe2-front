@@ -51,6 +51,7 @@ const POICard = (props: POICardProps) => {
   } = props.poi;
   const { user } = useContext(UserContext);
   const [toggleHover, setToggleHover] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   return (
     <Card className="h-full relative">
@@ -66,6 +67,8 @@ const POICard = (props: POICardProps) => {
               className="absolute top-1 right-1 text-red-600"
               width="20px"
               height="20px"
+              isFavorite={isFavorite}
+              setIsFavorite={setIsFavorite}
             />
           )}
         </div>

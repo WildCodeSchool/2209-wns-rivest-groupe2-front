@@ -60,7 +60,7 @@ const POIList = () => {
   return (
     <>
       <div className="mt-5 h-full w-full">
-        <div className="flex justify-between items-center mx-5">
+        <div className="flex justify-between items-center mx-5 my-3">
           <strong className="py-[5px] pl-[80px]" id="results-number">
             {getPoiData.getAllPoi.length === 0
               ? "Aucun point d'intérêt à Paris"
@@ -269,7 +269,7 @@ const POIList = () => {
               height: '70vh',
               position: 'fixed',
               right: 0,
-              top: '180px',
+              top: '200px',
             }}
           >
             <MapModule poiData={filteredPois} zoomPoi={zoomPoi} />

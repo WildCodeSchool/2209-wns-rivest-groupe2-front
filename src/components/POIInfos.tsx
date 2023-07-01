@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from 'src/contexts/userContext';
 import { Typography } from '@material-tailwind/react';
 import { IFavorite, IPOIData, OpeningHoursData } from 'src/types/POIType';
 import moment from 'moment';
 import { AverageRatingStar } from './AverageRatingStar';
-import POIImage from './POIImage';
 import { FavoriteButton } from './FavoriteButton';
 import { useQuery } from '@apollo/client';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
@@ -14,8 +13,6 @@ interface POIInfoProps {
   poi: IPOIData;
   commentsCount: number;
 }
-
-const image_url = process.env.REACT_APP_IMAGE_URL;
 
 export default function POIInfos(props: POIInfoProps) {
   const {
@@ -34,7 +31,6 @@ export default function POIInfos(props: POIInfoProps) {
   const { user } = useContext(UserContext);
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
-  const [openImageGallery, setOpenImageGallery] = useState<boolean>(false);
 
   const { data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
     variables: { userId: user?.id },
@@ -48,11 +44,6 @@ export default function POIInfos(props: POIInfoProps) {
       setIsFavorite(userFavorites.includes(id));
     }
   }, [data]);
-
-  /* const firstImage: string[] =
-    pictureUrl && pictureUrl.length > 0 ? pictureUrl.slice(0, 1) : [];
-  const otherImages: string[] =
-    pictureUrl && pictureUrl.length > 1 ? pictureUrl.slice(1) : []; */
 
   return (
     <>
@@ -86,16 +77,23 @@ export default function POIInfos(props: POIInfoProps) {
                   className="text-black pl-3"
                   width="20px"
                   height="20px"
+                  isFavorite={isFavorite}
+                  setIsFavorite={setIsFavorite}
                 />
               </div>
             ) : (
-              <FavoriteButton
-                userId={user?.id}
-                poiId={id}
-                className="absolute top-0 right-1 text-red-500"
-                width="30px"
-                height="30px"
-              />
+              <div className="absolute -top-8 right-1 flex items-center p-3 bg-white border rounded">
+                <p>Dans vos favoris</p>
+                <FavoriteButton
+                  userId={user?.id}
+                  poiId={id}
+                  className="text-black pl-3"
+                  width="20px"
+                  height="20px"
+                  isFavorite={isFavorite}
+                  setIsFavorite={setIsFavorite}
+                />
+              </div>
             ))}
         </div>
       </div>
