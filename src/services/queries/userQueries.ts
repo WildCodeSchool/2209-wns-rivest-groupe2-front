@@ -14,6 +14,10 @@ export const GET_USER_QUERY = gql`
         id
         name
       }
+      cities {
+        id
+        name
+      }
     }
   }
 `;

@@ -6,4 +6,5 @@ export interface IModalRole {
   header: string;
   userId: number;
   userRole: string;
+  userCities: string[];
 }

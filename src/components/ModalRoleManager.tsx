@@ -1,9 +1,9 @@
 import { Button, Modal } from 'flowbite-react';
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IModalRole } from 'src/types/IModal';
 import styles from '../styles/popUpMap.module.css';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ROLES_CITIES_QUERY } from '../services/queries/roleQueries';
 import { USER_ROLE_MUTATION } from '../services/mutations/userRoleMutation';
@@ -11,14 +11,20 @@ import { ICity } from 'src/types/ICity';
 import { IRole } from 'src/types/IRole';
 import { UserContext } from 'src/contexts/userContext';
 import { FaCity } from 'react-icons/fa';
+import Select from 'react-select';
 
 interface IFormInput {
   role: string;
   userId: number;
-  city:string;
+  city: string;
 }
 
-export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
+export const ModalRoleManager = ({
+  header,
+  userId,
+  userRole,
+  userCities,
+}: IModalRole) => {
   const { loading, error, data } = useQuery(GET_ROLES_CITIES_QUERY);
   console.log('================ data', data);
   const [
@@ -36,13 +42,17 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
   console.log('UserContext', contextUser);
   console.log('cities', cities);
 
-  const { register, handleSubmit } = useForm<IFormInput>();
+  const { register, handleSubmit, control } = useForm<IFormInput>();
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log("data : ", data.city);
+    console.log('data.city : ', data.city);
     try {
       const response = await updateUserRole({
-        variables: { role: data.role, userId: data.userId, cityName: data.city },
+        variables: {
+          role: data.role,
+          userId: data.userId,
+          cityName: cityName,
+        },
       });
       console.log(response);
     } catch (error) {
@@ -51,9 +61,43 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
   };
 
   const [selectedRole, setSelectedRole] = useState<string | undefined>();
+
+  //const selectedRole = useRef<string>();
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedRole(event.target.value);
+    //selectedRole.current = event.target.value;
   };
+  console.log("selectedRole : ", selectedRole)
+
+  let selectCities =
+    cities &&
+    cities.map((city: ICity) => ({ value: city.name, label: city.name }));
+
+  const initialSelectedCity = userCities
+    ? userCities.map((city) => ({ value: city, label: city }))
+    : [];
+
+  const [selectedCity, setSelectedCity] = useState<
+    Array<{
+      value: string;
+      label: string;
+    } | null>
+  >(initialSelectedCity);
+
+  const handleCityChange = (selectedOption: any) => {
+    setSelectedCity(selectedOption);
+  };
+
+  const cityName = selectedCity
+    ? selectedCity.map((option) => option?.value)
+    : [];
+
+  //const cityName = selectedCity ? selectedCity.map(option => option?.value).join(", ") : '';
+
+  // const cityName = selectedCity
+  //   ? selectedCity.filter(option => option !== null).map(option => option!.value)
+  //   : [];
 
   return (
     <>
@@ -61,7 +105,7 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
         style={{ cursor: 'pointer' }}
         onClick={() => {
           props.setOpenModal('default');
-          setSelectedRole(undefined);
+          setSelectedRole(selectedRole);
         }}
         to={''}
       >
@@ -106,7 +150,7 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
                         <option value={role.name}>{role.name}</option>
                       ))}
                 </select>
-                {selectedRole === 'city_admin' && (
+                {/* {selectedRole === 'city_admin' && (
                   <select
                     {...register('city')}
                     placeholder="Email"
@@ -118,13 +162,52 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
                     {cities &&
                       cities
                         .filter((city: any) => {
-                          console.log("city.user : ", city.user);
-                          return (city.user === null)
+                          console.log('city.user : ', city.user);
+                          return city.user === null;
                         })
                         .map((city: ICity, key: IRole) => (
                           <option value={city.name}>{city.name}</option>
                         ))}
                   </select>
+                )} */}
+                {selectedRole === 'city_admin' && (
+                  <Controller
+                    name="city"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        placeholder="Selectionner une ville"
+                        options={selectCities}
+                        value={selectedCity}
+                        onChange={(value) => {
+                          handleCityChange(value);
+                          field.onChange(value);
+                        }}
+                        isMulti
+                        styles={{
+                          control: (baseStyles, state) => ({
+                            ...baseStyles,
+                            borderColor: state.isFocused ? 'blue' : '#2c5282',
+                            color: 'black',
+                            fontSize: '1.125rem',
+                            borderRadius: '0.25rem',
+                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                            fontColor: '#000000',
+                            padding: '0.2rem',
+                            width: '100%',
+                            outline: 'none',
+                          }),
+                          placeholder: (defaultStyles) => {
+                            return {
+                              ...defaultStyles,
+                              color: 'black',
+                            };
+                          },
+                        }}
+                      />
+                    )}
+                  />
                 )}
               </div>
             </Modal.Body>
@@ -132,8 +215,8 @@ export const ModalRoleManager = ({ header, userId, userRole }: IModalRole) => {
               <Button
                 color="gray"
                 onClick={() => {
+                  setSelectedRole(selectedRole);
                   props.setOpenModal(undefined);
-                  setSelectedRole(undefined);
                 }}
               >
                 Annuler

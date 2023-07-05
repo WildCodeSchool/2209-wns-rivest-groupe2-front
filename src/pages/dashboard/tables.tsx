@@ -17,14 +17,15 @@ import { ModalRoleManager } from '../../components/ModalRoleManager';
 import { IUser } from 'src/types/UserType';
 import { useContext } from 'react';
 import { UserContext } from 'src/contexts/userContext';
+import { ICity } from 'src/types/ICity';
 
 export function Tables() {
   const { loading, error, data } = useQuery(GET_USER_QUERY);
-  const users = data && data.getAllUsers
+  const users = data && data.getAllUsers;
 
   const { user: contextUser } = useContext(UserContext);
 
-  console.log(users)
+  console.log(users);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;
@@ -40,7 +41,7 @@ export function Tables() {
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {['Utilisateurs', 'Email', 'Role', ''].map((el) => (
+                {['Utilisateurs', 'Email', 'Role', 'Ville', ''].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -57,54 +58,78 @@ export function Tables() {
             </thead>
             <tbody>
               {users
-              .filter((user: IUser) => user.role.name !== "admin" && user.id !== contextUser?.id)
-              .map((user: IUser, key: number) => {
-                const className = `py-3 px-5 ${
-                  key === authorsTableData.length - 1
-                    ? ''
-                    : 'border-b border-blue-gray-50'
-                }`;
-                return (
-                  <tr key={user.id}>
-                    <td className={className}>
-                      <div className="flex items-center gap-4">
-                        <Avatar src={user.profilePicture} alt={''} size="sm" />
-                        <div>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-semibold"
-                          >
-                            {user.email}
-                          </Typography>
-                          <Typography className="text-xs font-normal text-blue-gray-500">
-                            {user.email}
-                          </Typography>
+                .filter(
+                  (user: IUser) =>
+                    user.role.name !== 'admin' && user.id !== contextUser?.id
+                )
+                .map((user: IUser, key: number) => {
+                  const className = `py-3 px-5 ${
+                    key === authorsTableData.length - 1
+                      ? ''
+                      : 'border-b border-blue-gray-50'
+                  }`;
+                  return (
+                    <tr key={user.id}>
+                      <td className={className}>
+                        <div className="flex items-center gap-4">
+                          <Avatar
+                            src={user.profilePicture}
+                            alt={''}
+                            size="sm"
+                          />
+                          <div>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-semibold"
+                            >
+                              {user.email}
+                            </Typography>
+                            <Typography className="text-xs font-normal text-blue-gray-500">
+                              {user.email}
+                            </Typography>
+                          </div>
                         </div>
-                      </div>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">
-                        {user.email}
-                      </Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography className="text-xs font-semibold text-blue-gray-600">
-                        {user.role.name}
-                      </Typography>
-                    </td>
-                    <td className={className}>
-                      <Typography
-                        as="a"
-                        href="#"
-                        className="text-xs font-semibold text-blue-gray-600"
-                      >
-                        <ModalRoleManager userId={user.id} userRole={user.role.name} header={"Vous pouvez modifier le rôle de l'utilisateur"}/>
-                      </Typography>
-                    </td>
-                  </tr>
-                );
-              })}
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {user.email}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {user.role.name}
+                        </Typography>
+                      </td>
+                      <td className={className}>
+                        {user.cities.map((city: ICity, key: number) => (
+                          <Typography
+                            key={key}
+                            className="text-xs font-semibold text-blue-gray-600"
+                          >
+                            {city.name}
+                          </Typography>
+                        ))}
+                      </td>
+                      <td className={className}>
+                        <Typography
+                          as="a"
+                          href="#"
+                          className="text-xs font-semibold text-blue-gray-600"
+                        >
+                          <ModalRoleManager
+                            userId={user.id}
+                            userRole={user.role.name}
+                            userCities={user.cities.map((city: ICity) => city.name)}
+                            header={
+                              "Vous pouvez modifier le rôle de l'utilisateur"
+                            }
+                          />
+                        </Typography>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </CardBody>
