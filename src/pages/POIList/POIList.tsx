@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import MapModule from '../../components/Map/MapModule';
 import { IPOIData } from 'src/types/POIType';
 import POICard, { goodWrittenType } from 'src/components/POICard';
-import ModalAddPlace from 'src/components/ModalAddPlace/ModalAddPlace';
+import ModalAddPlace from 'src/components/ModalPois/ModalAddPlace';
 import { useQuery } from '@apollo/client';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
@@ -277,7 +277,10 @@ const POIList = () => {
         </div>
       </div>
       {openModalAddPlace && (
-        <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} />
+        <ModalAddPlace
+          setOpenModalAddPlace={setOpenModalAddPlace}
+          openModalAddPlace={openModalAddPlace}
+        />
       )}
     </>
   );

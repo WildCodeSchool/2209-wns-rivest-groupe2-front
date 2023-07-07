@@ -15,7 +15,6 @@ const ModalUpdateHours = ({
   selectedDays,
   setSelectedDays,
 }: ModalHoursProps) => {
-  const methods = useFormContext();
   const [closedChecked, setClosedChecked] = useState(false);
   const [fullOpenChecked, setFullOpenChecked] = useState(false);
   const [addingNewHours, setAddingNewHours] = useState(false);

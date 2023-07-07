@@ -1,12 +1,12 @@
-import { Point } from 'leaflet';
 import { LatLngExpression } from 'leaflet';
 
 export type OpeningHoursData = {
-  id: number;
+  id?: number;
   value: string;
   name: string;
   hoursOpen: string[] | [];
   hoursClose: string[] | [];
+  __typename?: string;
 };
 
 export interface IPOICard {
@@ -25,32 +25,16 @@ export interface IPOICard {
   openingHours?: OpeningHoursData[];
 }
 
-enum POIType {
-  RESTAURANT = 'restaurant',
-  FASTFOOD = 'fast-food',
-  BAR = 'bar',
-  PLACEOFRELIGION = 'lieu de culte',
-  HOSTEL = 'hôtel',
-  MUSEUM = 'musée',
-}
-
-enum EPriceRange {
-  LOW = '$',
-  MEDIUM = '$$',
-  HIGH = '$$$',
-}
-
 export type IFormInput = {
+  id?: number;
   name: string;
   address: string;
   postal: string;
-  type: POIType;
-  coordinates: Point;
-  creationDate: Date;
+  type: string;
+  coordinates: LatLngExpression;
   pictureUrl: string[];
   websiteURL: string;
   description: string;
-  priceRange: EPriceRange;
   city: string;
   openingHours: OpeningHoursData[];
 };
@@ -79,7 +63,6 @@ export interface IPOIData {
   websiteURL: string;
   description: string;
   creationDate: string;
-  priceRange: string;
   city: string;
   openingHours: OpeningHoursData[];
   averageRate?: number;

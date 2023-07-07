@@ -166,7 +166,7 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
               marginBottom: '15px',
             }}
           >
-            Suppresion commentaire
+            Suppression d'un commentaire
           </DialogTitle>
           <DialogContent>
             <DialogContentText
@@ -190,7 +190,7 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
           <DialogTitle
             sx={{
               textAlign: 'center',
-              backgroundColor: 'rgb(0, 134, 179)',
+              backgroundColor: 'rgb(68, 189, 190)',
               color: 'white',
               marginBottom: '15px',
             }}
@@ -236,7 +236,7 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
           <DialogTitle
             sx={{
               textAlign: 'center',
-              backgroundColor: 'rgb(0, 134, 179)',
+              backgroundColor: 'rgb(68, 189, 190)',
               color: 'white',
               marginBottom: '15px',
             }}

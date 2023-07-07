@@ -69,7 +69,7 @@ export default function POIInfos(props: POIInfoProps) {
         <div>
           {user &&
             (!isFavorite ? (
-              <div className="absolute -top-8 right-1 flex items-center p-3 bg-white border rounded">
+              <div className="absolute -top-8 right-1 flex items-center p-4 bg-white border rounded-2xl">
                 <p>Ajouter à vos favoris</p>
                 <FavoriteButton
                   userId={user?.id}

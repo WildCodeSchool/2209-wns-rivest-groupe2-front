@@ -2,23 +2,27 @@ import { BsFillCameraFill } from 'react-icons/bs';
 import type { ImagesProps } from 'src/types/POIType';
 
 interface Props {
-  handleImageUpload: (event: any) => void;
   handleImageChange: (event: any) => void;
   images: ImagesProps[] | [];
   reset: (id: number) => void;
   type?: string | null;
+  dataImg: string[] | [];
+  deleteImg: (imgUrl: string) => Promise<void>;
 }
 
-const DragAndDrop = ({
-  handleImageUpload,
+const ImageHandler = ({
   handleImageChange,
   images,
   reset,
-  type = null,
+  type,
+  dataImg,
+  deleteImg,
 }: Props) => {
+  const image_url = process.env.REACT_APP_IMAGE_URL;
+
   return (
     <div className="flex flex-col items-center gap-2">
-      {images.length === 0 && (
+      {images.length === 0 && dataImg.length === 0 && (
         <label className="flex justify-center w-full text-opalblue h-20 px-4 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer hover:border-info hover:text-info focus:outline-none">
           <span className="flex items-center">
             <BsFillCameraFill />
@@ -37,7 +41,7 @@ const DragAndDrop = ({
         </label>
       )}
 
-      {images.length !== 0 && images[0].preview && !images[0]?.imageUrl && (
+      {images.length !== 0 && images[0].preview && (
         <div className="flex flex-col items-center justify-center">
           {images.map((image) => (
             <figure className="relative my-3" key={image.id}>
@@ -77,52 +81,67 @@ const DragAndDrop = ({
               </figure>
             </figure>
           ))}
-          <div className="flex justify-center items-center">
-            <label className="flex justify-center items-center text-opalblue p-2 h-10 mr-2 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
-              <BsFillCameraFill />
-              <span className="text-xl pl-2">+</span>
-              <input
-                type="file"
-                name="file_upload"
-                onChange={handleImageChange}
-                className="hidden"
-                multiple
-              />
-            </label>
-            <button
-              type="button"
-              onClick={handleImageUpload}
-              className="p-2 h-10 text-opalblue text-center font-bold border-2 border-opalblue rounded-2xl"
-            >
-              {images.length === 1
-                ? "Sauvegarder l'image"
-                : 'Sauvegarder les images'}
-            </button>
-          </div>
+          {dataImg.length === 0 && (
+            <div className="flex justify-center items-center">
+              <label className="flex justify-center items-center text-opalblue p-2 h-10 mr-2 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
+                <BsFillCameraFill />
+                <span className="text-xl pl-2">+</span>
+                <input
+                  type="file"
+                  name="file_upload"
+                  onChange={handleImageChange}
+                  className="hidden"
+                  multiple
+                />
+              </label>
+            </div>
+          )}
         </div>
       )}
-      {images.length !== 0 && images[0]?.preview && images[0]?.imageUrl && (
-        <div className="flex flex-col items-center justify-center">
-          <div className="flex justify-center flex-wrap items-center pb-3">
-            {images.map((image) => (
-              <figure key={image.id} className="pr-3">
+
+      {dataImg.length > 0 && (
+        <div className="flex justify-center flex-wrap items-center px-3">
+          {dataImg.map((img, index) => (
+            <div className="flex flex-col justify-center py-3" key={index}>
+              <figure
+                className={`${
+                  type === 'avatar'
+                    ? 'w-full max-w-sm aspect-square rounded-full'
+                    : 'w-48 h-24'
+                } overflow-hidden flex justify-center items-center border border-white`}
+              >
                 <img
-                  src={image.preview}
-                  alt="image"
-                  className="w-24 h-16 bg-cover bg-center bg-no-repeat"
+                  src={`${image_url}${img}`}
+                  alt="blog cover"
+                  className="object-cover min-w-full min-h-full"
+                  width="400"
+                  height="400"
                 />
               </figure>
-            ))}
-          </div>
-          <span className="font-bold text-opalblue">
-            {images.length > 1
-              ? 'Images enregistrées !'
-              : 'Image enregistrée !'}
-          </span>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => deleteImg(img)}
+              >
+                Supprimer
+              </button>
+            </div>
+          ))}
+          <label className="flex justify-center items-center text-opalblue p-2 h-10 mx-2 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
+            <BsFillCameraFill />
+            <span className="text-xl pl-2">+</span>
+            <input
+              type="file"
+              name="file_upload"
+              onChange={handleImageChange}
+              className="hidden"
+              multiple
+            />
+          </label>
         </div>
       )}
     </div>
   );
 };
 
-export default DragAndDrop;
+export default ImageHandler;

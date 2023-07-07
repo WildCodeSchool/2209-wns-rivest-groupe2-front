@@ -19,9 +19,8 @@ const PictureVizualization = (props: PictureVizualizationProps) => {
         thumbnail: image_url + image,
       };
     });
-    console.log(formatedImages);
     setImages(formatedImages);
-  }, []);
+  }, [poiImages]);
 
   return (
     <div className="image-gallery-wrapper">

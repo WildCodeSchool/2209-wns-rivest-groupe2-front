@@ -8,12 +8,14 @@ type ModalHoursProps = {
   setOpenModalHours: React.Dispatch<React.SetStateAction<boolean>>;
   selectedDays: DaysOpenProps[];
   setSelectedDays: React.Dispatch<React.SetStateAction<DaysOpenProps[]>>;
+  setOpeningHoursData: React.Dispatch<React.SetStateAction<any[] | null>>;
 };
 
 const ModalHours = ({
   setOpenModalHours,
   selectedDays,
   setSelectedDays,
+  setOpeningHoursData,
 }: ModalHoursProps) => {
   const [openModalUpdateHours, setOpenModalUpdateHours] = useState(false);
 
@@ -169,7 +171,27 @@ const ModalHours = ({
           </div>
           <button
             className="absolute top-0 right-2 text-2xl"
-            onClick={() => setOpenModalHours(false)}
+            onClick={() => {
+              setOpeningHoursData(
+                selectedDays.map((day) => {
+                  if (!day.isOpen)
+                    return {
+                      value: day.value,
+                      name: day.name,
+                      hoursOpen: ['Fermé'],
+                      hoursClose: day.hoursClose,
+                    };
+                  else
+                    return {
+                      value: day.value,
+                      name: day.name,
+                      hoursOpen: day.hoursOpen,
+                      hoursClose: day.hoursClose,
+                    };
+                })
+              );
+              setOpenModalHours(false);
+            }}
           >
             x
           </button>

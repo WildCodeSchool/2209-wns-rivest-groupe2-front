@@ -14,46 +14,6 @@ export const GET_POI_QUERY = gql`
       pictureUrl
       websiteURL
       description
-      priceRange
-      city
-      openingHours {
-        id
-        value
-        name
-        hoursOpen
-        hoursClose
-      }
-      comments {
-        id
-        createDate
-        updateDate
-        text
-        rate
-        user {
-          id
-          email
-          username
-        }
-      }
-    }
-  }
-`;
-
-export const GET_POI_BY_ID_QUERY = gql`
-  query GetPOIbyId($getPoIbyId: Float!) {
-    getPoIbyId(id: $getPoIbyId) {
-      id
-      name
-      address
-      postal
-      type
-      coordinates
-      creationDate
-      averageRate
-      pictureUrl
-      websiteURL
-      description
-      priceRange
       city
       openingHours {
         id

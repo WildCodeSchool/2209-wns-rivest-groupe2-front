@@ -6,6 +6,10 @@ import { useQuery } from '@apollo/client';
 import POICard from 'src/components/POICard';
 import POIComments from 'src/components/POIComments';
 import { Typography } from '@material-tailwind/react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import bgBar from 'src/asset/img/bg-bar.jpg';
 import bgChurch from 'src/asset/img/bg-church.jpg';
@@ -15,14 +19,17 @@ import bgMuseum from 'src/asset/img/bg-museum.jpg';
 import bgRestaurant from 'src/asset/img/bg-restaurant.jpg';
 import MapModule from 'src/components/Map/MapModule';
 import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
-import PictureVizualization from 'src/components/PictureVizualization';
+import ModalAddPlace from 'src/components/ModalPois/ModalAddPlace';
+import ModalDeletePlace from 'src/components/ModalPois/ModalDeletePlace';
 
 const POIDetails = () => {
   const [commentsCount, setCommentsCount] = useState(0);
+  const [openModalAddPlace, setOpenModalAddPlace] = useState(false);
+  const [openModalDeletePlace, setOpenModalDeletePlace] = useState(false);
 
   const { loading, error, data } = useQuery(GET_POI_QUERY);
   const { id } = useParams();
-  const thisPOI = data?.getAllPoi?.find(
+  const thisPOI: IPOIData = data?.getAllPoi?.find(
     (poi: { id: number }) => poi.id === Number(id)
   );
 
@@ -37,7 +44,7 @@ const POIDetails = () => {
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>Une erreur est survenue :(</p>;
 
-  if (!thisPOI) return <p>Pas de point d'interet</p>;
+  if (!thisPOI) return <p>Pas de point d'intérêt renseigné avec ce nom</p>;
 
   const otherPOIs = data?.getAllPoi
     ?.filter((poi: { id: number }) => poi.id !== Number(id))
@@ -79,7 +86,24 @@ const POIDetails = () => {
         >
           {thisPOI.type}
         </Typography>
-        <div className="mx-auto bg-white drop-shadow-2xl">
+        <div className="mx-auto bg-white drop-shadow-2xl relative">
+          <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
+            <Tooltip title="Editer le point d'intéret">
+              <IconButton onClick={() => setOpenModalAddPlace(true)}>
+                <BorderColorIcon sx={{ color: 'black' }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Supprimer le point d'intéret">
+              <IconButton onClick={() => setOpenModalDeletePlace(true)}>
+                <DeleteIcon sx={{ color: 'black' }} />
+              </IconButton>
+            </Tooltip>
+          </div>
+          <ModalDeletePlace
+            poiId={thisPOI.id}
+            openDeleteDialog={openModalDeletePlace}
+            handleDeleteDialogClose={() => setOpenModalDeletePlace(false)}
+          />
           <nav aria-label="Breadcrumb" className="py-3 px-2">
             <ol
               role="list"
@@ -123,7 +147,7 @@ const POIDetails = () => {
             </div>
             <div className="mt-6 mx-auto px-10">
               <POIComments
-                averageRate={thisPOI.averageRate}
+                averageRate={thisPOI?.averageRate || 0}
                 commentsCount={commentsCount}
                 comments={thisPOI.comments}
                 poiId={thisPOI.id}
@@ -160,6 +184,13 @@ const POIDetails = () => {
           </div>
         </div>
       </div>
+      {openModalAddPlace && (
+        <ModalAddPlace
+          setOpenModalAddPlace={setOpenModalAddPlace}
+          openModalAddPlace={openModalAddPlace}
+          poi={thisPOI}
+        />
+      )}
     </div>
   );
 };

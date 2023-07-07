@@ -3,17 +3,12 @@ import { UserContext } from '../contexts/userContext';
 import { IUserContext } from '../types/IUserContext';
 import { Link } from 'react-router-dom';
 import redneck from '../asset/img/redneck.jpg';
-import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
 const UserDropdown = () => {
@@ -108,21 +103,6 @@ const UserDropdown = () => {
         </MenuItem>
       </Menu>
     </React.Fragment>
-    /* <Dropdown
-      label={<Avatar alt="User settings" img={redneck} size="lg" />}
-      arrowIcon={false}
-      inline={true}
-      className="z-50"
-    >
-      <Dropdown.Header>
-        <span className="block text-sm text-opalblue">{user?.username}</span>
-      </Dropdown.Header>
-      <Dropdown.Item>
-        <Link to={`/dashboard/profile/`}>Mon compte</Link>
-      </Dropdown.Item>
-      <Dropdown.Divider />
-      <Dropdown.Item onClick={logout}>Déconnexion</Dropdown.Item>
-    </Dropdown> */
   );
 };
 
