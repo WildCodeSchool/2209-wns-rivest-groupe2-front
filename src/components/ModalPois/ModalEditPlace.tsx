@@ -5,11 +5,7 @@ import { useMutation } from '@apollo/client';
 import axios from 'axios';
 import type { IFormInput, IPOIData, ImagesProps } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
-import {
-  CREATE_POI_MUTATION,
-  UPDATE_POI_MUTATION,
-  UPDATE_POI_IMG_MUTATION,
-} from 'src/services/mutations/POIMutations';
+import { UPDATE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 import { DaysOpenProps } from 'src/types/POIType';
 import { defaultDays } from 'src/services/helpers/POIDefaultDays';
 import {

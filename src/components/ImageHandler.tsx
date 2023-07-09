@@ -20,8 +20,6 @@ const ImageHandler = ({
 }: Props) => {
   const image_url = process.env.REACT_APP_IMAGE_URL;
 
-  console.log('dataImg', dataImg);
-
   return (
     <div className="flex flex-col items-center gap-2">
       {images.length === 0 && dataImg.length === 0 && (
@@ -124,7 +122,6 @@ const ImageHandler = ({
                 type="button"
                 className="btn btn-secondary"
                 onClick={() => {
-                  console.log('img', img);
                   deleteImg(img);
                 }}
               >

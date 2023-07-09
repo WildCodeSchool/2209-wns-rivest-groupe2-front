@@ -39,18 +39,6 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
   const methods = useForm<IFormInput>();
   const { handleSubmit, reset, getValues } = methods;
 
-  let pictureUrlArray: string[] = [];
-
-  const updateBackendUrlImg = async (
-    data: Array<{ status: string; filename: string }>
-  ) => {
-    data.forEach((element) => {
-      pictureUrlArray.push(element.filename);
-    });
-    setDataImage(pictureUrlArray);
-    return Promise.resolve();
-  };
-
   const [createPoi] = useMutation(CREATE_POI_MUTATION, {
     context: {
       headers: {
@@ -69,6 +57,18 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
     },
     refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
   });
+
+  let pictureUrlArray: string[] = [];
+
+  const updateBackendUrlImg = async (
+    data: Array<{ status: string; filename: string }>
+  ) => {
+    data.forEach((element) => {
+      pictureUrlArray.push(element.filename);
+    });
+    setDataImage(pictureUrlArray);
+    return Promise.resolve();
+  };
 
   const handleImageUpload = async (poiId: number) => {
     const formData = new FormData();
@@ -216,7 +216,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
           marginBottom: '15px',
         }}
       >
-        {'Ajouter un lieu'}
+        Ajouter un lieu
       </DialogTitle>
       <DialogContent>
         <FormProvider {...methods}>
@@ -253,7 +253,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
             Annuler
           </Button>
           <Button type="submit" onClick={handleSubmit(onSubmit)}>
-            {'Ajouter'}
+            Ajouter
           </Button>
         </DialogActions>
       )}
