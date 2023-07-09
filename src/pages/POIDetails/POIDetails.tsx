@@ -19,12 +19,12 @@ import bgMuseum from 'src/asset/img/bg-museum.jpg';
 import bgRestaurant from 'src/asset/img/bg-restaurant.jpg';
 import MapModule from 'src/components/Map/MapModule';
 import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
-import ModalAddPlace from 'src/components/ModalPois/ModalAddPlace';
 import ModalDeletePlace from 'src/components/ModalPois/ModalDeletePlace';
+import ModalEditPlace from 'src/components/ModalPois/ModalEditPlace';
 
 const POIDetails = () => {
   const [commentsCount, setCommentsCount] = useState(0);
-  const [openModalAddPlace, setOpenModalAddPlace] = useState(false);
+  const [openModalEditPlace, setOpenModalEditPlace] = useState(false);
   const [openModalDeletePlace, setOpenModalDeletePlace] = useState(false);
 
   const { loading, error, data } = useQuery(GET_POI_QUERY);
@@ -89,7 +89,7 @@ const POIDetails = () => {
         <div className="mx-auto bg-white drop-shadow-2xl relative">
           <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
             <Tooltip title="Editer le point d'intéret">
-              <IconButton onClick={() => setOpenModalAddPlace(true)}>
+              <IconButton onClick={() => setOpenModalEditPlace(true)}>
                 <BorderColorIcon sx={{ color: 'black' }} />
               </IconButton>
             </Tooltip>
@@ -184,10 +184,10 @@ const POIDetails = () => {
           </div>
         </div>
       </div>
-      {openModalAddPlace && (
-        <ModalAddPlace
-          setOpenModalAddPlace={setOpenModalAddPlace}
-          openModalAddPlace={openModalAddPlace}
+      {openModalEditPlace && (
+        <ModalEditPlace
+          setOpenModalEditPlace={setOpenModalEditPlace}
+          openModalEditPlace={openModalEditPlace}
           poi={thisPOI}
         />
       )}

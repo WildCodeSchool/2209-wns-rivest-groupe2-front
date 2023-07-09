@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalHours from './ModalHours';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
@@ -8,6 +8,7 @@ import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import {
   CREATE_POI_MUTATION,
   UPDATE_POI_MUTATION,
+  UPDATE_POI_IMG_MUTATION,
 } from 'src/services/mutations/POIMutations';
 import { DaysOpenProps } from 'src/types/POIType';
 import { defaultDays } from 'src/services/helpers/POIDefaultDays';
@@ -20,18 +21,19 @@ import {
 } from '@mui/material';
 import ModalAddPlaceForm from './ModalAddPlaceForm';
 
-type ModalAddPlaceProps = {
-  openModalAddPlace: boolean;
-  setOpenModalAddPlace: React.Dispatch<React.SetStateAction<boolean>>;
-  poi?: IPOIData;
+type ModalEditPlaceProps = {
+  openModalEditPlace: boolean;
+  setOpenModalEditPlace: React.Dispatch<React.SetStateAction<boolean>>;
+  poi: IPOIData;
 };
 
-const ModalAddPlace = (props: ModalAddPlaceProps) => {
-  const { openModalAddPlace, setOpenModalAddPlace, poi } = props;
+const ModalEditPlace = (props: ModalEditPlaceProps) => {
+  const { openModalEditPlace, setOpenModalEditPlace, poi } = props;
   const [openModalHours, setOpenModalHours] = useState(false);
   const [selectedDays, setSelectedDays] =
     useState<DaysOpenProps[]>(defaultDays);
   const [selectedImage, setSelectedImage] = useState<Array<ImagesProps>>([]);
+  const [openingHoursData, setOpeningHoursData] = useState<any[] | null>(null);
   const [dataImage, setDataImage] = useState<string[] | []>([]);
   const token = localStorage.getItem('token');
   const image_url = process.env.REACT_APP_IMAGE_URL;
@@ -39,27 +41,33 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
   const methods = useForm<IFormInput>();
   const { handleSubmit, reset, getValues } = methods;
 
-  let pictureUrlArray: string[] = [];
-
-  const updateBackendUrlImg = async (
-    data: Array<{ status: string; filename: string }>
-  ) => {
-    data.forEach((element) => {
-      pictureUrlArray.push(element.filename);
+  useEffect(() => {
+    reset({
+      name: poi.name,
+      address: poi.address,
+      postal: poi.postal,
+      type: poi.type,
+      coordinates: poi.coordinates,
+      websiteURL: poi.websiteURL,
+      description: poi.description,
+      city: poi.city,
     });
-    setDataImage(pictureUrlArray);
-    return Promise.resolve();
-  };
 
-  const [createPoi] = useMutation(CREATE_POI_MUTATION, {
-    context: {
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    },
-    refetchQueries:
-      selectedImage.length === 0 ? [{ query: GET_POI_QUERY }, 'getAllPoi'] : [],
-  });
+    for (let i = 0; i < selectedDays.length; i++) {
+      const selectedDay = selectedDays[i];
+      const dataDay = poi.openingHours.find(
+        (day) => day.value === selectedDay.value
+      );
+      if (dataDay) {
+        selectedDay.hoursOpen = dataDay.hoursOpen;
+        selectedDay.hoursClose = dataDay.hoursClose;
+      }
+      if (selectedDay.hoursClose.length > 0) {
+        selectedDay.isOpen = true;
+      }
+    }
+    setDataImage(poi.pictureUrl);
+  }, []);
 
   const [updatePoi] = useMutation(UPDATE_POI_MUTATION, {
     context: {
@@ -69,6 +77,58 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
     },
     refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
   });
+
+  const [updateCoverImg] = useMutation(UPDATE_POI_MUTATION, {
+    context: {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
+  });
+
+  const updateBackendUrlImg = async (
+    data: Array<{ status: string; filename: string }>
+  ) => {
+    try {
+      let pictureUrlArray: string[] = [...dataImage];
+      data.forEach((element) => {
+        pictureUrlArray.push(element.filename);
+      });
+      setDataImage(pictureUrlArray);
+      await updateCoverImg({
+        variables: {
+          data: {
+            id: poi.id,
+            pictureUrl: pictureUrlArray,
+          },
+        },
+      });
+    } catch (error: any) {
+      console.log(error);
+      alert(`Erreur lors de la modification de l'image: ${error.message}`);
+    }
+  };
+
+  const deleteBackendUrlImg = async (imgUrl: string) => {
+    try {
+      console.log('imgUrl', imgUrl);
+      const deletedPictureArray = dataImage.filter(
+        (picture) => picture !== imgUrl
+      );
+      setDataImage(deletedPictureArray);
+      await updateCoverImg({
+        variables: {
+          data: {
+            id: poi.id,
+            pictureUrl: deletedPictureArray,
+          },
+        },
+      });
+    } catch (error: any) {
+      console.log(error);
+      alert(`Erreur lors de la suppression de l'image: ${error.message}`);
+    }
+  };
 
   const handleImageUpload = async (poiId: number) => {
     const formData = new FormData();
@@ -121,6 +181,19 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
     }
   };
 
+  const deleteImg = async (imgUrl: string) => {
+    try {
+      await axios.delete(`${image_url}/delete${imgUrl}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      await deleteBackendUrlImg(imgUrl);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
     const options = {
       method: 'GET',
@@ -141,69 +214,58 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
       },
     };
     try {
-      const daysOpen = selectedDays.map((day) => {
-        if (!day.isOpen)
-          return {
-            value: day.value,
-            name: day.name,
-            hoursOpen: ['Fermé'],
-            hoursClose: day.hoursClose,
-          };
-        return {
-          value: day.value,
-          name: day.name,
-          hoursOpen: day.hoursOpen,
-          hoursClose: day.hoursClose,
-        };
-      });
-      const responseCoordinates = await axios.request(options);
-      const dataFromApi = responseCoordinates.data.Results[0];
+      let coordinatesGPS: string[] = [];
+      if (poi.address !== formData.address) {
+        const responseCoordinates = await axios.request(options);
+        const dataFromApi = responseCoordinates.data.Results[0];
 
-      const coordinatesGPS = dataFromApi && [
-        dataFromApi.latitude,
-        dataFromApi.longitude,
-      ];
-      const createResponse = await createPoi({
+        coordinatesGPS = dataFromApi && [
+          dataFromApi.latitude,
+          dataFromApi.longitude,
+        ];
+      }
+      if (selectedImage.length > 0) {
+        await handleImageUpload(poi.id);
+      }
+
+      await updatePoi({
         variables: {
           data: {
-            name: formData.name,
-            address: formData.address,
-            postal: formData.postal,
-            type: formData.type,
-            coordinates: coordinatesGPS,
-            websiteURL: formData.websiteURL,
-            description: formData.description,
-            city: formData.city,
-            openingHours: daysOpen,
+            id: poi.id,
+            name: poi.name !== formData.name ? formData.name : null,
+            address: poi.address !== formData.address ? formData.address : null,
+            postal: poi.postal !== formData.postal ? formData.postal : null,
+            type: poi.type !== formData.type ? formData.type : null,
+            coordinates:
+              poi.address !== formData.address ? coordinatesGPS : null,
+            websiteURL:
+              poi.websiteURL !== formData.websiteURL
+                ? formData.websiteURL
+                : null,
+            description:
+              poi.description !== formData.description
+                ? formData.description
+                : null,
+            city: poi.city !== formData.city ? formData.city : null,
+            openingHours: openingHoursData,
           },
         },
       });
-
-      const poiId = createResponse.data.createPoi.id;
-      if (selectedImage.length > 0) {
-        await handleImageUpload(poiId);
-        await updatePoi({
-          variables: {
-            data: {
-              id: poiId,
-              pictureUrl: pictureUrlArray,
-            },
-          },
-        });
-      }
       reset();
-      setOpenModalAddPlace(false);
-      alert("Point d'intérêt créé avec succès");
+      setOpenModalEditPlace(false);
+      alert("Point d'intérêt modifié avec succès");
     } catch (error: any) {
       console.log(error);
-      alert(`Erreur lors de la création du point d'intérêt: ${error.message}`);
+      alert(
+        `Erreur lors de la modification du point d'intérêt: ${error.message}`
+      );
     }
   };
 
   return (
     <Dialog
-      open={openModalAddPlace}
-      onClose={() => setOpenModalAddPlace(false)}
+      open={openModalEditPlace}
+      onClose={() => setOpenModalEditPlace(false)}
       PaperProps={{
         sx: { width: '750px', maxWidth: '1000px' },
       }}
@@ -216,7 +278,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
           marginBottom: '15px',
         }}
       >
-        {'Ajouter un lieu'}
+        Modifier les informations du lieu
       </DialogTitle>
       <DialogContent>
         <FormProvider {...methods}>
@@ -229,6 +291,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
                 setOpenModalHours={setOpenModalHours}
                 selectedDays={selectedDays}
                 setSelectedDays={setSelectedDays}
+                setOpeningHoursData={setOpeningHoursData}
               />
             ) : (
               <ModalAddPlaceForm
@@ -237,6 +300,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
                 selectedImage={selectedImage}
                 dataImage={dataImage}
                 resetImage={resetImage}
+                deleteImg={deleteImg}
               />
             )}
           </form>
@@ -247,13 +311,13 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
           <Button
             onClick={() => {
               reset();
-              setOpenModalAddPlace(false);
+              setOpenModalEditPlace(false);
             }}
           >
             Annuler
           </Button>
           <Button type="submit" onClick={handleSubmit(onSubmit)}>
-            {'Ajouter'}
+            Modifier
           </Button>
         </DialogActions>
       )}
@@ -261,4 +325,4 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
   );
 };
 
-export default ModalAddPlace;
+export default ModalEditPlace;

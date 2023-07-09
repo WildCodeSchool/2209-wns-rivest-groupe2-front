@@ -52,3 +52,13 @@ export const DELETE_POI_MUTATION = gql`
     deletePoi(id: $deletePoiId)
   }
 `;
+
+export const UPDATE_POI_IMG_MUTATION = gql`
+  mutation UpdatePoi($data: UpdatePoiInput!) {
+    updatePoi(data: $data) {
+      id
+      name
+      pictureUrl
+    }
+  }
+`;

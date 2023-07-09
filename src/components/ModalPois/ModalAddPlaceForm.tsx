@@ -10,7 +10,7 @@ type ModalAddPlaceFormProps = {
   selectedImage: ImagesProps[];
   dataImage: string[] | [];
   resetImage: (id: number) => void;
-  deleteImg: (imgUrl: string) => Promise<void>;
+  deleteImg?: (imgUrl: string) => Promise<void>;
 };
 
 const ModalAddPlaceForm = (props: ModalAddPlaceFormProps): ReactElement => {

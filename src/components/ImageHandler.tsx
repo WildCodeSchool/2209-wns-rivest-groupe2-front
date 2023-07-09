@@ -7,7 +7,7 @@ interface Props {
   reset: (id: number) => void;
   type?: string | null;
   dataImg: string[] | [];
-  deleteImg: (imgUrl: string) => Promise<void>;
+  deleteImg?: (imgUrl: string) => Promise<void>;
 }
 
 const ImageHandler = ({
@@ -19,6 +19,8 @@ const ImageHandler = ({
   deleteImg,
 }: Props) => {
   const image_url = process.env.REACT_APP_IMAGE_URL;
+
+  console.log('dataImg', dataImg);
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -99,7 +101,7 @@ const ImageHandler = ({
         </div>
       )}
 
-      {dataImg.length > 0 && (
+      {dataImg.length > 0 && deleteImg && (
         <div className="flex justify-center flex-wrap items-center px-3">
           {dataImg.map((img, index) => (
             <div className="flex flex-col justify-center py-3" key={index}>
@@ -121,7 +123,10 @@ const ImageHandler = ({
               <button
                 type="button"
                 className="btn btn-secondary"
-                onClick={() => deleteImg(img)}
+                onClick={() => {
+                  console.log('img', img);
+                  deleteImg(img);
+                }}
               >
                 Supprimer
               </button>
