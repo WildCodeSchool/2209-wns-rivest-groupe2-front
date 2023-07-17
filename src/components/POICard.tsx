@@ -7,9 +7,8 @@ import {
 } from '@material-tailwind/react';
 import noImage from '../asset/img/no-image-icon.png';
 import { IPOICard } from 'src/types/POIType';
-import StarRating from 'src/components/StarRating';
 import { UserContext } from 'src/contexts/userContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AverageRatingStar } from './AverageRatingStar';
 import { FavoriteButton } from './FavoriteButton';
@@ -47,47 +46,65 @@ const POICard = (props: POICardProps) => {
     city,
     pictureUrl,
     description,
-    type,
     id,
     averageRate,
   } = props.poi;
   const { user } = useContext(UserContext);
+  const [toggleHover, setToggleHover] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   return (
-    <>
-      <Card className="h-full flex flex-col justify-center items-center">
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <Typography variant="h5" className="text-center">
-              {name}
-            </Typography>
-          </div>
-        </CardHeader>
-        <CardBody className="p-0 flex flex-col justify-center items-center relative">
-          <div className="relative w-full">
-            <img
-              src={pictureUrl ? `${image_url}${pictureUrl[0]}` : noImage}
-              alt={name}
-              className="h-[100px] w-[90%] m-auto bg-cover bg-center"
-            />
-            {user && (
-              <FavoriteButton
-                userId={user?.id}
-                poiId={id}
-                className="absolute top-0 right-0"
-              />
-            )}
-          </div>
-          <Typography className="text-center text-xs font-normal text-blue-gray-400 pt-[10px]">
-            {description.slice(0, 60)}...
+    <Card className="h-full relative">
+      <CardHeader>
+        <div className="w-full">
+          <Typography variant="h5" className="text-center w-[90%]">
+            {name}
           </Typography>
-          <AverageRatingStar averageRate={averageRate} />
-          {user?.id && (
-            <StarRating
-              className="border-2 flex items-center justify-center cursor-default"
+          {user && (
+            <FavoriteButton
               userId={user?.id}
               poiId={id}
+              className="absolute top-1 right-1 text-red-600"
+              width="20px"
+              height="20px"
+              isFavorite={isFavorite}
+              setIsFavorite={setIsFavorite}
             />
+          )}
+        </div>
+      </CardHeader>
+      <CardBody className="px-0 mt-5 w-full flex flex-col justify-evenly items-center relative">
+        <div className="relative w-full" style={{ overflow: 'hidden' }}>
+          <div
+            style={{
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              width: '100%',
+              height: '150px',
+              backgroundImage:
+                pictureUrl && pictureUrl.length > 0
+                  ? `url(${image_url}${pictureUrl[0]})`
+                  : `url(${noImage})`,
+              transition: 'all 0.5s ease-in-out',
+              transform: toggleHover ? 'scale(1.3)' : 'scale(1)',
+            }}
+            onMouseEnter={() => setToggleHover(!toggleHover)}
+            onMouseLeave={() => setToggleHover(!toggleHover)}
+          />
+        </div>
+        <div className="w-[90%] flex flex-col justify-evenly h-[130px]">
+          {description && (
+            <Typography className="text-center text-xs font-normal text-blue-gray-400 pt-[10px]">
+              {description.length > 60
+                ? `${description.slice(0, 60)}...`
+                : description}
+            </Typography>
+          )}
+          {averageRate && (
+            <div>
+              <AverageRatingStar averageRate={averageRate} />
+            </div>
           )}
           <Typography>
             <Link
@@ -100,14 +117,14 @@ const POICard = (props: POICardProps) => {
               </span>
             </Link>
           </Typography>
-        </CardBody>
-        <CardFooter divider className="flex items-center justify-between py-1">
-          <Typography variant="small" className="text-center text-xs">
-            {`${address}, ${postal} ${city}`}
-          </Typography>
-        </CardFooter>
-      </Card>
-    </>
+        </div>
+      </CardBody>
+      <CardFooter divider className="w-full h-20 absolute bottom-0 left-0">
+        <Typography variant="small" className="text-center text-xs">
+          {`${address}, ${postal} ${city}`}
+        </Typography>
+      </CardFooter>
+    </Card>
   );
 };
 

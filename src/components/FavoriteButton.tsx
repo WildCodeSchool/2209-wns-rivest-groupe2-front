@@ -9,15 +9,21 @@ interface FavoriteButtonProps {
   userId: number | null | undefined;
   poiId: number;
   className?: string;
+  width: string;
+  height: string;
+  isFavorite: boolean;
+  setIsFavorite: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   userId,
   poiId,
   className,
+  width,
+  height,
+  isFavorite,
+  setIsFavorite,
 }) => {
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
-
   const { loading, error, data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
     variables: { userId },
   });
@@ -43,7 +49,11 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
 
   return (
     <button onClick={() => toggleFavoriteMutation()} className={className}>
-      {isFavorite ? <FaHeart color="red" /> : <FaRegHeart />}
+      {isFavorite ? (
+        <FaHeart style={{ width, height }} />
+      ) : (
+        <FaRegHeart style={{ width, height }} />
+      )}
     </button>
   );
 };

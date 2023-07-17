@@ -1,0 +1,21 @@
+.image-gallery-wrapper {
+  margin-top: 5rem;
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  background-color: black;
+}
+
+.fullscreen .image-gallery-image {
+  min-height: 1000px !important;
+  max-height: 1000px !important;
+}
+
+.image-gallery-image {
+  min-height: 700px !important;
+  max-height: 700px !important;
+  padding-top: 50px;
+  padding-bottom: 50px !important;
+  /* object-fit: none !important;
+  object-position: center; */
+}

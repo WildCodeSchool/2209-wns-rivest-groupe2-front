@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import MapModule from '../../components/Map/MapModule';
 import { IPOIData } from 'src/types/POIType';
 import POICard, { goodWrittenType } from 'src/components/POICard';
-import ModalAddPlace from 'src/components/ModalAddPlace/ModalAddPlace';
+import ModalAddPlace from 'src/components/ModalPois/ModalAddPlace';
 import { useQuery } from '@apollo/client';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
@@ -50,13 +50,17 @@ const POIList = () => {
     }
   }, [getPoiData, category]);
 
+  useEffect(() => {
+    setFilteredCount(filteredPois.length);
+  }, [filteredPois.length]);
+
   if (getPoiLoading) return <p>Chargement...</p>;
   if (getPoiError) return <p>{getPoiError.message}</p>;
 
   return (
     <>
       <div className="mt-5 h-full w-full">
-        <div className="flex justify-between items-center mx-5">
+        <div className="flex justify-between items-center mx-5 my-3">
           <strong className="py-[5px] pl-[80px]" id="results-number">
             {getPoiData.getAllPoi.length === 0
               ? "Aucun point d'intérêt à Paris"
@@ -112,13 +116,13 @@ const POIList = () => {
               <>
                 {category !== '' ? (
                   <ul
-                    id="poi-list-bar"
+                    id="poi-list"
                     className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                   >
                     {filteredPois &&
                       filteredPois.map((poi: IPOIData) => (
                         <li
-                          className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                          className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                           key={poi.id}
                           value={poi.id}
                           onClick={() => setZoomPoi(poi)}
@@ -138,7 +142,7 @@ const POIList = () => {
                       {barPois &&
                         barPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -153,13 +157,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Fast Food</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-fastfood"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {fastFoodPois &&
                         fastFoodPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -174,13 +178,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Hôtels</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-hotel"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {hotelPois &&
                         hotelPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -197,13 +201,13 @@ const POIList = () => {
                       Les Lieux de culte
                     </h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-culte"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {cultePois &&
                         cultePois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -218,13 +222,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Musées</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-museum"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {museumPois &&
                         museumPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -239,13 +243,13 @@ const POIList = () => {
                   <>
                     <h3 className="pl-8 text-3xl font-bold">Les Restaurants</h3>
                     <ul
-                      id="poi-list-bar"
+                      id="poi-list-restaurant"
                       className="flex justify-around py-4 flex-wrap w-4/5 my-3.5 mx-auto"
                     >
                       {restaurantPois &&
                         restaurantPois.map((poi: IPOIData) => (
                           <li
-                            className="h-[300px] w-[250px] border-solid border rounded-xl mb-12"
+                            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
                             key={poi.id}
                             value={poi.id}
                             onClick={() => setZoomPoi(poi)}
@@ -265,7 +269,7 @@ const POIList = () => {
               height: '70vh',
               position: 'fixed',
               right: 0,
-              top: '180px',
+              top: '200px',
             }}
           >
             <MapModule poiData={filteredPois} zoomPoi={zoomPoi} />
@@ -273,7 +277,10 @@ const POIList = () => {
         </div>
       </div>
       {openModalAddPlace && (
-        <ModalAddPlace setOpenModalAddPlace={setOpenModalAddPlace} />
+        <ModalAddPlace
+          setOpenModalAddPlace={setOpenModalAddPlace}
+          openModalAddPlace={openModalAddPlace}
+        />
       )}
     </>
   );

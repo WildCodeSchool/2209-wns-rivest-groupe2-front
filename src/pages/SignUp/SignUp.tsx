@@ -10,37 +10,36 @@ import signup from '../../asset/img/bg-signup.jpg';
 import { CREATE_USER } from 'src/services/mutations/userMutations';
 
 // YUP SCHEMA
-const schema = yup
-  .object({
-    username: yup
-      .string()
-      .required('Merci de renseigner un identifiant.')
-      .matches(
-        /^[aA-zZ\s]+$/,
-        `Veuillez n'utiliser que des lettres de l'alphabet.`
-      ),
+const schema = yup.object({
+  username: yup
+    .string()
+    .required('Merci de renseigner un identifiant.')
+    .matches(
+      /^[aA-zZ\s]+$/,
+      `Veuillez n'utiliser que des lettres de l'alphabet.`
+    ),
 
-    email: yup
-      .string()
-      .email('Veuillez renseigner un email valide.')
-      .required('Veuillez renseigner un email valide.'),
+  email: yup
+    .string()
+    .email('Veuillez renseigner un email valide.')
+    .required('Veuillez renseigner un email valide.'),
 
-    password: yup
-      .string()
-      .required('Veuillez renseigner un mot de passe.')
-      .matches(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
-        'Doit contenir une majuscule, une minuscule, un nombre et au minimum et faire entre 8 et 25 caractères.'
-      ),
+  password: yup
+    .string()
+    .required('Veuillez renseigner un mot de passe.')
+    .matches(
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
+      'Doit contenir une majuscule, une minuscule, un nombre et au minimum et faire entre 8 et 25 caractères.'
+    ),
 
-    confirmPassword: yup
-      .string()
-      .oneOf(
-        [yup.ref('password'), null],
-        'Les mots de passe doivent être identiques.'
-      ),
-  })
-  .required();
+  confirmPassword: yup
+    .string()
+    .oneOf(
+      [yup.ref('password'), null],
+      'Les mots de passe doivent être identiques.'
+    )
+    .required(),
+});
 
 const SignUp = () => {
   // SHOW - HIDE PASSWORD

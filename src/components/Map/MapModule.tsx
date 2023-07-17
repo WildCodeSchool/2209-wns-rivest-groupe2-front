@@ -1,4 +1,4 @@
-import L, { LatLngExpression } from 'leaflet';
+import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { IPOIData } from 'src/types/POIType';
 import { Legend } from './MapLegend';
@@ -25,7 +25,7 @@ const MapModule = ({
   zoomPoi,
 }: {
   poiData: IPOIData[];
-  zoomPoi: IPOIData | void;
+  zoomPoi?: IPOIData | void;
 }) => {
   const parisPosition: LatLngExpression = [48.88, 2.33];
   const zoom: number = 12;
