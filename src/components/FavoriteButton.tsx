@@ -2,6 +2,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { TOGGLE_FAVORITE_MUTATION } from 'src/services/mutations/favoriteMutations';
+import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
 import { IFavorite } from 'src/types/POIType';
 
@@ -42,6 +43,10 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     onCompleted: () => {
       setIsFavorite((prevIsFavorite) => !prevIsFavorite);
     },
+    refetchQueries: [
+      { query: GET_POI_QUERY },
+      { query: GET_USER_FAVORITE_POI_QUERY, variables: { userId } },
+    ],
   });
 
   if (!userId || loading) return null;

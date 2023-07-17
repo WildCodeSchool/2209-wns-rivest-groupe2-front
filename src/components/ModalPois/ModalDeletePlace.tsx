@@ -76,7 +76,6 @@ const ModalDeletePlace: React.FC<POICommentModalProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
-      )
     </div>
   );
 };

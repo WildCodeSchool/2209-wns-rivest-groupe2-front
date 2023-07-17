@@ -3,8 +3,8 @@ import {
   UserCircleIcon,
   TableCellsIcon,
 } from '@heroicons/react/24/solid';
-import { Profile } from './pages/dashboard/profile';
-import { Tables } from './pages/dashboard/tables';
+import { Profile } from './pages/Dashboard/Profile';
+import { Tables } from './pages/Dashboard/tables';
 
 const icon = {
   className: 'w-5 h-5 text-inherit',

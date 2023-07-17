@@ -1,26 +1,19 @@
-import {
-  Card,
-  CardBody,
-  Avatar,
-  Typography,
-  Tooltip,
-} from '@material-tailwind/react';
-import { useQuery } from '@apollo/client';
-
-import { PencilIcon } from '@heroicons/react/24/solid';
+import { Card, CardBody, Avatar, Typography } from '@material-tailwind/react';
 import { ProfileInfoCard } from '../../widgets/cards/profile-info-card';
 import { UserContext } from 'src/contexts/userContext';
-import { useContext, useState, useEffect, useRef } from 'react';
-import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import { useContext, useState, useEffect } from 'react';
 import POIMap from 'src/components/POIMap';
 import { useMutation } from '@apollo/client';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogActions from '@mui/material/DialogActions';
 import { DELETE_USER } from 'src/services/mutations/userMutations';
-import { Button } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { UserDetailsProps } from 'src/types/UserType';
 
 export function Profile() {
   const { user, setUser } = useContext(UserContext);
@@ -38,7 +31,7 @@ export function Profile() {
       localStorage.removeItem('user');
       setUser(null);
     } catch (error) {
-      console.error('Error deleting user:', error);
+      console.error('Error deleting user: ', error);
     }
   };
 
@@ -50,27 +43,29 @@ export function Profile() {
     setOpenDeleteDialog(true);
   };
 
-  const POIData = useQuery(GET_POI_QUERY);
-
-  const [isTruncated, setIsTruncated] = useState(false);
-  const textRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const element = textRef.current;
-    if (element?.clientHeight) {
-      const lineHeight = parseInt(getComputedStyle(element).lineHeight);
-      const maxHeight = lineHeight * 2;
-      if (element.clientHeight > maxHeight) {
-        setIsTruncated(true);
-      }
-    }
-  }, []);
-
   useEffect(() => {
     if (user === null) {
       navigate('/');
     }
   }, [user, navigate]);
+
+  const details: UserDetailsProps[] = [
+    {
+      name: 'username',
+      title: "Nom d'utilisateur",
+      value: user ? user.username : null,
+    },
+    {
+      name: 'firstname',
+      title: 'Prénom',
+      value: user ? user.firstname : null,
+    },
+    {
+      name: 'lastname',
+      title: 'Nom',
+      value: user ? user.lastname : null,
+    },
+  ];
 
   return (
     <>
@@ -89,13 +84,7 @@ export function Profile() {
               />
               <div>
                 <Typography variant="h5" color="blue-gray" className="mb-1">
-                  {user && user.firstname}
-                </Typography>
-                <Typography
-                  variant="small"
-                  className="font-normal text-blue-gray-600"
-                >
-                  Eclaireur
+                  {user && user.username}
                 </Typography>
               </div>
             </div>
@@ -103,56 +92,23 @@ export function Profile() {
           <div className="gird-cols-1 mb-12 grid gap-6 px-4 xl:grid-cols-3">
             <ProfileInfoCard
               title="Informations de profil"
-              details={{
-                "Nom d'utilisateur": user ? user.username : 'undefined',
-                Prénom: user ? user.firstname : 'undefined',
-                Nom: user ? user.lastname : 'undefined',
-                Email: user ? user.email : 'undefined',
-              }}
-              action={
-                <Tooltip content="Edit Profile">
-                  <button
-                    type="submit"
-                    form="userForm"
-                    value="Update"
-                    onClick={() => {
-                      if (isEditMode === false) {
-                        setIsEditMode(!isEditMode);
-                      }
-                      if (isEditMode === true) {
-                        document.body.style.cursor = 'wait';
-                        setTimeout(() => {
-                          document.body.style.cursor = 'default';
-                          setIsEditMode(!isEditMode);
-                        }, 2000);
-                      }
-                    }}
-                  >
-                    {isEditMode === false ? (
-                      <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />
-                    ) : (
-                      <div className="border-2 px-2 text-blue-gray-500">
-                        Save
-                      </div>
-                    )}
-                  </button>
-                </Tooltip>
-              }
+              details={details}
+              setIsEditMode={setIsEditMode}
               isEditMode={isEditMode}
             />
 
             <div className="pl-2 xl:col-span-2">
               <Typography variant="h6" color="blue-gray" className="mb-2">
-                Point of interests - Migth interest you
+                Points d'intérêt pouvant vous intéresser
               </Typography>
               <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <POIMap />
+                <POIMap favorite={false} />
               </ul>
               <Typography variant="h6" color="blue-gray" className="mb-2">
                 Vos lieux favoris
               </Typography>
               <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <POIMap />
+                <POIMap favorite={true} />
               </ul>
             </div>
           </div>

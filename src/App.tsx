@@ -3,16 +3,13 @@ import Home from './pages/Home/Home';
 import SignUp from './pages/SignUp/SignUp';
 import SignIn from './pages/SignIn/SignIn';
 import NotFound from './pages/NotFound/NotFound';
-import Payment from './pages/Payment/Payment';
 import POIDetails from './pages/POIDetails/POIDetails';
-import Profil from './pages/Profil/Profil';
-import TownCreation from './pages/TownCreation/TownCreation';
 import Dashboard from './layouts/dashboard';
 import Auth from './layouts/auth';
 import BaseLayout from './layouts/baseLayout';
 import POIList from './pages/POIList/POIList';
 import RequireAuth from './components/RequireAuth';
-import Profile from './pages/dashboard/profile';
+import Profile from './pages/Dashboard/Profile';
 import ConfirmUserPage from './pages/ConfirmPage';
 import EmailSentConfirmationPage from './pages/EmailSentConfirmationPage ';
 
@@ -32,12 +29,8 @@ const App = () => {
             path="/confirmation-email/:uuid"
             element={<ConfirmUserPage />}
           />
-
-          <Route path="/payment" element={<Payment />} />
           <Route path="/point-of-interest/list" element={<POIList />} />
           <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
-          <Route path="/profil/:id" element={<Profil />} />
-          <Route path="/town/creation" element={<TownCreation />} />
           <Route path="*" element={<NotFound />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['freeUser']} />}>
