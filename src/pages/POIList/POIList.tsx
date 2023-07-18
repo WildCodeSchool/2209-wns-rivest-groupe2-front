@@ -4,7 +4,7 @@ import { IPOIData } from 'src/types/POIType';
 import POICard, { goodWrittenType } from 'src/components/POICard';
 import ModalAddPlace from 'src/components/ModalPois/ModalAddPlace';
 import { useQuery } from '@apollo/client';
-import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import { GET_POI_QUERY_BY_CITY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
 import { useParams } from 'react-router-dom';
 
@@ -13,13 +13,19 @@ const POIList = () => {
   const [openModalAddPlace, setOpenModalAddPlace] = useState(false);
   const [count, setCount] = useState(0);
   const params = useParams();
-  const city = params.name;
+
+  const city = {
+    id: Number(params.cityId),
+    name: params.cityName,
+  };
 
   const {
     loading: getPoiLoading,
     error: getPoiError,
     data: getPoiData,
-  } = useQuery(GET_POI_QUERY, { variables: { cityId: Number(params.id) } });
+  } = useQuery(GET_POI_QUERY_BY_CITY, {
+    variables: { cityId: Number(params.cityId) },
+  });
 
   const [category, setCategory] = useState<string>('');
   const [filteredPois, setFilteredPois] = useState<IPOIData[] | []>([]);
@@ -33,7 +39,6 @@ const POIList = () => {
   const [museumPois, setMuseumPois] = useState<IPOIData[] | []>([]);
 
   useEffect(() => {
-    console.log('getPoiData', getPoiData);
     if (getPoiData?.getAllPoiInCity) {
       const pois = [...getPoiData.getAllPoiInCity];
       setFilteredPois(pois);
@@ -67,12 +72,14 @@ const POIList = () => {
         <div className="flex justify-between items-center mx-5 my-3">
           <strong className="py-[5px] pl-[80px]" id="results-number">
             {getPoiData.getAllPoiInCity.length === 0
-              ? `Aucun point d'intérêt à ${city}`
+              ? `Aucun point d'intérêt à ${city.name}`
               : getPoiData.getAllPoiInCity.length > 0 && category !== ''
               ? `${filteredCount} ${goodWrittenType(category)}${
                   filteredCount > 1 ? 's' : ''
-                } à ${city}`
-              : `${count} Point${count > 1 ? 's' : ''} d'intérêt à ${city}`}
+                } à ${city.name}`
+              : `${count} Point${count > 1 ? 's' : ''} d'intérêt à ${
+                  city.name
+                }`}
           </strong>
           <button
             className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
@@ -267,10 +274,11 @@ const POIList = () => {
           </div>
         </div>
       </div>
-      {openModalAddPlace && (
+      {openModalAddPlace && city && (
         <ModalAddPlace
           setOpenModalAddPlace={setOpenModalAddPlace}
           openModalAddPlace={openModalAddPlace}
+          city={city}
         />
       )}
     </>

@@ -49,7 +49,6 @@ const SignIn = () => {
       } else {
         localStorage.setItem('token', data.getToken.token);
         localStorage.setItem('user', JSON.stringify(data.getToken.userFromDB));
-        console.log('data.getToken.userFromDB', data.getToken.userFromDB);
         setUser(data.getToken.userFromDB);
         navigate(-1);
       }

@@ -26,15 +26,20 @@ const POIDetails = () => {
   const [commentsCount, setCommentsCount] = useState(0);
   const [openModalEditPlace, setOpenModalEditPlace] = useState(false);
   const [openModalDeletePlace, setOpenModalDeletePlace] = useState(false);
+  const params = useParams();
+  const city = {
+    id: Number(params.cityId),
+    name: params.cityName,
+  };
 
   const { loading, error, data } = useQuery(GET_POI_QUERY);
-  const { id } = useParams();
+  const { poiId } = useParams();
   const thisPOI: IPOIData = data?.getAllPoi?.find(
-    (poi: { id: number }) => poi.id === Number(id)
+    (poi: { id: number }) => poi.id === Number(poiId)
   );
 
   const { data: countCommentData } = useQuery(GET_COMMENTS_NUMBER_PER_POI, {
-    variables: { poiId: Number(id) },
+    variables: { poiId: Number(poiId) },
   });
 
   useEffect(() => {
@@ -47,7 +52,7 @@ const POIDetails = () => {
   if (!thisPOI) return <p>Pas de point d'intérêt renseigné avec ce nom</p>;
 
   const otherPOIs = data?.getAllPoi
-    ?.filter((poi: { id: number }) => poi.id !== Number(id))
+    ?.filter((poi: { id: number }) => poi.id !== Number(poiId))
     .slice(0, 4);
 
   const categoryBackgroundStyle = {
@@ -112,10 +117,10 @@ const POIDetails = () => {
               <li>
                 <div className="flex items-center">
                   <a
-                    href="/point-of-interest/list"
+                    href={`/point-of-interest/list/${thisPOI.city.id}/${thisPOI.city.name}`}
                     className="mr-2 text-sm font-medium text-gray-900"
                   >
-                    Paris
+                    {thisPOI.city.name}
                   </a>
                   <svg
                     width="16"
@@ -189,6 +194,7 @@ const POIDetails = () => {
           setOpenModalEditPlace={setOpenModalEditPlace}
           openModalEditPlace={openModalEditPlace}
           poi={thisPOI}
+          city={city}
         />
       )}
     </div>

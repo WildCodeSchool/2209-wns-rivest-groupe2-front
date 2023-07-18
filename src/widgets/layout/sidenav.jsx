@@ -32,7 +32,10 @@ export function Sidenav({ brandImg, brandName, routes }) {
           sidenavType === 'dark' ? 'border-white/20' : 'border-blue-gray-50'
         }`}
       >
-        <Link to="/point-of-interest/list" className="flex items-center gap-4 py-6 px-8">
+        <Link
+          to="/point-of-interest/list/1/Paris"
+          className="flex items-center gap-4 py-6 px-8"
+        >
           <Avatar src={brandImg} size="sm" />
           <Typography
             variant="h6"

@@ -30,10 +30,13 @@ const App = () => {
             element={<ConfirmUserPage />}
           />
           <Route
-            path="/point-of-interest/list/:id/:name"
+            path="/point-of-interest/list/:cityId/:cityName"
             element={<POIList />}
           />
-          <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
+          <Route
+            path="/point-of-interest/:cityId/:cityName/:poiId/:poiName"
+            element={<POIDetails />}
+          />
           <Route path="*" element={<NotFound />} />
         </Route>
         <Route element={<RequireAuth allowedRoles={['freeUser']} />}>

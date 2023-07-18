@@ -21,10 +21,14 @@ type ModalEditPlaceProps = {
   openModalEditPlace: boolean;
   setOpenModalEditPlace: React.Dispatch<React.SetStateAction<boolean>>;
   poi: IPOIData;
+  city: {
+    id: number | undefined;
+    name: string | undefined;
+  };
 };
 
 const ModalEditPlace = (props: ModalEditPlaceProps) => {
-  const { openModalEditPlace, setOpenModalEditPlace, poi } = props;
+  const { openModalEditPlace, setOpenModalEditPlace, poi, city } = props;
   const [openModalHours, setOpenModalHours] = useState(false);
   const [selectedDays, setSelectedDays] =
     useState<DaysOpenProps[]>(defaultDays);
@@ -46,7 +50,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
       coordinates: poi.coordinates,
       websiteURL: poi.websiteURL,
       description: poi.description,
-      city: poi.city,
     });
 
     for (let i = 0; i < selectedDays.length; i++) {
@@ -107,7 +110,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
 
   const deleteBackendUrlImg = async (imgUrl: string) => {
     try {
-      console.log('imgUrl', imgUrl);
       const deletedPictureArray = dataImage.filter(
         (picture) => picture !== imgUrl
       );
@@ -242,7 +244,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
               poi.description !== formData.description
                 ? formData.description
                 : null,
-            city: poi.city !== formData.city ? formData.city : null,
             openingHours: openingHoursData,
           },
         },
@@ -297,6 +298,7 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
                 dataImage={dataImage}
                 resetImage={resetImage}
                 deleteImg={deleteImg}
+                city={city}
               />
             )}
           </form>

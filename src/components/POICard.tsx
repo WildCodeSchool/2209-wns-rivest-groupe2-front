@@ -109,7 +109,7 @@ const POICard = (props: POICardProps) => {
           <Typography>
             <Link
               key={id}
-              to={`/point-of-interest/${id}/${name}`}
+              to={`/point-of-interest/${city.id}/${city.name}/${id}/${name}`}
               style={{ cursor: 'pointer' }}
             >
               <span className="text-xs text-blue-500 pt-3">
@@ -121,7 +121,7 @@ const POICard = (props: POICardProps) => {
       </CardBody>
       <CardFooter divider className="w-full h-20 absolute bottom-0 left-0">
         <Typography variant="small" className="text-center text-xs">
-          {`${address}, ${postal} ${city}`}
+          {`${address}, ${postal} ${city.name}`}
         </Typography>
       </CardFooter>
     </Card>

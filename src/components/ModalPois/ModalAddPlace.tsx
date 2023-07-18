@@ -4,7 +4,10 @@ import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import axios from 'axios';
 import type { IFormInput, IPOIData, ImagesProps } from 'src/types/POIType';
-import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import {
+  GET_POI_QUERY,
+  GET_POI_QUERY_BY_CITY,
+} from 'src/services/queries/POIqueries';
 import {
   CREATE_POI_MUTATION,
   UPDATE_POI_MUTATION,
@@ -23,11 +26,14 @@ import ModalAddPlaceForm from './ModalAddPlaceForm';
 type ModalAddPlaceProps = {
   openModalAddPlace: boolean;
   setOpenModalAddPlace: React.Dispatch<React.SetStateAction<boolean>>;
-  poi?: IPOIData;
+  city: {
+    id: number | undefined;
+    name: string | undefined;
+  };
 };
 
 const ModalAddPlace = (props: ModalAddPlaceProps) => {
-  const { openModalAddPlace, setOpenModalAddPlace, poi } = props;
+  const { openModalAddPlace, setOpenModalAddPlace, city } = props;
   const [openModalHours, setOpenModalHours] = useState(false);
   const [selectedDays, setSelectedDays] =
     useState<DaysOpenProps[]>(defaultDays);
@@ -46,7 +52,9 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
       },
     },
     refetchQueries:
-      selectedImage.length === 0 ? [{ query: GET_POI_QUERY }, 'getAllPoi'] : [],
+      selectedImage.length === 0
+        ? [{ query: GET_POI_QUERY_BY_CITY, variables: { cityId: city?.id } }]
+        : [],
   });
 
   const [updatePoi] = useMutation(UPDATE_POI_MUTATION, {
@@ -55,7 +63,9 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
         authorization: `Bearer ${token}`,
       },
     },
-    refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
+    refetchQueries: [
+      { query: GET_POI_QUERY_BY_CITY, variables: { cityId: city?.id } },
+    ],
   });
 
   let pictureUrlArray: string[] = [];
@@ -173,7 +183,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
             coordinates: coordinatesGPS,
             websiteURL: formData.websiteURL,
             description: formData.description,
-            city: formData.city,
+            city: city,
             openingHours: daysOpen,
           },
         },
@@ -237,6 +247,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
                 selectedImage={selectedImage}
                 dataImage={dataImage}
                 resetImage={resetImage}
+                city={city}
               />
             )}
           </form>

@@ -52,7 +52,7 @@ export default function POIInfos(props: POIInfoProps) {
           {name}
         </Typography>
         <Typography variant="h2">
-          {address}, {postal} {city}
+          {address}, {postal} {city.name}
         </Typography>
       </div>
       <div className="relative flex items-center">
