@@ -29,7 +29,10 @@ const App = () => {
             path="/confirmation-email/:uuid"
             element={<ConfirmUserPage />}
           />
-          <Route path="/point-of-interest/list" element={<POIList />} />
+          <Route
+            path="/point-of-interest/list/:id/:name"
+            element={<POIList />}
+          />
           <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
           <Route path="*" element={<NotFound />} />
         </Route>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styles from '../../styles/popUpMap.module.css';
-import noImage from '../../asset/img/no-image-icon.png';
+import noImage from '../../asset/img/no-image-icon.jpeg';
 
 const image_url = process.env.REACT_APP_IMAGE_URL;
 

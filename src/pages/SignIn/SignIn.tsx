@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { UserContext } from '../../contexts/userContext';
 import { ISignIn } from 'src/types/ISignIn';
@@ -49,6 +49,7 @@ const SignIn = () => {
       } else {
         localStorage.setItem('token', data.getToken.token);
         localStorage.setItem('user', JSON.stringify(data.getToken.userFromDB));
+        console.log('data.getToken.userFromDB', data.getToken.userFromDB);
         setUser(data.getToken.userFromDB);
         navigate(-1);
       }

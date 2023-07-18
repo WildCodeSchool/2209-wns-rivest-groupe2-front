@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../contexts/userContext';
 import { IUserContext } from '../types/IUserContext';
 import { Link } from 'react-router-dom';
-import redneck from '../asset/img/redneck.jpg';
+import defaultImage from '../asset/img/image-de-lutilisateur.png';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,9 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import Logout from '@mui/icons-material/Logout';
 
 const UserDropdown = () => {
-  // CATCH ID FROM USERCONTEXT
   const { user, setUser } = useContext<IUserContext>(UserContext);
-  const id = user?.id;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -42,8 +40,13 @@ const UserDropdown = () => {
       >
         <Avatar
           alt={user?.username || user?.email}
-          sx={{ width: 80, height: 80 }}
-          src={redneck}
+          sx={{
+            width: 80,
+            height: 80,
+            border: '2px solid rgba(139, 139, 139)',
+            borderRadius: '100%',
+          }}
+          src={user?.profilePicture ? user.profilePicture : defaultImage}
         />
       </IconButton>
       <Menu

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_POI_QUERY = gql`
-  query GetAllPoi {
-    getAllPoi {
+  query GetAllPoiInCity($cityId: Float!) {
+    getAllPoiInCity(cityId: $cityId) {
       id
       name
       address
@@ -14,7 +14,10 @@ export const GET_POI_QUERY = gql`
       pictureUrl
       websiteURL
       description
-      city
+      city {
+        id
+        name
+      }
       openingHours {
         id
         value

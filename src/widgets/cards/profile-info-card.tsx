@@ -135,7 +135,7 @@ export const ProfileInfoCard = ({
                   setTimeout(() => {
                     document.body.style.cursor = 'default';
                     setIsEditMode(!isEditMode);
-                  }, 2000);
+                  }, 500);
                 }}
               >
                 <div className="border-2 px-2 text-blue-gray-500">Save</div>

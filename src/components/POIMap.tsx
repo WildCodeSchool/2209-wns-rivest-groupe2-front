@@ -5,6 +5,7 @@ import { IFavorite, IPOIData } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
 import { UserContext } from 'src/contexts/userContext';
+import { divIcon } from 'leaflet';
 
 const POIMap = ({ favorite }: { favorite: boolean }) => {
   const [pois, setPois] = useState<IPOIData[] | []>([]);
@@ -46,29 +47,35 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
     }
   }, [poiData, favoriteData]);
 
-  console.log('pois', pois, 'userFavorites', userFavoritePois);
-
   return !favorite ? (
     <>
-      {pois.map((poi) => (
-        <div
-          className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
-          key={poi.id}
-        >
-          <POICard poi={poi} />
-        </div>
-      ))}
+      {pois.length > 0 ? (
+        pois.map((poi) => (
+          <div
+            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
+            key={poi.id}
+          >
+            <POICard poi={poi} />
+          </div>
+        ))
+      ) : (
+        <div>Aucun point d'intérêt enregistré dans notre base de données</div>
+      )}
     </>
   ) : (
     <>
-      {userFavoritePois.map((poi) => (
-        <div
-          className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
-          key={poi.id}
-        >
-          <POICard poi={poi} />
-        </div>
-      ))}
+      {userFavoritePois.length > 0 ? (
+        userFavoritePois.map((poi) => (
+          <div
+            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
+            key={poi.id}
+          >
+            <POICard poi={poi} />
+          </div>
+        ))
+      ) : (
+        <div>Aucun point d'intérêt enregistré dans vos favoris</div>
+      )}
     </>
   );
 };

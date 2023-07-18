@@ -6,17 +6,20 @@ import ModalAddPlace from 'src/components/ModalPois/ModalAddPlace';
 import { useQuery } from '@apollo/client';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { UserContext } from 'src/contexts/userContext';
+import { useParams } from 'react-router-dom';
 
 const POIList = () => {
   const { user } = useContext(UserContext);
   const [openModalAddPlace, setOpenModalAddPlace] = useState(false);
   const [count, setCount] = useState(0);
+  const params = useParams();
+  const city = params.name;
 
   const {
     loading: getPoiLoading,
     error: getPoiError,
     data: getPoiData,
-  } = useQuery(GET_POI_QUERY);
+  } = useQuery(GET_POI_QUERY, { variables: { cityId: Number(params.id) } });
 
   const [category, setCategory] = useState<string>('');
   const [filteredPois, setFilteredPois] = useState<IPOIData[] | []>([]);
@@ -30,8 +33,9 @@ const POIList = () => {
   const [museumPois, setMuseumPois] = useState<IPOIData[] | []>([]);
 
   useEffect(() => {
-    if (getPoiData?.getAllPoi) {
-      const pois = [...getPoiData.getAllPoi];
+    console.log('getPoiData', getPoiData);
+    if (getPoiData?.getAllPoiInCity) {
+      const pois = [...getPoiData.getAllPoiInCity];
       setFilteredPois(pois);
       setBarPois(pois.filter((poi: IPOIData) => poi.type === 'bar'));
       setRestaurantPois(
@@ -62,13 +66,13 @@ const POIList = () => {
       <div className="mt-5 h-full w-full">
         <div className="flex justify-between items-center mx-5 my-3">
           <strong className="py-[5px] pl-[80px]" id="results-number">
-            {getPoiData.getAllPoi.length === 0
-              ? "Aucun point d'intérêt à Paris"
-              : getPoiData.getAllPoi.length > 0 && category !== ''
+            {getPoiData.getAllPoiInCity.length === 0
+              ? `Aucun point d'intérêt à ${city}`
+              : getPoiData.getAllPoiInCity.length > 0 && category !== ''
               ? `${filteredCount} ${goodWrittenType(category)}${
                   filteredCount > 1 ? 's' : ''
-                } à Paris`
-              : `${count} Point${count > 1 ? 's' : ''} d'intérêt à Paris`}
+                } à ${city}`
+              : `${count} Point${count > 1 ? 's' : ''} d'intérêt à ${city}`}
           </strong>
           <button
             className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
@@ -78,23 +82,9 @@ const POIList = () => {
             {!openModalAddPlace ? 'Ajouter votre lieu' : "Annuler l'ajout"}
           </button>
           <select
-            name="cities"
-            id="cities"
-            className="bg-gray-300 px-[15px] py-[4px] mt-2 border-2 rounded-xl"
-            disabled
-          >
-            <option value="City">Ville</option>
-            <option value="Paris">Paris</option>
-            <option value="Lyon">Lyon</option>
-            <option value="Marseille">Marseille</option>
-            <option value="Bordeaux">Bordeaux</option>
-            <option value="Bordeaux">Bordeaux</option>
-            <option value="Toulouse">Toulouse</option>
-          </select>
-          <select
             name="categories"
             id="categories"
-            className="px-[15px] py-[4px] mr-[80px] mt-2 border-2 rounded-xl focus:border-gray-500 focus:outline-none focus:ring focus:ring-gray-300"
+            className="px-[15px] py-[4px] mr-[80px] mt-2 border-2 rounded-xl bg-transparent focus:border-gray-500 focus:outline-none focus:ring focus:ring-gray-300"
             onChange={(e) => setCategory(e.target.value)}
           >
             <option value="">Toutes les catégories</option>
@@ -108,7 +98,8 @@ const POIList = () => {
         </div>
         <div className="flex pt-5 h-full">
           <div style={{ height: '65vh' }} className="overflow-auto w-[50%]">
-            {getPoiData.getAllPoi.length === 0 || filteredPois.length === 0 ? (
+            {getPoiData.getAllPoiInCity.length === 0 ||
+            filteredPois.length === 0 ? (
               <p className="py-4 w-4/5 my-3.5 mx-auto">
                 Pas de point d'intérêt renseigné pour l'instant.
               </p>

@@ -14,11 +14,15 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { UserDetailsProps } from 'src/types/UserType';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import classes from './Profile.module.css';
+import ModalUpdateImage from './ModalUpdateImage';
 
 export function Profile() {
   const { user, setUser } = useContext(UserContext);
   const [isEditMode, setIsEditMode] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openModalUpdateImage, setOpenModalUpdateImage] = useState(false);
   const [deleteUser, { loading: deleteLoading, error: deleteError }] =
     useMutation(DELETE_USER);
 
@@ -67,81 +71,103 @@ export function Profile() {
     },
   ];
 
+  console.log('user', user);
+
   return (
-    <>
-      <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)] bg-cover	bg-center">
-        <div className="absolute inset-0 h-full w-full bg-blue-500/50" />
-      </div>
-      <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
-        <CardBody className="p-4">
-          <div className="mb-10 flex items-center justify-between gap-6">
-            <div className="flex items-center gap-6">
-              <Avatar
-                src="/img/bruce-mars.jpeg"
-                alt="bruce-mars"
-                size="xl"
-                className="rounded-lg shadow-lg shadow-blue-gray-500/40"
-              />
-              <div>
-                <Typography variant="h5" color="blue-gray" className="mb-1">
-                  {user && user.username}
-                </Typography>
+    user && (
+      <>
+        <div className="relative mt-8 h-72 w-full overflow-hidden rounded-xl bg-[url(https://images.unsplash.com/photo-1531512073830-ba890ca4eba2?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80)] bg-cover	bg-center">
+          <div className="absolute inset-0 h-full w-full bg-blue-500/50" />
+        </div>
+        <Card className="mx-3 -mt-16 mb-6 lg:mx-4">
+          <CardBody className="p-4">
+            <div className="mb-10 flex items-center justify-between gap-6">
+              <div className="flex items-center gap-6">
+                <div className={classes.container}>
+                  <Avatar
+                    src="/img/image-de-lutilisateur.png"
+                    alt="bruce-mars"
+                    size="xl"
+                    className="rounded-lg shadow-lg shadow-blue-gray-500/40 block"
+                  />
+                  <div className={classes.overlay}>
+                    <div
+                      className={classes.icon}
+                      onClick={() => setOpenModalUpdateImage(true)}
+                    >
+                      <AddPhotoAlternateIcon className={classes.faUser} />
+                    </div>
+                    {openModalUpdateImage && (
+                      <ModalUpdateImage
+                        openModalUpdateImage={openModalUpdateImage}
+                        setOpenModalUpdateImage={setOpenModalUpdateImage}
+                        user={user}
+                      />
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <Typography variant="h5" color="blue-gray" className="mb-1">
+                    {user && user.username}
+                  </Typography>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="gird-cols-1 mb-12 grid gap-6 px-4 xl:grid-cols-3">
-            <ProfileInfoCard
-              title="Informations de profil"
-              details={details}
-              setIsEditMode={setIsEditMode}
-              isEditMode={isEditMode}
-            />
+            <div className="gird-cols-1 mb-12 grid gap-6 px-4 xl:grid-cols-3">
+              <ProfileInfoCard
+                title="Informations de profil"
+                details={details}
+                setIsEditMode={setIsEditMode}
+                isEditMode={isEditMode}
+              />
 
-            <div className="pl-2 xl:col-span-2">
-              <Typography variant="h6" color="blue-gray" className="mb-2">
-                Points d'intérêt pouvant vous intéresser
-              </Typography>
-              <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <POIMap favorite={false} />
-              </ul>
-              <Typography variant="h6" color="blue-gray" className="mb-2">
-                Vos lieux favoris
-              </Typography>
-              <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <POIMap favorite={true} />
-              </ul>
+              <div className="pl-2 xl:col-span-2">
+                <Typography variant="h6" color="blue-gray" className="mb-10">
+                  Points d'intérêt pouvant vous intéresser
+                </Typography>
+                <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  <POIMap favorite={false} />
+                </ul>
+                <Typography variant="h6" color="blue-gray" className="my-10">
+                  Vos lieux favoris
+                </Typography>
+                <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  <POIMap favorite={true} />
+                </ul>
+              </div>
             </div>
+          </CardBody>
+          <div className="p-4">
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={handleDeleteDialogOpen}
+              className="text-xs float-left"
+            >
+              Supprimer votre compte
+            </Button>
+            <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
+              <DialogContent>
+                <DialogContentText>
+                  Attention, vous allez supprimer votre compte !
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleDeleteDialogClose}>Annuler</Button>
+                <Button
+                  onClick={handleDeleteUser}
+                  disabled={deleteLoading}
+                  color="error"
+                >
+                  Supprimer
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
-        </CardBody>
-        <div className="p-4">
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={handleDeleteDialogOpen}
-            className="text-xs float-left"
-          >
-            Supprimer votre compte
-          </Button>
-          <Dialog open={openDeleteDialog} onClose={handleDeleteDialogClose}>
-            <DialogContent>
-              <DialogContentText>
-                Attention, vous allez supprimer votre compte !
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteDialogClose}>Annuler</Button>
-              <Button
-                onClick={handleDeleteUser}
-                disabled={deleteLoading}
-                color="error"
-              >
-                Supprimer
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      </Card>
-    </>
+        </Card>
+      </>
+    )
   );
 }
 

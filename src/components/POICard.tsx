@@ -5,7 +5,7 @@ import {
   CardFooter,
   Typography,
 } from '@material-tailwind/react';
-import noImage from '../asset/img/no-image-icon.png';
+import noImage from '../asset/img/no-image-icon.jpeg';
 import { IPOICard } from 'src/types/POIType';
 import { UserContext } from 'src/contexts/userContext';
 import { useContext, useState } from 'react';
