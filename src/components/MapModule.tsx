@@ -3,8 +3,8 @@ import { useContext } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { UserContext } from 'src/contexts/userContext';
 import { IPOIData } from 'src/types/POIType';
-import Legend from './MapLegend';
-import PopUpMap from './PopupMap';
+import Legend from './Map/MapLegend';
+import PopUpMap from './Map/PopupMap';
 
 function MapComponent() {
   const map = useMap();

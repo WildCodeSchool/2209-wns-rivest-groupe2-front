@@ -1,7 +1,7 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const GET_POI_QUERY = gql`
-  query GetAllPois {
+  query GetAllPoi {
     getAllPoi {
       id
       name
@@ -10,14 +10,30 @@ export const GET_POI_QUERY = gql`
       type
       coordinates
       creationDate
+      averageRate
       pictureUrl
       websiteURL
       description
-      priceRange
       city
-      daysOpen
-      hoursOpen
-      hoursClose
+      openingHours {
+        id
+        value
+        name
+        hoursOpen
+        hoursClose
+      }
+      comments {
+        id
+        createDate
+        updateDate
+        text
+        rate
+        user {
+          id
+          email
+          username
+        }
+      }
     }
   }
 `;

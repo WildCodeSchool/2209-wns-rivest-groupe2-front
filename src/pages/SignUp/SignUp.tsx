@@ -2,50 +2,46 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { UserContext } from '../../contexts/userContext';
+// import { UserContext } from '../../contexts/userContext';
 import { ISignUp, IDecodedToken } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
-import jwtDecode from 'jwt-decode';
-
-// MUTATION APOLLO
-const CREATE_USER = gql`
-  mutation Mutation($email: String!, $password: String!) {
-    createUser(email: $email, password: $password) {
-      token
-      userFromDB {
-        id
-        email
-        username
-        firstname
-        lastname
-        profilePicture
-      }
-    }
-  }
-`;
+import { CREATE_USER } from 'src/services/mutations/userMutations';
+// import jwtDecode from 'jwt-decode';
 
 // YUP SCHEMA
-const schema = yup
-  .object({
-    email: yup
-      .string()
-      .email('Please enter a valid email.')
-      .required('Please enter an email.'),
-    password: yup
-      .string()
-      .required('Please enter a password.')
-      .matches(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
-        'Should have one uppercase letter, one lowercase letter, one number. Should have min 8 and max 25 characters.'
-      ),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password'), null], 'Passwords do not match.'),
-  })
-  .required();
+const schema = yup.object({
+  username: yup
+    .string()
+    .required('Merci de renseigner un identifiant.')
+    .matches(
+      /^[aA-zZ\s]+$/,
+      `Veuillez n'utiliser que des lettres de l'alphabet.`
+    ),
+
+  email: yup
+    .string()
+    .email('Veuillez renseigner un email valide.')
+    .required('Veuillez renseigner un email valide.'),
+
+  password: yup
+    .string()
+    .required('Veuillez renseigner un mot de passe.')
+    .matches(
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
+      'Doit contenir une majuscule, une minuscule, un nombre et au minimum et faire entre 8 et 25 caractères.'
+    ),
+
+  confirmPassword: yup
+    .string()
+    .oneOf(
+      [yup.ref('password'), null],
+      'Les mots de passe doivent être identiques.'
+    )
+    .required(),
+});
 
 const SignUp = () => {
   // SHOW - HIDE PASSWORD
@@ -58,22 +54,20 @@ const SignUp = () => {
     setPasswordConfirmShown(!passwordConfirmShown);
   };
 
-  // MUTATION - SUBMISSION
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
 
   const [signUp] = useMutation(CREATE_USER, {
     onCompleted(data) {
-      const token = data.createUser.token;
-      const decodedToken = jwtDecode(token) as IDecodedToken;
-      const userDataWithRole = {
-        ...data.createUser.userFromDB,
-        role: decodedToken.role
-      };
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(userDataWithRole));
-      setUser(userDataWithRole);
-      navigate('/point-of-interest/list');
+      // const token = data.createUser.token;
+      // const decodedToken = jwtDecode(token) as IDecodedToken;
+      // const userDataWithRole = {
+      //   ...data.createUser.userFromDB,
+      //   role: decodedToken.role,
+      // };
+      localStorage.setItem('token', data.createUser.token);
+      localStorage.setItem('user', JSON.stringify(data.createUser.userFromDB));
+      // setUser(userDataWithRole);
+      navigate('/confirmation-email-sent');
     },
     onError(error: any) {
       console.log(error);
@@ -89,11 +83,13 @@ const SignUp = () => {
   });
 
   const onSubmit: SubmitHandler<ISignUp> = async (fields: {
+    username: string;
     email: string;
     password: string;
   }) => {
     signUp({
       variables: {
+        username: fields.username,
         email: fields.email,
         password: fields.password,
       },
@@ -127,6 +123,20 @@ const SignUp = () => {
                   {errors.email && (
                     <span className="text-sm text-red-600">
                       {errors.email.message}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col mb-8 relative">
+                  <input
+                    type="text"
+                    id="username"
+                    {...register('username')}
+                    placeholder="Identifiant"
+                    className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
+                  />
+                  {errors.username && (
+                    <span className="text-sm text-red-600">
+                      {errors.username.message}
                     </span>
                   )}
                 </div>

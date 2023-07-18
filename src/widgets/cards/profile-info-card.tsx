@@ -104,7 +104,7 @@ export const ProfileInfoCard: React.FC<Props> = ({
                 <Typography
                   variant="small"
                   color="blue-gray"
-                  className="font-semibold capitalize"
+                  className="font-semibold"
                 >
                   {el}:
                 </Typography>
