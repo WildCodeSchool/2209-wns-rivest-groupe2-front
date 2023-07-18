@@ -4,13 +4,8 @@ import {
   CardBody,
   Typography,
   Avatar,
-  Chip,
-  Tooltip,
-  Progress,
 } from '@material-tailwind/react';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { authorsTableData } from '../../data/authors-table-data';
-import { projectsTableData } from '../../data/projects-table-data';
 import { GET_USER_QUERY } from '../../services/queries/userQueries';
 import { useQuery } from '@apollo/client';
 import { ModalRoleManager } from '../../components/ModalRoleManager';
@@ -24,8 +19,6 @@ export function Tables() {
   const users = data && data.getAllUsers;
 
   const { user: contextUser } = useContext(UserContext);
-
-  console.log(users);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;
