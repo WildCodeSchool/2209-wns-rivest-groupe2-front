@@ -111,7 +111,7 @@ const POICard = (props: POICardProps) => {
             {user?.role ? (
               <Link
                 key={id}
-                to={`/point-of-interest/${id}/${name}`}
+                to={`/point-of-interest/${city.id}/${city.name}/${id}/${name}`}
                 style={{ cursor: 'pointer' }}
               >
                 <span className="text-xs text-blue-500 pt-3">

@@ -34,7 +34,6 @@ const MapModule = ({
     __typename: string;
   };
 }) => {
-  const parisPosition: LatLngExpression = [48.88, 2.33];
   const zoom: number = 12;
   const mapRef = useRef(null);
   const markerRef = useRef(null);
@@ -112,6 +111,7 @@ const MapModule = ({
                     address={poi.address}
                     pictureUrl={poi.pictureUrl}
                     id={poi.id}
+                    city={city}
                   />
                 </Popup>
               </Marker>
@@ -123,6 +123,7 @@ const MapModule = ({
                     address={poi.address}
                     pictureUrl={poi.pictureUrl}
                     id={poi.id}
+                    city={city}
                   />
                 </Popup>
               </Marker>
