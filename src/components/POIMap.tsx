@@ -5,7 +5,6 @@ import { IFavorite, IPOIData } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
 import { UserContext } from 'src/contexts/userContext';
-import { divIcon } from 'leaflet';
 
 const POIMap = ({ favorite }: { favorite: boolean }) => {
   const [pois, setPois] = useState<IPOIData[] | []>([]);
@@ -49,7 +48,11 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
 
   return !favorite ? (
     <>
-      {pois.length > 0 ? (
+      {poiLoading ? (
+        <div>Chargement...</div>
+      ) : poiError ? (
+        <div>Erreur lors de la récupération des points d'intérêts :(</div>
+      ) : pois.length > 0 ? (
         pois.map((poi) => (
           <div
             className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
@@ -64,7 +67,13 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
     </>
   ) : (
     <>
-      {userFavoritePois.length > 0 ? (
+      {favoriteLoading ? (
+        <div>Chargement...</div>
+      ) : favoriteError ? (
+        <div>
+          Erreur lors de la récupération de vos points d'intérêts favoris :(
+        </div>
+      ) : userFavoritePois.length > 0 ? (
         userFavoritePois.map((poi) => (
           <div
             className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"

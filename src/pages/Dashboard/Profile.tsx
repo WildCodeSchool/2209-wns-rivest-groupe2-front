@@ -24,8 +24,7 @@ export function Profile() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openModalUpdateImage, setOpenModalUpdateImage] = useState(false);
   const image_url = process.env.REACT_APP_IMAGE_URL;
-  const [deleteUser, { loading: deleteLoading, error: deleteError }] =
-    useMutation(DELETE_USER);
+  const [deleteUser, { loading: deleteLoading }] = useMutation(DELETE_USER);
 
   const navigate = useNavigate();
 
@@ -35,8 +34,10 @@ export function Profile() {
       setOpenDeleteDialog(false);
       localStorage.removeItem('user');
       setUser(null);
-    } catch (error) {
+      alert('Suppression de votre compte terminée');
+    } catch (error: any) {
       console.error('Error deleting user: ', error);
+      alert(`Erreur lors de la suppression de votre compte : ${error.message}`);
     }
   };
 
@@ -71,8 +72,6 @@ export function Profile() {
       value: user ? user.lastname : null,
     },
   ];
-
-  console.log('user', user);
 
   return (
     user && (

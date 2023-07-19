@@ -122,6 +122,7 @@ const ModalUpdateImage = (props: ModalUpdateImageProps) => {
   };
 
   const handleImageUpload = async () => {
+    if (!dataImg || dataImg.length === 0) setOpenModalUpdateImage(false);
     const formData = new FormData();
     if (selectedImage.image)
       formData.append('file', selectedImage.image, selectedImage.image.name);
@@ -243,7 +244,7 @@ const ModalUpdateImage = (props: ModalUpdateImageProps) => {
           Annuler
         </Button>
         <Button type="button" onClick={() => handleImageUpload()}>
-          Ajouter
+          Sauvegarder
         </Button>
       </DialogActions>
     </Dialog>

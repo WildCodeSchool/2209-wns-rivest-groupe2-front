@@ -1,36 +1,14 @@
 import { useLocation, Link } from 'react-router-dom';
-import {
-  Navbar,
-  Typography,
-  Button,
-  IconButton,
-  Breadcrumbs,
-  Input,
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Avatar,
-} from '@material-tailwind/react';
-import {
-  UserCircleIcon,
-  Cog6ToothIcon,
-  BellIcon,
-  ClockIcon,
-  CreditCardIcon,
-  Bars3Icon,
-} from '@heroicons/react/24/solid';
-import {
-  useMaterialTailwindController,
-  setOpenConfigurator,
-  setOpenSidenav,
-} from '../../contexts/index';
+import { Navbar, Typography, Breadcrumbs } from '@material-tailwind/react';
+import { useMaterialTailwindController } from '../../contexts/index';
 
 export function DashboardNavbar() {
-  const [controller, dispatch] = useMaterialTailwindController();
-  const { fixedNavbar, openSidenav } = controller;
+  const [controller] = useMaterialTailwindController();
+  const { fixedNavbar } = controller;
   const { pathname } = useLocation();
   const [layout, page] = pathname.split('/').filter((el) => el !== '');
+
+  console.log('layout', layout, 'page', page);
 
   return (
     <Navbar
@@ -50,20 +28,17 @@ export function DashboardNavbar() {
               fixedNavbar ? 'mt-1' : ''
             }`}
           >
-            <Link to={`/${layout}
-            `}>
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
-              >
-                {layout}
-              </Typography>
-            </Link>
             <Typography
               variant="small"
               color="blue-gray"
-              className="font-normal"
+              className="font-normal opacity-50 transition-all cursor-default"
+            >
+              {layout}
+            </Typography>
+            <Typography
+              variant="small"
+              color="blue-gray"
+              className="font-normal cursor-default"
             >
               {page}
             </Typography>

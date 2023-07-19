@@ -1,22 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
-import { Cog6ToothIcon } from '@heroicons/react/24/solid';
-import { IconButton } from '@material-tailwind/react';
-import { Sidenav } from '../widgets/layout/sidenav';
-import { DashboardNavbar } from '../widgets/layout/dashboard-navbar';
+import { Sidenav } from '../widgets/layout/sidenav.jsx';
+import { DashboardNavbar } from '../widgets/layout/dashboard-navbar.jsx';
 import routes from '../routes';
-import {
-  useMaterialTailwindController,
-  setOpenConfigurator,
-} from '../contexts/index';
-
-const initialState = {
-  openSidenav: false,
-  sidenavColor: 'blue',
-  sidenavType: 'dark',
-  transparentNavbar: true,
-  fixedNavbar: false,
-  openConfigurator: false,
-};
+import { useMaterialTailwindController } from '../contexts/index.jsx';
 
 type ControllerType = {
   openSidenav: boolean;

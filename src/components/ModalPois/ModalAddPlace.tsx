@@ -53,7 +53,10 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
     },
     refetchQueries:
       selectedImage.length === 0
-        ? [{ query: GET_POI_QUERY_BY_CITY, variables: { cityId: city?.id } }]
+        ? [
+            { query: GET_POI_QUERY_BY_CITY, variables: { cityId: city?.id } },
+            { query: GET_POI_QUERY },
+          ]
         : [],
   });
 
@@ -65,6 +68,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
     },
     refetchQueries: [
       { query: GET_POI_QUERY_BY_CITY, variables: { cityId: city?.id } },
+      { query: GET_POI_QUERY },
     ],
   });
 
@@ -136,12 +140,8 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
       url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
       params: {
         address:
-          getValues('address') && getValues('postal') && getValues('city')
-            ? getValues('address') +
-              ' ' +
-              getValues('postal') +
-              ' ' +
-              getValues('city')
+          getValues('address') && getValues('postal') && city
+            ? getValues('address') + ' ' + getValues('postal') + ' ' + city.name
             : '',
       },
       headers: {
