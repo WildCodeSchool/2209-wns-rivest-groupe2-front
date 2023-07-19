@@ -94,7 +94,7 @@ export const ModalRoleManager = ({
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;
   return (
-    <div className="mt-[30vh]">
+    <div>
       <Link
         style={{ cursor: 'pointer' }}
         onClick={() => {
@@ -109,7 +109,7 @@ export const ModalRoleManager = ({
       <Modal
         show={props.openModal === 'default'}
         onClose={() => props.setOpenModal(undefined)}
-        className="h-full w-screen"
+        className="p-44 h-full w-screen"
       >
         <div className="space-y-6">
           <Modal.Header>{header}</Modal.Header>
