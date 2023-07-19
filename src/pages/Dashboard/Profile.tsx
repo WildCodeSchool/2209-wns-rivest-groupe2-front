@@ -23,6 +23,7 @@ export function Profile() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openModalUpdateImage, setOpenModalUpdateImage] = useState(false);
+  const image_url = process.env.REACT_APP_IMAGE_URL;
   const [deleteUser, { loading: deleteLoading, error: deleteError }] =
     useMutation(DELETE_USER);
 
@@ -71,6 +72,8 @@ export function Profile() {
     },
   ];
 
+  console.log('user', user);
+
   return (
     user && (
       <>
@@ -83,7 +86,11 @@ export function Profile() {
               <div className="flex items-center gap-6">
                 <div className={classes.container}>
                   <Avatar
-                    src="/img/image-de-lutilisateur.png"
+                    src={
+                      user.profilePicture && user.profilePicture.length > 0
+                        ? `${image_url}${user.profilePicture}`
+                        : '/img/image-de-lutilisateur.png'
+                    }
                     alt="bruce-mars"
                     size="xl"
                     className="rounded-lg shadow-lg shadow-blue-gray-500/40 block"
@@ -99,7 +106,6 @@ export function Profile() {
                       <ModalUpdateImage
                         openModalUpdateImage={openModalUpdateImage}
                         setOpenModalUpdateImage={setOpenModalUpdateImage}
-                        user={user}
                       />
                     )}
                   </div>

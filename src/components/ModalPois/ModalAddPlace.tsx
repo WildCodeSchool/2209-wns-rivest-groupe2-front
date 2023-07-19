@@ -99,7 +99,6 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data);
       await updateBackendUrlImg(data);
 
       setSelectedImage(

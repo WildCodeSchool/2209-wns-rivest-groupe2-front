@@ -30,14 +30,15 @@ export const GET_TOKEN = gql`
 `;
 
 export const GET_USER_BY_ID = gql`
-  query GetUserById($getUserByIdId: Float!) {
-    getUserById(id: $getUserByIdId) {
+  query GetUserById($userId: Float!) {
+    getUserById(userId: $userId) {
       id
       email
       username
       type
       firstname
       lastname
+      profilePicture
     }
   }
 `;

@@ -15,6 +15,8 @@ const UserDropdown = () => {
   const { user, setUser } = useContext<IUserContext>(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const image_url = process.env.REACT_APP_IMAGE_URL;
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -46,7 +48,11 @@ const UserDropdown = () => {
             border: '2px solid rgba(139, 139, 139)',
             borderRadius: '100%',
           }}
-          src={user?.profilePicture ? user.profilePicture : defaultImage}
+          src={
+            user?.profilePicture && user.profilePicture.length > 0
+              ? `${image_url}${user.profilePicture}`
+              : defaultImage
+          }
         />
       </IconButton>
       <Menu
