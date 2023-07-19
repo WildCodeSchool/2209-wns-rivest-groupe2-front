@@ -113,7 +113,9 @@ export function Tables() {
                           <ModalRoleManager
                             userId={user.id}
                             userRole={user.role.name}
-                            userCities={user.cities.map((city: ICity) => city.name)}
+                            userCities={user.cities.map(
+                              (city: ICity) => city.name
+                            )}
                             header={
                               "Vous pouvez modifier le rôle de l'utilisateur"
                             }
