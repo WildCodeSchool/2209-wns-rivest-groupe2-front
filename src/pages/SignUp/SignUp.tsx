@@ -5,11 +5,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useState, useContext } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-// import { UserContext } from '../../contexts/userContext';
 import { ISignUp, IDecodedToken } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
 import { CREATE_USER } from 'src/services/mutations/userMutations';
-// import jwtDecode from 'jwt-decode';
 
 // YUP SCHEMA
 const schema = yup.object({
@@ -58,15 +56,8 @@ const SignUp = () => {
 
   const [signUp] = useMutation(CREATE_USER, {
     onCompleted(data) {
-      // const token = data.createUser.token;
-      // const decodedToken = jwtDecode(token) as IDecodedToken;
-      // const userDataWithRole = {
-      //   ...data.createUser.userFromDB,
-      //   role: decodedToken.role,
-      // };
       localStorage.setItem('token', data.createUser.token);
       localStorage.setItem('user', JSON.stringify(data.createUser.userFromDB));
-      // setUser(userDataWithRole);
       navigate('/confirmation-email-sent');
     },
     onError(error: any) {

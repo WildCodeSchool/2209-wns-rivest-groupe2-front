@@ -15,6 +15,7 @@ import RequireAuth from './components/RequireAuth';
 import Profile from './pages/dashboard/profile';
 import ConfirmUserPage from './pages/ConfirmPage';
 import EmailSentConfirmationPage from './pages/EmailSentConfirmationPage ';
+import Tables from './pages/dashboard/tables';
 
 const App = () => {
   return (
@@ -32,7 +33,6 @@ const App = () => {
             path="/confirmation-email/:uuid"
             element={<ConfirmUserPage />}
           />
-
           <Route path="/payment" element={<Payment />} />
           <Route path="/point-of-interest/list" element={<POIList />} />
           <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
@@ -44,8 +44,9 @@ const App = () => {
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/profile/" element={<Profile />} />
           <Route path="/auth/*" element={<Auth />} />
-          <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
-          <Route path="/point-of-interest/:id/:name" element={<POIDetails />} />
+          <Route element={<RequireAuth allowedRoles={['city_admin','admin']} />}>
+            <Route path="/tables/" element={<Tables />} />
+          </Route>
         </Route>
       </Routes>
     </>

@@ -23,7 +23,7 @@ export const GET_USER_QUERY = gql`
 `;
 
 export const GET_USER_FAVORITES = gql`
-query GetUserFavorites($userId: Float!) {
+  query GetUserFavorites($userId: Float!) {
     getUserFavorites(userId: $userId) {
       id
       pointOfInterest {
@@ -44,8 +44,11 @@ export const GET_TOKEN = gql`
         firstname
         lastname
         profilePicture
-        type
         isVerified
+        role {
+          id
+          name
+        }
       }
     }
   }

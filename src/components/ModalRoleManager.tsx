@@ -76,14 +76,12 @@ export const ModalRoleManager = ({
     } | null>
   >(initialSelectedCity);
 
-  const handleCityChange = (value: any) => {
-    setSelectedCity(value);
+  const handleCityChange = (selectedCity: any) => {
+    setSelectedCity(selectedCity);
   };
 
   // Map selectedCity pour passer l'array dans le onSubmit
-  const cityName = selectedCity
-    ? selectedCity.map((city) => city?.value)
-    : [];
+  const cityName = selectedCity ? selectedCity.map((city) => city?.value) : [];
 
   // Récupère userRole via les props + handleChange pour target le changement de role via le dropdown select
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
@@ -110,9 +108,9 @@ export const ModalRoleManager = ({
       <Modal
         show={props.openModal === 'default'}
         onClose={() => props.setOpenModal(undefined)}
-        className="h-[100vh] w-screen"
+        className="h-full w-screen"
       >
-        <div className="my-[50%]">
+        <div className=" space-y-6">
           <Modal.Header>{header}</Modal.Header>
           <form className="w-full p-3" onSubmit={handleSubmit(onSubmit)}>
             <Modal.Body>
@@ -145,7 +143,6 @@ export const ModalRoleManager = ({
                         value={selectedCity}
                         onChange={(value) => {
                           handleCityChange(value);
-                          field.onChange(value);
                         }}
                         isMulti
                         styles={{
@@ -185,6 +182,7 @@ export const ModalRoleManager = ({
                 Annuler
               </Button>
               <Button
+                color="gray"
                 type="submit"
                 onClick={() => props.setOpenModal(undefined)}
               >

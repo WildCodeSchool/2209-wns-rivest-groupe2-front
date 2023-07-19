@@ -6,12 +6,15 @@ export const CONFIRM_USER_MUTATION = gql`
       id
       email
       username
-      type
       firstname
       lastname
       uuid
       isVerified
       profilePicture
+      role {
+        id
+        name
+      }
     }
   }
 `;
@@ -27,7 +30,10 @@ export const CREATE_USER = gql`
         firstname
         lastname
         profilePicture
-        type
+        role {
+          id
+          name
+        }
       }
     }
   }

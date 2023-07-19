@@ -70,6 +70,7 @@ const POIList = () => {
                 } à Paris`
               : `${count} Point${count > 1 ? 's' : ''} d'intérêt à Paris`}
           </strong>
+          { user && user?.role?.name !== 'free_user' && 
           <button
             className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
             onClick={() => setOpenModalAddPlace(!openModalAddPlace)}
@@ -77,6 +78,7 @@ const POIList = () => {
           >
             {!openModalAddPlace ? 'Ajouter votre lieu' : "Annuler l'ajout"}
           </button>
+          }
           <select
             name="cities"
             id="cities"

@@ -8,8 +8,6 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { UserContext } from '../../contexts/userContext';
 import { ISignIn } from 'src/types/ISignIn';
 import signin from '../../asset/img/bg-signin.jpg';
-import jwtDecode from 'jwt-decode';
-import { IDecodedToken } from 'src/types/ISignUp';
 import { GET_TOKEN } from 'src/services/queries/userQueries';
 
 // YUP SCHEMA
@@ -49,15 +47,8 @@ const SignIn = () => {
       if (data.getToken.userFromDB.isVerified === false) {
         setVerificationError(true);
       } else {
-          //     const token = data.getToken.token;
-  //     const decodedToken = jwtDecode(token) as IDecodedToken;
-  //     const userDataWithRole = {
-  //       ...data.getToken.userFromDB,
-  //       role: decodedToken.role
-  //     };
         localStorage.setItem('token', data.getToken.token);
         localStorage.setItem('user', JSON.stringify(data.getToken.userFromDB));
-          //     setUser(userDataWithRole);
         setUser(data.getToken.userFromDB);
         navigate(-1);
       }
@@ -91,12 +82,6 @@ const SignIn = () => {
             alt="icon site"
             className="absolute object-cover h-full w-full"
           />
-                    {/* <div className="row-span-2 col-span-1 relative w-3/4 md:w-2/3 lg:w-1/3">
-            <div className="bg-deep-blue rounded-lg px-6 py-6 mx-auto z-10 flex flex-col items-center lg:w-4/5 lg:mb-8 lg:px-12 lg:py-12">
-              <span className="box-sizing:border-box;display:inline-block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:relative;max-width:100%"></span>
-              <SignInForm />
-            </div>
-          </div> */}
           <div className="row-span-2 col-span-1 relative w-3/4 md:w-2/3 lg:w-1/3 ">
             <div className="bg-deep-blue rounded-lg px-6 py-6 mx-auto z-10 flex flex-col items-center lg:w-4/5 lg:mb-8 lg:px-12 lg:py-12">
               <span className="box-sizing:border-box;display:inline-block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:relative;max-width:100%"></span>

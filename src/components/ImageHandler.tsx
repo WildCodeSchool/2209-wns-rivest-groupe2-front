@@ -22,7 +22,7 @@ const ImageHandler = ({
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {images.length === 0 && dataImg.length === 0 && (
+      {images?.length === 0 && dataImg?.length === 0 && (
         <label className="flex justify-center w-full text-opalblue h-20 px-4 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer hover:border-info hover:text-info focus:outline-none">
           <span className="flex items-center">
             <BsFillCameraFill />
@@ -41,7 +41,7 @@ const ImageHandler = ({
         </label>
       )}
 
-      {images.length !== 0 && images[0].preview && (
+      {images?.length !== 0 && images[0].preview && (
         <div className="flex flex-col items-center justify-center">
           {images.map((image) => (
             <figure className="relative my-3" key={image.id}>
@@ -81,7 +81,7 @@ const ImageHandler = ({
               </figure>
             </figure>
           ))}
-          {dataImg.length === 0 && (
+          {dataImg?.length === 0 && (
             <div className="flex justify-center items-center">
               <label className="flex justify-center items-center text-opalblue p-2 h-10 mr-2 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
                 <BsFillCameraFill />
@@ -99,7 +99,7 @@ const ImageHandler = ({
         </div>
       )}
 
-      {dataImg.length > 0 && deleteImg && (
+      {dataImg?.length > 0 && deleteImg && (
         <div className="flex justify-center flex-wrap items-center px-3">
           {dataImg.map((img, index) => (
             <div className="flex flex-col justify-center py-3" key={index}>
