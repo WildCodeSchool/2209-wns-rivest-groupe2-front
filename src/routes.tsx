@@ -4,7 +4,7 @@ import {
   TableCellsIcon,
 } from '@heroicons/react/24/solid';
 import { Profile } from './pages/Dashboard/Profile';
-import { Tables } from './pages/Dashboard/tables';
+import { Tables } from './pages/Dashboard/Tables';
 
 const icon = {
   className: 'w-5 h-5 text-inherit',
