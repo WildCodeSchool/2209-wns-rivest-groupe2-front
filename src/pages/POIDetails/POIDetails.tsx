@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
@@ -21,8 +21,10 @@ import MapModule from 'src/components/Map/MapModule';
 import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
 import ModalDeletePlace from 'src/components/ModalPois/ModalDeletePlace';
 import ModalEditPlace from 'src/components/ModalPois/ModalEditPlace';
+import { UserContext } from 'src/contexts/userContext';
 
 const POIDetails = () => {
+  const { user } = useContext(UserContext);
   const [commentsCount, setCommentsCount] = useState(0);
   const [openModalEditPlace, setOpenModalEditPlace] = useState(false);
   const [openModalDeletePlace, setOpenModalDeletePlace] = useState(false);
@@ -86,19 +88,21 @@ const POIDetails = () => {
         >
           {thisPOI.type}
         </Typography>
-        <div className="mx-auto bg-white drop-shadow-2xl relative">
-          <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
-            <Tooltip title="Editer le point d'intéret">
-              <IconButton onClick={() => setOpenModalEditPlace(true)}>
-                <BorderColorIcon sx={{ color: 'black' }} />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Supprimer le point d'intéret">
-              <IconButton onClick={() => setOpenModalDeletePlace(true)}>
-                <DeleteIcon sx={{ color: 'black' }} />
-              </IconButton>
-            </Tooltip>
-          </div>
+          <div className="mx-auto bg-white drop-shadow-2xl relative">
+          { user && user?.role?.name !== 'free_user' &&
+            <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
+              <Tooltip title="Editer le point d'intéret">
+                <IconButton onClick={() => setOpenModalEditPlace(true)}>
+                  <BorderColorIcon sx={{ color: 'black' }} />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Supprimer le point d'intéret">
+                <IconButton onClick={() => setOpenModalDeletePlace(true)}>
+                  <DeleteIcon sx={{ color: 'black' }} />
+                </IconButton>
+              </Tooltip>
+            </div>
+          }
           <ModalDeletePlace
             poiId={thisPOI.id}
             openDeleteDialog={openModalDeletePlace}

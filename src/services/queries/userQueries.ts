@@ -1,7 +1,29 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
+
+export const GET_USER_QUERY = gql`
+  query GetAllUsers {
+    getAllUsers {
+      id
+      email
+      username
+      firstname
+      lastname
+      hashedPassword
+      profilePicture
+      role {
+        id
+        name
+      }
+      cities {
+        id
+        name
+      }
+    }
+  }
+`;
 
 export const GET_USER_FAVORITES = gql`
-query GetUserFavorites($userId: Float!) {
+  query GetUserFavorites($userId: Float!) {
     getUserFavorites(userId: $userId) {
       id
       pointOfInterest {
@@ -22,8 +44,11 @@ export const GET_TOKEN = gql`
         firstname
         lastname
         profilePicture
-        type
         isVerified
+        role {
+          id
+          name
+        }
       }
     }
   }
