@@ -1,33 +1,13 @@
-import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
-import { gql, useLazyQuery } from '@apollo/client';
-import { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLazyQuery } from '@apollo/client';
+import { useState, useContext, useEffect } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { UserContext } from '../contexts/userContext';
 import { ISignIn } from 'src/types/ISignIn';
-import signin from '../../asset/img/bg-signin.jpg';
-import jwtDecode from 'jwt-decode';
-import { IDecodedToken } from 'src/types/ISignUp';
-
-// MUTATION APOLLO
-export const GET_TOKEN = gql`
-  query Query($password: String!, $email: String!) {
-    getToken(password: $password, email: $email) {
-      token
-      userFromDB {
-        id
-        email
-        username
-        firstname
-        lastname
-        profilePicture
-      }
-    }
-  }
-`;
+import { GET_TOKEN } from 'src/services/queries/userQueries';
 
 // YUP SCHEMA
 const schema = yup
@@ -49,30 +29,32 @@ const schema = yup
 export const SignInForm = () => {
   // SHOW - HIDE PASSWORD
   const [passwordShown, setPasswordShown] = useState(false);
+  const [verificationError, setVerificationError] = useState(false);
+  const [authError, setAuthError] = useState('');
+
   const handleShowPassword = () => {
     setPasswordShown(!passwordShown);
   };
 
-  // ADD NAVIGATION TO THE PREVIOUS PAGE
+  // // ADD NAVIGATION TO THE PREVIOUS PAGE
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
 
   // MUTATION - SUBMISSION
   const [login] = useLazyQuery(GET_TOKEN, {
     onCompleted(data) {
-      const token = data.getToken.token;
-      const decodedToken = jwtDecode(token) as IDecodedToken;
-      const userDataWithRole = {
-        ...data.getToken.userFromDB,
-        role: decodedToken.role,
-      };
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(userDataWithRole));
-      setUser(userDataWithRole);
-      navigate(-1);
+      if (data.getToken.userFromDB.isVerified === false) {
+        setVerificationError(true);
+      } else {
+        localStorage.setItem('token', data.getToken.token);
+        localStorage.setItem('user', JSON.stringify(data.getToken.userFromDB));
+        setUser(data.getToken.userFromDB);
+        navigate(-1);
+      }
     },
     onError(error: any) {
       console.log(error);
+      setAuthError('Identifiant incorrect');
     },
   });
 
@@ -102,6 +84,7 @@ export const SignInForm = () => {
             id="email"
             {...register('email')}
             placeholder="Email"
+            onChange={() => setAuthError('')}
             className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
           />
           {errors.email && (
@@ -114,6 +97,7 @@ export const SignInForm = () => {
             id="password"
             {...register('password')}
             placeholder="Mot de passe"
+            onChange={() => setAuthError('')}
             className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
           />
           <i onClick={handleShowPassword} className="absolute top-1/3 right-4">
@@ -129,6 +113,12 @@ export const SignInForm = () => {
             </span>
           )}
         </div>
+        {verificationError && (
+          <div className="text-red-600 mb-4">
+            Veuillez confirmer votre email
+          </div>
+        )}
+        {authError && <div className="text-red-600 mb-4">{authError}</div>}
         <div className="flex flex-col mb-6">
           <Link
             to="#"

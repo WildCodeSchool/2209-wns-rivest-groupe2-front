@@ -12,6 +12,7 @@ import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AverageRatingStar } from './AverageRatingStar';
 import { FavoriteButton } from './FavoriteButton';
+import { ModalRedirectionAccess } from './ModalRedirectionAccess';
 
 interface POICardProps {
   poi: IPOICard;
@@ -107,15 +108,23 @@ const POICard = (props: POICardProps) => {
             </div>
           )}
           <Typography>
-            <Link
-              key={id}
-              to={`/point-of-interest/${id}/${name}`}
-              style={{ cursor: 'pointer' }}
-            >
-              <span className="text-xs text-blue-500 pt-3">
-                Voir plus de détails
-              </span>
-            </Link>
+            {user?.role ? (
+              <Link
+                key={id}
+                to={`/point-of-interest/${id}/${name}`}
+                style={{ cursor: 'pointer' }}
+              >
+                <span className="text-xs text-blue-500 pt-3">
+                  Voir plus de détails
+                </span>
+              </Link>
+            ) : (
+              <ModalRedirectionAccess
+                header={
+                  'Vous devez être connecté pour accéder au détail de cet établissement'
+                }
+              />
+            )}
           </Typography>
         </div>
       </CardBody>
