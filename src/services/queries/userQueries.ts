@@ -1,5 +1,26 @@
 import { gql } from '@apollo/client';
 
+export const GET_USER_QUERY = gql`
+  query GetAllUsers {
+    getAllUsers {
+      id
+      email
+      username
+      firstname
+      lastname
+      profilePicture
+      role {
+        id
+        name
+      }
+      cities {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_USER_FAVORITES = gql`
   query GetUserFavorites($userId: Float!) {
     getUserFavorites(userId: $userId) {
@@ -22,8 +43,11 @@ export const GET_TOKEN = gql`
         firstname
         lastname
         profilePicture
-        type
         isVerified
+        role {
+          id
+          name
+        }
       }
     }
   }
@@ -39,6 +63,14 @@ export const GET_USER_BY_ID = gql`
       firstname
       lastname
       profilePicture
+      role {
+        id
+        name
+      }
+      cities {
+        id
+        name
+      }
     }
   }
 `;

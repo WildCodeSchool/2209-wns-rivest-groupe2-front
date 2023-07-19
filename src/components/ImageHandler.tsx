@@ -41,7 +41,7 @@ const ImageHandler = ({
         </label>
       )}
 
-      {images.length !== 0 && images[0].preview && (
+      {images?.length !== 0 && images[0].preview && (
         <div className="flex flex-col items-center justify-center">
           {images.map((image) => (
             <figure className="relative my-3" key={image.id}>

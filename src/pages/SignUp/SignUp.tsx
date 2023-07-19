@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { ISignUp } from 'src/types/ISignUp';
+import { ISignUp, IDecodedToken } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
 import { CREATE_USER } from 'src/services/mutations/userMutations';
 
@@ -99,14 +99,6 @@ const SignUp = () => {
           <div className="row-span-2 col-span-1 relative w-3/4 md:w-2/3 lg:w-1/3">
             <div className="bg-deep-blue rounded-lg px-6 py-6 mx-auto z-10 flex flex-col items-center lg:w-4/5 lg:mb-8 lg:px-12 lg:py-12">
               <span className="box-sizing:border-box;display:inline-block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:relative;max-width:100%"></span>
-              {/* <p className="text-gray-300 text-center text-l my-2">
-                Sign up with
-              </p>
-              <div className="flex items-center my-4 space-x-8 w-full">
-                <hr className="grow w-full h-px bg-gray-500 border-none" />
-                <div className="text-gray-500 text-center text-xsm">or</div>
-                <hr className="grow w-full h-px bg-gray-500 border-none" />
-              </div> */}
               <div className="text-gray-300 font-luckiest tracking-widest text-center text-xl md:text-2xl lg:text-2xl mb-10 mt-6">
                 Create Account
               </div>

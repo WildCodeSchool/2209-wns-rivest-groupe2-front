@@ -1,11 +1,15 @@
-export interface UserType {
+import { ICity } from './ICity';
+import { IRole } from './IRole';
+
+export interface IUser {
   id: number;
   email: string;
   firstname: string;
   lastname: string;
   username: string;
   profilePicture?: string;
-  description?: string;
+  role: IRole;
+  cities: ICity[];
 }
 
 export type IFormUserInput = {

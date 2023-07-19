@@ -4,28 +4,37 @@ import {
   CardBody,
   Typography,
   Avatar,
-  Chip,
-  Tooltip,
-  Progress,
 } from '@material-tailwind/react';
-import { EllipsisVerticalIcon } from '@heroicons/react/24/outline';
 import { authorsTableData } from '../../data/authors-table-data';
-import { projectsTableData } from '../../data/projects-table-data';
+import { GET_USER_QUERY } from '../../services/queries/userQueries';
+import { useQuery } from '@apollo/client';
+import { ModalRoleManager } from '../../components/ModalRoleManager';
+import { IUser } from 'src/types/UserType';
+import { useContext } from 'react';
+import { UserContext } from 'src/contexts/userContext';
+import { ICity } from 'src/types/ICity';
 
 export function Tables() {
+  const { loading, error, data } = useQuery(GET_USER_QUERY);
+  const users = data && data.getAllUsers;
+
+  const { user: contextUser } = useContext(UserContext);
+
+  if (loading) return <p>Chargement...</p>;
+  if (error) return <p>{error.message}</p>;
   return (
     <div className="mt-12 mb-8 flex flex-col gap-12">
       <Card>
         <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
           <Typography variant="h6" color="white">
-            Authors Table
+            Utilisateurs
           </Typography>
         </CardHeader>
         <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
           <table className="w-full min-w-[640px] table-auto">
             <thead>
               <tr>
-                {['author', 'function', 'status', 'employed', ''].map((el) => (
+                {['Utilisateurs', 'Email', 'Role', 'Ville', ''].map((el) => (
                   <th
                     key={el}
                     className="border-b border-blue-gray-50 py-3 px-5 text-left"
@@ -41,53 +50,59 @@ export function Tables() {
               </tr>
             </thead>
             <tbody>
-              {authorsTableData.map(
-                ({ img, name, email, job, online, date }, key) => {
+              {users
+                .filter(
+                  (user: IUser) =>
+                    user.role.name !== 'admin' && user.id !== contextUser?.id
+                )
+                .map((user: IUser, key: number) => {
                   const className = `py-3 px-5 ${
                     key === authorsTableData.length - 1
                       ? ''
                       : 'border-b border-blue-gray-50'
                   }`;
-
                   return (
-                    <tr key={name}>
+                    <tr key={user.id}>
                       <td className={className}>
                         <div className="flex items-center gap-4">
-                          <Avatar src={img} alt={name} size="sm" />
+                          <Avatar
+                            src={user.profilePicture}
+                            alt={''}
+                            size="sm"
+                          />
                           <div>
                             <Typography
                               variant="small"
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              {name}
+                              {user.email}
                             </Typography>
                             <Typography className="text-xs font-normal text-blue-gray-500">
-                              {email}
+                              {user.email}
                             </Typography>
                           </div>
                         </div>
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {job[0]}
+                          {user.email}
                         </Typography>
-                        <Typography className="text-xs font-normal text-blue-gray-500">
-                          {job[1]}
-                        </Typography>
-                      </td>
-                      <td className={className}>
-                        <Chip
-                          variant="gradient"
-                          color={online ? 'green' : 'blue-gray'}
-                          value={online ? 'online' : 'offline'}
-                          className="py-0.5 px-2 text-[11px] font-medium"
-                        />
                       </td>
                       <td className={className}>
                         <Typography className="text-xs font-semibold text-blue-gray-600">
-                          {date}
+                          {user.role.name}
                         </Typography>
+                      </td>
+                      <td className={className}>
+                        {user.cities.map((city: ICity, key: number) => (
+                          <Typography
+                            key={key}
+                            className="text-xs font-semibold text-blue-gray-600"
+                          >
+                            {city.name}
+                          </Typography>
+                        ))}
                       </td>
                       <td className={className}>
                         <Typography
@@ -95,105 +110,19 @@ export function Tables() {
                           href="#"
                           className="text-xs font-semibold text-blue-gray-600"
                         >
-                          Edit
+                          <ModalRoleManager
+                            userId={user.id}
+                            userRole={user.role.name}
+                            userCities={user.cities.map((city: ICity) => city.name)}
+                            header={
+                              "Vous pouvez modifier le rôle de l'utilisateur"
+                            }
+                          />
                         </Typography>
                       </td>
                     </tr>
                   );
-                }
-              )}
-            </tbody>
-          </table>
-        </CardBody>
-      </Card>
-      <Card>
-        <CardHeader variant="gradient" color="blue" className="mb-8 p-6">
-          <Typography variant="h6" color="white">
-            Projects Table
-          </Typography>
-        </CardHeader>
-        <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
-          <table className="w-full min-w-[640px] table-auto">
-            <thead>
-              <tr>
-                {['companies', 'members', 'budget', 'completion', ''].map(
-                  (el) => (
-                    <th
-                      key={el}
-                      className="border-b border-blue-gray-50 py-3 px-5 text-left"
-                    >
-                      <Typography
-                        variant="small"
-                        className="text-[11px] font-bold uppercase text-blue-gray-400"
-                      >
-                        {el}
-                      </Typography>
-                    </th>
-                  )
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {projectsTableData.map(({ img, name, members, budget }, key) => {
-                const className = `py-3 px-5 ${
-                  key === projectsTableData.length - 1
-                    ? ''
-                    : 'border-b border-blue-gray-50'
-                }`;
-
-                return (
-                  <tr key={name}>
-                    <td className={className}>
-                      <div className="flex items-center gap-4">
-                        <Avatar src={img} alt={name} size="sm" />
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-bold"
-                        >
-                          {name}
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={className}>
-                      {members.map(({ img, name }, key) => (
-                        <Tooltip key={name} content={name}>
-                          <Avatar
-                            src={img}
-                            alt={name}
-                            size="xs"
-                            variant="circular"
-                            className={`cursor-pointer border-2 border-white ${
-                              key === 0 ? '' : '-ml-2.5'
-                            }`}
-                          />
-                        </Tooltip>
-                      ))}
-                    </td>
-                    <td className={className}>
-                      <Typography
-                        variant="small"
-                        className="text-xs font-medium text-blue-gray-600"
-                      >
-                        {budget}
-                      </Typography>
-                    </td>
-                    <td className={className}></td>
-                    <td className={className}>
-                      <Typography
-                        as="a"
-                        href="#"
-                        className="text-xs font-semibold text-blue-gray-600"
-                      >
-                        <EllipsisVerticalIcon
-                          strokeWidth={2}
-                          className="h-5 w-5 text-inherit"
-                        />
-                      </Typography>
-                    </td>
-                  </tr>
-                );
-              })}
+                })}
             </tbody>
           </table>
         </CardBody>

@@ -12,6 +12,7 @@ import RequireAuth from './components/RequireAuth';
 import Profile from './pages/Dashboard/Profile';
 import ConfirmUserPage from './pages/ConfirmPage';
 import EmailSentConfirmationPage from './pages/EmailSentConfirmationPage ';
+import Tables from './pages/Dashboard/Tables';
 
 const App = () => {
   return (
@@ -39,11 +40,21 @@ const App = () => {
           />
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route element={<RequireAuth allowedRoles={['freeUser']} />}>
+        <Route
+          element={
+            <RequireAuth
+              allowedRoles={['free_user', 'city_admin', 'super_user', 'admin']}
+            />
+          }
+        >
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="/profile/" element={<Profile />} />
           <Route path="/auth/*" element={<Auth />} />
-          <Route path="*" element={<Navigate to="/dashboard/home" replace />} />
+          <Route
+            element={<RequireAuth allowedRoles={['city_admin', 'admin']} />}
+          >
+            <Route path="/tables/" element={<Tables />} />
+          </Route>
         </Route>
       </Routes>
     </>

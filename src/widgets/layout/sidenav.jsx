@@ -11,8 +11,11 @@ import {
   useMaterialTailwindController,
   setOpenSidenav,
 } from '../../contexts/index';
+import { useContext } from 'react';
+import { UserContext } from '../../contexts/userContext';
 
 export function Sidenav({ brandImg, brandName, routes }) {
+  const { user } = useContext(UserContext);
   const [controller, dispatch] = useMaterialTailwindController();
   const { sidenavColor, sidenavType, openSidenav } = controller;
   const sidenavTypes = {
@@ -66,7 +69,7 @@ export function Sidenav({ brandImg, brandName, routes }) {
                 </Typography>
               </li>
             )}
-            {pages.map(({ icon, name, path }) => (
+            {user && user?.role?.name !== 'free_user' && pages.map(({ icon, name, path }) => (
               <li key={name}>
                 <NavLink to={`/${layout}${path}`}>
                   {({ isActive }) => (
