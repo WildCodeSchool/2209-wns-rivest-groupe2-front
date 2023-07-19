@@ -22,13 +22,16 @@ import {
   DialogTitle,
 } from '@mui/material';
 import ModalAddPlaceForm from './ModalAddPlaceForm';
+import { LatLngExpression } from 'leaflet';
 
 type ModalAddPlaceProps = {
   openModalAddPlace: boolean;
   setOpenModalAddPlace: React.Dispatch<React.SetStateAction<boolean>>;
   city: {
-    id: number | undefined;
-    name: string | undefined;
+    coordinates: LatLngExpression;
+    id: number;
+    name: string;
+    __typename: string;
   };
 };
 
@@ -182,7 +185,10 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
             coordinates: coordinatesGPS,
             websiteURL: formData.websiteURL,
             description: formData.description,
-            city: city,
+            city: {
+              id: city.id,
+              name: city.name,
+            },
             openingHours: daysOpen,
           },
         },

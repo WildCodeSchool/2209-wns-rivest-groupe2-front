@@ -8,7 +8,7 @@ const EmailSentConfirmationPage = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate('/point-of-interest/list');
+      navigate('/');
     }, 5000);
     return () => clearTimeout(timer);
   }, [navigate]);

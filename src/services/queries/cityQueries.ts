@@ -5,6 +5,7 @@ export const GET_ALL_CITIES = gql`
     getAllCities {
       id
       name
+      coordinates
     }
   }
 `;

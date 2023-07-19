@@ -10,17 +10,25 @@ import {
 } from '@mui/material';
 import { DELETE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 import { useNavigate } from 'react-router-dom';
+import { LatLngExpression } from 'leaflet';
 
 interface POICommentModalProps {
   poiId: number;
   openDeleteDialog: boolean;
   handleDeleteDialogClose?: () => void;
+  city: {
+    coordinates: LatLngExpression;
+    id: number;
+    name: string;
+    __typename: string;
+  };
 }
 
 const ModalDeletePlace: React.FC<POICommentModalProps> = ({
   poiId,
   openDeleteDialog,
   handleDeleteDialogClose,
+  city,
 }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
@@ -37,7 +45,7 @@ const ModalDeletePlace: React.FC<POICommentModalProps> = ({
     try {
       await deletePoi({ variables: { deletePoiId: poiId } });
       handleDeleteDialogClose && handleDeleteDialogClose();
-      navigate('/point-of-interest/list');
+      navigate(`/point-of-interest/list/${city.id}/${city.name}`);
     } catch (error: any) {
       console.log(error);
       alert(

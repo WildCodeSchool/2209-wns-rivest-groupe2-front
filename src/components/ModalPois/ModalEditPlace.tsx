@@ -61,7 +61,9 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
         selectedDay.hoursOpen = dataDay.hoursOpen;
         selectedDay.hoursClose = dataDay.hoursClose;
       }
-      if (selectedDay.hoursClose.length > 0) {
+      if (selectedDay.hoursOpen[0] === 'Fermé') {
+        selectedDay.isOpen = false;
+      } else {
         selectedDay.isOpen = true;
       }
     }

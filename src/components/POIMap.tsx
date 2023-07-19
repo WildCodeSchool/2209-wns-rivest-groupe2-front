@@ -61,8 +61,16 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
             <POICard poi={poi} />
           </div>
         ))
-      ) : (
+      ) : pois.length === 0 && userFavoritePois.length === 0 ? (
         <div>Aucun point d'intérêt enregistré dans notre base de données</div>
+      ) : (
+        pois.length === 0 &&
+        userFavoritePois.length > 0 && (
+          <div>
+            Aucun point d'intérêt enregistré dans notre base de données en plus
+            de vos favoris
+          </div>
+        )
       )}
     </>
   ) : (
