@@ -1,5 +1,5 @@
 import { Button, Modal } from 'flowbite-react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { IModalRole } from 'src/types/IModal';
 import styles from '../styles/popUpMap.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -13,6 +13,7 @@ import { Point } from 'leaflet';
 import { CREATE_CITY_MUTATION } from 'src/services/mutations/cityMutations';
 import { GET_ALL_CITIES } from 'src/services/queries/cityQueries';
 import axios from 'axios';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 interface IFormInput {
   name: string;
@@ -28,6 +29,7 @@ export const ModalCityManager = ({
   const [openModal, setOpenModal] = useState<string | undefined>();
   const props = { openModal, setOpenModal };
   const token = localStorage.getItem('token');
+  const { setMessage } = useContext(NotificationContext);
 
   const [createCity] = useMutation(CREATE_CITY_MUTATION, {
     context: {
@@ -70,10 +72,13 @@ export const ModalCityManager = ({
       });
       reset();
       props.setOpenModal(undefined);
-      alert('Ville créée avec succès');
+      setMessage({ text: 'Ville créée avec succès', type: 'success' });
     } catch (error: any) {
       console.error(`Erreur lors de la création de la ville: ${error.message}`);
-      alert(`Erreur lors de la création de la ville: ${error.message}`);
+      setMessage({
+        text: `Erreur lors de la création de la ville: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
@@ -83,7 +88,7 @@ export const ModalCityManager = ({
         onClick={() => {
           props.setOpenModal('default');
         }}
-        className="flex items-center border-2 rounded-2xl p-3 cursor-pointer text-blue-gray-800 hover:text-white hover:bg-blue-gray-800"
+        className="flex items-center btn btn-secondary"
       >
         <BsBuildingAdd />
         <button type="button" className="pl-3">
@@ -102,10 +107,12 @@ export const ModalCityManager = ({
             <Modal.Body>
               {cities && cities.length > 0 && (
                 <div>
-                  <p>Liste des villes existantes : </p>
-                  <ol>
+                  <p className="py-3">Liste des villes existantes : </p>
+                  <ol className="flex justify-around flex-wrap">
                     {cities.map((city) => (
-                      <li>{city.name}</li>
+                      <li className="text-xs font-semibold w-fit text-white bg-blue-gray-600 border rounded-full px-3 py-2 m-1">
+                        {city.name}
+                      </li>
                     ))}
                   </ol>
                 </div>

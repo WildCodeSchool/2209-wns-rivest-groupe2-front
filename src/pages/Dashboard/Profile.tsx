@@ -16,7 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import { UserDetailsProps } from 'src/types/UserType';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import classes from './Profile.module.css';
-import ModalUpdateImage from './ModalUpdateImage';
+import ModalUpdateImage from '../../components/ModalUpdateImage';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 export function Profile() {
   const { user, setUser } = useContext(UserContext);
@@ -24,6 +25,8 @@ export function Profile() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openModalUpdateImage, setOpenModalUpdateImage] = useState(false);
   const image_url = process.env.REACT_APP_IMAGE_URL;
+  const { setMessage } = useContext(NotificationContext);
+
   const [deleteUser, { loading: deleteLoading }] = useMutation(DELETE_USER);
 
   const navigate = useNavigate();
@@ -34,10 +37,16 @@ export function Profile() {
       setOpenDeleteDialog(false);
       localStorage.removeItem('user');
       setUser(null);
-      alert('Suppression de votre compte terminée');
+      setMessage({
+        text: 'Suppression de votre compte terminée',
+        type: 'success',
+      });
     } catch (error: any) {
       console.error('Error deleting user: ', error);
-      alert(`Erreur lors de la suppression de votre compte : ${error.message}`);
+      setMessage({
+        text: `Erreur lors de la suppression de votre compte : ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
@@ -72,6 +81,8 @@ export function Profile() {
       value: user ? user.lastname : null,
     },
   ];
+
+  console.log('user', user);
 
   return (
     user && (

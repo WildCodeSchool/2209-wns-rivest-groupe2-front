@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home/Home';
 import SignUp from './pages/SignUp/SignUp';
 import SignIn from './pages/SignIn/SignIn';
@@ -14,10 +14,15 @@ import ConfirmUserPage from './pages/ConfirmPage';
 import EmailSentConfirmationPage from './pages/EmailSentConfirmationPage ';
 import Tables from './pages/Dashboard/Tables';
 import Cities from './pages/Dashboard/Cities';
+import Toaster from './components/Toaster';
+import { useContext } from 'react';
+import { NotificationContext } from './contexts/NotificationsContext';
 
 const App = () => {
+  const { message } = useContext(NotificationContext);
+
   return (
-    <>
+    <main className="min-h-screen">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/" element={<BaseLayout />}>
@@ -61,7 +66,8 @@ const App = () => {
           </Route>
         </Route>
       </Routes>
-    </>
+      {message && <Toaster />}
+    </main>
   );
 };
 

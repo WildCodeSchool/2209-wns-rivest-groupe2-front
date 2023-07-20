@@ -5,13 +5,14 @@ import {
   Typography,
   Tooltip,
 } from '@material-tailwind/react';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import { UserContext } from 'src/contexts/userContext';
 import { IFormUserInput, UserDetailsProps } from 'src/types/UserType';
 import { UPDATE_USER } from 'src/services/mutations/userMutations';
 import { PencilIcon } from '@heroicons/react/24/solid';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 interface Props {
   title: string;
@@ -33,6 +34,7 @@ export const ProfileInfoCard = ({
 }: Props) => {
   const { user, setUser } = useContext(UserContext);
   const token = localStorage.getItem('token');
+  const { setMessage } = useContext(NotificationContext);
 
   const { register, handleSubmit } = useForm<IFormUserInput>();
 
@@ -66,9 +68,16 @@ export const ProfileInfoCard = ({
             },
           },
         });
+        setMessage({
+          text: 'Profil modifié avec succès',
+          type: 'success',
+        });
       } catch (error: any) {
         console.log(error);
-        alert(`Erreur lors de la modification du profil: ${error.message}`);
+        setMessage({
+          text: `Erreur lors de la modification du profil: ${error.message}`,
+          type: 'error',
+        });
       }
     }
   };

@@ -20,6 +20,7 @@ import {
   Button,
   DialogTitle,
 } from '@mui/material';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 interface POICommentModalProps {
   poiId: number;
@@ -52,6 +53,7 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
 }) => {
   const [currentComment, setCurrentComment] = useState<string | undefined>('');
   const [currentRate, setcurrentRate] = useState<number>(0);
+  const { setMessage } = useContext(NotificationContext);
 
   useEffect(() => {
     if (userComment) setCurrentComment(userComment);
@@ -108,9 +110,13 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
         },
       });
       handleDeleteDialogClose && handleDeleteDialogClose();
+      setMessage({ text: 'Commentaire supprimé avec succès', type: 'success' });
     } catch (error: any) {
-      console.log(error);
-      alert(`Erreur lors de la suppression du commentaire: ${error.message}`);
+      console.error(error);
+      setMessage({
+        text: `Erreur lors de la suppression du commentaire: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
@@ -132,15 +138,27 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
             poiId,
           },
         });
+        setMessage({
+          text: 'Commentaire modifié avec succès',
+          type: 'success',
+        });
       } else {
         await commentPOI({ variables });
+        setMessage({
+          text: 'Commentaire créé avec succès',
+          type: 'success',
+        });
       }
       handleCreateDialogClose && handleCreateDialogClose();
       handleUpdateDialogClose && handleUpdateDialogClose();
       setCurrentComment(undefined);
       setcurrentRate(0);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error(error);
+      setMessage({
+        text: `Erreur lors de l'ajout du commentaire: ${error.message}`,
+        type: 'error',
+      });
     }
 
     if (userCommentLoading) {

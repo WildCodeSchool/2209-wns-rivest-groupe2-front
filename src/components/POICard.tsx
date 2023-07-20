@@ -13,6 +13,12 @@ import { Link } from 'react-router-dom';
 import { AverageRatingStar } from './AverageRatingStar';
 import { FavoriteButton } from './FavoriteButton';
 import { ModalRedirectionAccess } from './ModalRedirectionAccess';
+import defaultBar from 'src/asset/img/default-bar.jpg';
+import defaultChurch from 'src/asset/img/default-church.jpg';
+import defaultFastfood from 'src/asset/img/default-fastfood.jpg';
+import defaultHotel from 'src/asset/img/default-hotel.jpg';
+import defaultMuseum from 'src/asset/img/default-museum.jpg';
+import defaultRestaurant from 'src/asset/img/default-restaurant.jpg';
 
 interface POICardProps {
   poi: IPOICard;
@@ -49,10 +55,32 @@ const POICard = (props: POICardProps) => {
     description,
     id,
     averageRate,
+    type,
   } = props.poi;
   const { user } = useContext(UserContext);
   const [toggleHover, setToggleHover] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
+
+  console.log('type', type);
+
+  const getDefaultBackgroundImage = (type: string) => {
+    switch (type) {
+      case 'restaurant':
+        return defaultRestaurant;
+      case 'fast-food':
+        return defaultFastfood;
+      case 'bar':
+        return defaultBar;
+      case 'lieu de culte':
+        return defaultChurch;
+      case 'hotel':
+        return defaultHotel;
+      case 'musee':
+        return defaultMuseum;
+      default:
+        return defaultRestaurant;
+    }
+  };
 
   return (
     <Card className="h-full relative">
@@ -74,7 +102,7 @@ const POICard = (props: POICardProps) => {
           )}
         </div>
       </CardHeader>
-      <CardBody className="px-0 mt-5 w-full flex flex-col justify-evenly items-center relative">
+      <CardBody className="px-0 w-full flex flex-col justify-evenly items-center relative">
         <div className="relative w-full" style={{ overflow: 'hidden' }}>
           <div
             style={{
@@ -82,11 +110,11 @@ const POICard = (props: POICardProps) => {
               backgroundSize: 'cover',
               backgroundRepeat: 'no-repeat',
               width: '100%',
-              height: '150px',
+              height: '120px',
               backgroundImage:
                 pictureUrl && pictureUrl.length > 0
                   ? `url(${image_url}${pictureUrl[0]})`
-                  : `url(${noImage})`,
+                  : `url(${getDefaultBackgroundImage(type)})`,
               transition: 'all 0.5s ease-in-out',
               transform: toggleHover ? 'scale(1.3)' : 'scale(1)',
             }}

@@ -9,6 +9,7 @@ import { useQuery } from '@apollo/client';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
 import PictureVizualization from './PictureVizualization';
 import { defaultDays } from 'src/services/helpers/POIDefaultDays';
+import { Link } from 'react-router-dom';
 
 interface POIInfoProps {
   poi: IPOIData;
@@ -27,6 +28,7 @@ export default function POIInfos(props: POIInfoProps) {
     creationDate,
     openingHours,
     averageRate,
+    websiteURL,
   } = props.poi;
   const { commentsCount } = props;
   const { user } = useContext(UserContext);
@@ -64,6 +66,20 @@ export default function POIInfos(props: POIInfoProps) {
         <Typography variant="h2">
           {address}, {postal} {city.name}
         </Typography>
+        {websiteURL && (
+          <div className="flex">
+            <Typography className="pr-2">Site internet :</Typography>
+            <Typography>
+              <Link
+                to={websiteURL}
+                target="_blank"
+                className="text-blue-600 underline"
+              >
+                {websiteURL?.split('//')[1] || ''}
+              </Link>
+            </Typography>
+          </div>
+        )}
       </div>
       <div className="relative flex items-center">
         <AverageRatingStar
