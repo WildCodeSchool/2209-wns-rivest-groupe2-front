@@ -8,91 +8,89 @@ import { GET_ROLES_CITIES_QUERY } from '../services/queries/roleQueries';
 import { USER_ROLE_MUTATION } from '../services/mutations/userRoleMutation';
 import { ICity } from 'src/types/ICity';
 import { IRole } from 'src/types/IRole';
+import { BsBuildingAdd } from 'react-icons/bs';
+import { Point } from 'leaflet';
+import { CREATE_CITY_MUTATION } from 'src/services/mutations/cityMutations';
+import { GET_ALL_CITIES } from 'src/services/queries/cityQueries';
+import axios from 'axios';
 
 interface IFormInput {
-  role: string;
-  userId: number;
-  city: string;
+  name: string;
 }
 
-export const ModalRoleManager = ({
+export const ModalCityManager = ({
   header,
-  userId,
-  userRole,
-  userCity,
-}: IModalRole) => {
-  const { loading, error, data } = useQuery(GET_ROLES_CITIES_QUERY);
-  const [updateUserRole] = useMutation(USER_ROLE_MUTATION, {
-    refetchQueries: [{ query: GET_ROLES_CITIES_QUERY }],
-  });
+  cities,
+}: {
+  header: string;
+  cities: ICity[];
+}) => {
   const [openModal, setOpenModal] = useState<string | undefined>();
   const props = { openModal, setOpenModal };
+  const token = localStorage.getItem('token');
 
-  const roles = data?.getAllRoles;
-
-  const { register, handleSubmit, control } = useForm<IFormInput>({
-    defaultValues: {
-      role: userRole,
+  const [createCity] = useMutation(CREATE_CITY_MUTATION, {
+    context: {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
     },
+    refetchQueries: [{ query: GET_ALL_CITIES }],
   });
 
+  const { register, handleSubmit, getValues, reset } = useForm<IFormInput>();
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const options = {
+      method: 'GET',
+      url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
+      params: {
+        address: getValues('name') ? getValues('name') : '',
+      },
+      headers: {
+        'X-RapidAPI-Key': process.env.REACT_APP_GEOCODING_ACCESS_KEY,
+        'X-RapidAPI-Host': process.env.REACT_APP_GEOCODING_ACCESS_HOST,
+      },
+    };
     try {
-      await updateUserRole({
+      const responseCoordinates = await axios.request(options);
+      const dataFromApi = responseCoordinates.data.Results[0];
+
+      const coordinatesGPS = dataFromApi && [
+        dataFromApi.latitude,
+        dataFromApi.longitude,
+      ];
+      await createCity({
         variables: {
-          role: data.role,
-          userId: data.userId,
-          cityName: selectedCity,
+          data: {
+            name: data.name,
+            coordinates: coordinatesGPS,
+          },
         },
       });
-    } catch (error) {
-      console.error('Error updating user role', error);
+      reset();
+      props.setOpenModal(undefined);
+      alert('Ville créée avec succès');
+    } catch (error: any) {
+      console.error(`Erreur lors de la création de la ville: ${error.message}`);
+      alert(`Erreur lors de la création de la ville: ${error.message}`);
     }
   };
 
-  // Récupère les villes non assignées et on les tranforme en objet {value / label} pour le dropdown select via la query GET_ROLES_CITIES_QUERY
-  let availableCities: ICity[] = data?.getAllCities;
-  let selectCities = availableCities?.map((city: ICity) => ({
-    value: city.name,
-    label: city.name,
-  }));
-
-  const initialSelectedCity: {
-    value: string;
-    label: string;
-  } = userCity
-    ? { value: userCity, label: userCity }
-    : { value: '', label: '' };
-
-  const [selectedCity, setSelectedCity] = useState<string>(
-    initialSelectedCity.value
-  );
-
-  const handleCityChange = (newSelectedCity: string) => {
-    setSelectedCity(newSelectedCity);
-  };
-
-  // Récupère userRole via les props + handleChange pour target le changement de role via le dropdown select
-  const [selectedRole, setSelectedRole] = useState<string | undefined>(
-    userRole
-  );
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedRole(event.target.value);
-  };
-
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>{error.message}</p>;
+  console.log('cities', cities);
 
   return (
     <div>
       <div
-        style={{ cursor: 'pointer' }}
         onClick={() => {
           props.setOpenModal('default');
-          setSelectedRole(selectedRole);
         }}
+        className="flex items-center border-2 rounded-2xl p-3 cursor-pointer text-blue-gray-800 hover:text-white hover:bg-blue-gray-800"
       >
-        <p className={styles.poiShowDetails}>Editer le rôle</p>
+        <BsBuildingAdd />
+        <button type="button" className="pl-3">
+          Ajouter une ville
+        </button>
       </div>
 
       <Modal
@@ -100,11 +98,35 @@ export const ModalRoleManager = ({
         onClose={() => props.setOpenModal(undefined)}
         className="p-44 h-full w-screen"
       >
-        <div className="space-y-6">
+        <div>
           <Modal.Header>{header}</Modal.Header>
           <form className="w-full p-3" onSubmit={handleSubmit(onSubmit)}>
             <Modal.Body>
-              <div className="flex flex-col mb-8">
+              {cities && cities.length > 0 && (
+                <div>
+                  <p>Liste des villes existantes : </p>
+                  <ol>
+                    {cities.map((city) => (
+                      <li>{city.name}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              <input
+                {...register('name', {
+                  required: {
+                    value: true,
+                    message: 'Le nom de la ville est obligatoire',
+                  },
+                })}
+                type="text"
+                id="name"
+                placeholder="Nom de la ville"
+                className="w-[60%] border-2 rounded-xl h-[40px] px-[15px] py-[4px] my-4 focus:outline-none"
+              />
+
+              {/* <div className="flex flex-col mb-8">
                 <input {...register('userId')} value={userId} hidden />
                 <select
                   {...register('role')}
@@ -149,13 +171,12 @@ export const ModalRoleManager = ({
                       )}
                   </select>
                 )}
-              </div>
+              </div> */}
             </Modal.Body>
             <Modal.Footer>
               <Button
                 color="gray"
                 onClick={() => {
-                  setSelectedRole(selectedRole);
                   props.setOpenModal(undefined);
                 }}
               >

@@ -54,7 +54,10 @@ export const UPDATE_USER = gql`
       firstname
       lastname
       profilePicture
-      type
+      role {
+        id
+        name
+      }
       isVerified
     }
   }

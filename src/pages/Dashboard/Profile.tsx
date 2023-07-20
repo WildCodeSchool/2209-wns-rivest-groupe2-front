@@ -90,7 +90,7 @@ export function Profile() {
                         ? `${image_url}${user.profilePicture}`
                         : '/img/image-de-lutilisateur.png'
                     }
-                    alt="bruce-mars"
+                    alt="profile-picture"
                     size="xl"
                     className="rounded-lg shadow-lg shadow-blue-gray-500/40 block"
                   />

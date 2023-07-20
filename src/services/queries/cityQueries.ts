@@ -14,6 +14,10 @@ export const GET_ALL_CITIES = gql`
           name
         }
       }
+      pointOfInterest {
+        id
+        name
+      }
     }
   }
 `;

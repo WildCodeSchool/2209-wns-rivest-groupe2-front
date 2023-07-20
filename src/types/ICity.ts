@@ -5,5 +5,9 @@ export interface ICity {
   id: number;
   name: string;
   coordinates: Point;
-  user: IUser;
+  users: IUser[];
+  pointOfInterest: {
+    id: number;
+    name: string;
+  }[];
 }
