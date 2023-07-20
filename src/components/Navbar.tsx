@@ -1,16 +1,31 @@
-import { useContext } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import icon from '../asset/img/logo.png';
 import UserDropdown from './UserDropdown';
 import logo from '../asset/img/city-guide-logo.svg';
 import { UserContext } from '../contexts/userContext';
+import { ICityData } from 'src/types/CityType';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_CITIES } from 'src/services/queries/cityQueries';
 
 const getActiveLinkStyle = ({ isActive }: { isActive: boolean }) => ({
   color: isActive ? 'grey' : 'black',
 });
 
 const Navbar = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const [cities, setCities] = useState<ICityData[]>([]);
+  const navigate = useNavigate();
+
+  const {
+    loading: getCitiesLoading,
+    error: getCitiesError,
+    data: getCitiesData,
+  } = useQuery(GET_ALL_CITIES);
+
+  useEffect(() => {
+    if (getCitiesData?.getAllCities) setCities(getCitiesData.getAllCities);
+  }, [getCitiesData]);
 
   return (
     <nav className="border-b-2">
@@ -23,22 +38,33 @@ const Navbar = () => {
             <img src={logo} alt="icon site2" />
           </NavLink>
         </div>
-        <select
-          name="cities"
-          id="cities"
-          className="bg-white p-[4px] pl-[15px] mt-2 border-2 rounded-xl w-[300px]"
-          defaultValue="Paris"
-        >
-          <option value="City" disabled>
-            City
-          </option>
-          <option value="Paris">Paris</option>
-          <option value="Lyon">Lyon</option>
-          <option value="Marseille">Marseille</option>
-          <option value="Bordeaux">Bordeaux</option>
-          <option value="Bordeaux">Bordeaux</option>
-          <option value="Toulouse">Toulouse</option>
-        </select>
+        {getCitiesError ? (
+          <div>Erreur lors de la récupération des villes :(</div>
+        ) : getCitiesLoading ? (
+          <div>Chargement...</div>
+        ) : cities.length > 0 ? (
+          <select
+            name="cities"
+            id="cities"
+            defaultValue="Ville"
+            className="bg-white p-[4px] pl-[15px] mt-2 border-2 rounded-xl w-[300px]"
+            onChange={(e) => {
+              navigate(`/point-of-interest/list/${e.target.value}`);
+              location.reload();
+            }}
+          >
+            <option value="Ville" disabled>
+              Ville
+            </option>
+            {cities.map((city) => (
+              <option key={city.id} value={`${city.id}/${city.name}`}>
+                {city.name}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <div>Aucune ville renseignée actuellement</div>
+        )}
         {user ? (
           <li>
             <UserDropdown />

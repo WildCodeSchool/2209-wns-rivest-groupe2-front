@@ -1,4 +1,4 @@
-import L, { LatLngExpression } from 'leaflet';
+import { LatLngExpression } from 'leaflet';
 import { MapContainer, TileLayer, Marker, useMap, Popup } from 'react-leaflet';
 import { IPOIData } from 'src/types/POIType';
 import { Legend } from './MapLegend';
@@ -23,14 +23,22 @@ function MapComponent() {
 const MapModule = ({
   poiData,
   zoomPoi,
+  city,
 }: {
   poiData: IPOIData[];
-  zoomPoi: IPOIData | void;
+  zoomPoi?: IPOIData | void;
+  city: {
+    coordinates: LatLngExpression;
+    id: number;
+    name: string;
+    __typename: string;
+  };
 }) => {
-  const parisPosition: LatLngExpression = [48.88, 2.33];
   const zoom: number = 12;
   const mapRef = useRef(null);
   const markerRef = useRef(null);
+
+  const position = city.coordinates;
 
   useEffect(() => {
     if (zoomPoi) {
@@ -67,7 +75,7 @@ const MapModule = ({
 
   return (
     <MapContainer
-      center={parisPosition}
+      center={position}
       zoom={zoom}
       style={{
         height: '90%',
@@ -101,6 +109,7 @@ const MapModule = ({
                     address={poi.address}
                     pictureUrl={poi.pictureUrl}
                     id={poi.id}
+                    city={city}
                   />
                 </Popup>
               </Marker>
@@ -112,6 +121,7 @@ const MapModule = ({
                     address={poi.address}
                     pictureUrl={poi.pictureUrl}
                     id={poi.id}
+                    city={city}
                   />
                 </Popup>
               </Marker>

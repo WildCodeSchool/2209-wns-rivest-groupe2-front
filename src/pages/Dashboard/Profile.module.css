@@ -1,0 +1,36 @@
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  transition: 0.3s ease;
+  background-color: rgba(139, 139, 139);
+  transform: translate(-50%, -50%);
+  border-radius: 0.5rem;
+}
+
+.container:hover .overlay {
+  opacity: 0.9;
+}
+
+.icon {
+  color: white;
+  font-size: 100px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  cursor: pointer;
+}
+
+.faUser:hover {
+  color: #eee;
+}
