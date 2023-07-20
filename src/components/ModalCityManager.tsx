@@ -77,8 +77,6 @@ export const ModalCityManager = ({
     }
   };
 
-  console.log('cities', cities);
-
   return (
     <div>
       <div

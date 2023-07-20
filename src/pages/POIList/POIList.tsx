@@ -82,10 +82,6 @@ const POIList = () => {
   if (getPoiError || getCitiesError)
     return <p>{getPoiError?.message || getCitiesError?.message}</p>;
 
-  console.log('user', user);
-
-  /* const userPermission = user?.role.name !== 'free_user' || (user?.role.name === 'super_user' || user?.role.name === 'city_admin') && user?.city */
-
   return (
     city && (
       <>

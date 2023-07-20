@@ -12,7 +12,6 @@ import { ModalRoleManager } from '../../components/ModalRoleManager';
 import { IUser } from 'src/types/UserType';
 import { useContext } from 'react';
 import { UserContext } from 'src/contexts/userContext';
-import { ICity } from 'src/types/ICity';
 
 export function Tables() {
   const { loading, error, data } = useQuery(GET_USER_QUERY);
@@ -20,7 +19,6 @@ export function Tables() {
   const image_url = process.env.REACT_APP_IMAGE_URL;
 
   const { user: contextUser } = useContext(UserContext);
-  console.log('user', contextUser, 'users', users);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;

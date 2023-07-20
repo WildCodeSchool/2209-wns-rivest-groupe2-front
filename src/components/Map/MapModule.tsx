@@ -40,8 +40,6 @@ const MapModule = ({
 
   const position = city.coordinates;
 
-  console.log('position', position);
-
   useEffect(() => {
     if (zoomPoi) {
       const map = mapRef.current;

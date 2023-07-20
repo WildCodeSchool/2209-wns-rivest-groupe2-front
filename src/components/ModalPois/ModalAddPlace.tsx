@@ -136,7 +136,6 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
       setSelectedImage((selectedImage) => [...selectedImage, image]);
     }
   };
-
   const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
     const options = {
       method: 'GET',

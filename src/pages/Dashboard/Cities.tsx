@@ -9,15 +9,10 @@ import { useQuery } from '@apollo/client';
 import { ModalCityManager } from '../../components/ModalCityManager';
 import { ICity } from 'src/types/ICity';
 import { GET_ALL_CITIES } from 'src/services/queries/cityQueries';
-import { BsBuildingAdd } from 'react-icons/bs';
 
 export function Cities() {
   const { loading, error, data } = useQuery(GET_ALL_CITIES);
   const cities: ICity[] = data && data.getAllCities;
-
-  /* const { user: contextUser } = useContext(UserContext); */
-
-  console.log('cities', cities);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;
