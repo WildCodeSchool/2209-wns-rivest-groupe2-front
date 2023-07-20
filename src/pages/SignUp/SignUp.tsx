@@ -3,7 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { ISignUp, IDecodedToken } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';

@@ -5,7 +5,7 @@ import {
   CardFooter,
   Typography,
 } from '@material-tailwind/react';
-import noImage from '../asset/img/no-image-icon.png';
+import noImage from '../asset/img/no-image-icon.jpeg';
 import { IPOICard } from 'src/types/POIType';
 import { UserContext } from 'src/contexts/userContext';
 import { useContext, useState } from 'react';
@@ -111,7 +111,7 @@ const POICard = (props: POICardProps) => {
             {user?.role ? (
               <Link
                 key={id}
-                to={`/point-of-interest/${id}/${name}`}
+                to={`/point-of-interest/${city.id}/${city.name}/${id}/${name}`}
                 style={{ cursor: 'pointer' }}
               >
                 <span className="text-xs text-blue-500 pt-3">
@@ -130,7 +130,7 @@ const POICard = (props: POICardProps) => {
       </CardBody>
       <CardFooter divider className="w-full h-20 absolute bottom-0 left-0">
         <Typography variant="small" className="text-center text-xs">
-          {`${address}, ${postal} ${city}`}
+          {`${address}, ${postal} ${city.name}`}
         </Typography>
       </CardFooter>
     </Card>

@@ -1,10 +1,13 @@
-import { IUser } from "./IUserContext";
+import { Point } from 'leaflet';
+import { IUser } from './IUserContext';
 
 export interface ICity {
+  id: number;
+  name: string;
+  coordinates: Point;
+  users: IUser[];
+  pointOfInterest: {
     id: number;
     name: string;
-    description: string;
-    population: number;
-    user : IUser;
-  }
-  
+  }[];
+}

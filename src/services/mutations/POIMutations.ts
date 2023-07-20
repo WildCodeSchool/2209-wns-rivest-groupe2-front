@@ -13,7 +13,10 @@ export const CREATE_POI_MUTATION = gql`
       pictureUrl
       websiteURL
       description
-      city
+      city {
+        id
+        name
+      }
       openingHours {
         value
         name
@@ -36,7 +39,10 @@ export const UPDATE_POI_MUTATION = gql`
       pictureUrl
       websiteURL
       description
-      city
+      city {
+        id
+        name
+      }
       openingHours {
         value
         name

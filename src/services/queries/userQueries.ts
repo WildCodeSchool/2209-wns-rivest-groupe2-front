@@ -8,13 +8,12 @@ export const GET_USER_QUERY = gql`
       username
       firstname
       lastname
-      hashedPassword
       profilePicture
       role {
         id
         name
       }
-      cities {
+      city {
         id
         name
       }
@@ -49,6 +48,28 @@ export const GET_TOKEN = gql`
           id
           name
         }
+      }
+    }
+  }
+`;
+
+export const GET_USER_BY_ID = gql`
+  query GetUserById($userId: Float!) {
+    getUserById(userId: $userId) {
+      id
+      email
+      username
+      type
+      firstname
+      lastname
+      profilePicture
+      role {
+        id
+        name
+      }
+      city {
+        id
+        name
       }
     }
   }

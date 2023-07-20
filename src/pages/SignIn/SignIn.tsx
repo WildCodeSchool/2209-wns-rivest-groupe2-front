@@ -1,10 +1,9 @@
 import signin from '../../asset/img/bg-signin.jpg';
 import { SignInForm } from 'src/components/SignInForm';
 
-
 const SignIn = () => {
   return (
-<>
+    <>
       <div className="bg-gray-200 h-[90vh] w-screen relative overflow-hidden">
         <div className="text-black w-full h-full flex flex-col justify-center items-center bg-primary-dark">
           <img

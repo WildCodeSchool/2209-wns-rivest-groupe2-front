@@ -1,5 +1,5 @@
-import { ICity } from "./ICity";
-import { IRole } from "./IRole";
+import { ICity } from './ICity';
+import { IRole } from './IRole';
 
 export interface IUser {
   id: number;
@@ -9,5 +9,18 @@ export interface IUser {
   username: string;
   profilePicture?: string;
   role: IRole;
-  cities: ICity[];
+  city: ICity;
 }
+
+export type IFormUserInput = {
+  id: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+};
+
+export type UserDetailsProps = {
+  name: 'username' | 'firstname' | 'lastname';
+  title: string;
+  value: string | null;
+};

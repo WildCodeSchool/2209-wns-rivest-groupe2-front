@@ -4,7 +4,10 @@ import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
 import axios from 'axios';
 import type { IFormInput, IPOIData, ImagesProps } from 'src/types/POIType';
-import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import {
+  GET_POI_QUERY,
+  GET_POI_QUERY_BY_CITY,
+} from 'src/services/queries/POIqueries';
 import {
   CREATE_POI_MUTATION,
   UPDATE_POI_MUTATION,
@@ -19,15 +22,21 @@ import {
   DialogTitle,
 } from '@mui/material';
 import ModalAddPlaceForm from './ModalAddPlaceForm';
+import { LatLngExpression } from 'leaflet';
 
 type ModalAddPlaceProps = {
   openModalAddPlace: boolean;
   setOpenModalAddPlace: React.Dispatch<React.SetStateAction<boolean>>;
-  poi?: IPOIData;
+  city: {
+    coordinates: LatLngExpression;
+    id: number;
+    name: string;
+    __typename: string;
+  };
 };
 
 const ModalAddPlace = (props: ModalAddPlaceProps) => {
-  const { openModalAddPlace, setOpenModalAddPlace, poi } = props;
+  const { openModalAddPlace, setOpenModalAddPlace, city } = props;
   const [openModalHours, setOpenModalHours] = useState(false);
   const [selectedDays, setSelectedDays] =
     useState<DaysOpenProps[]>(defaultDays);
@@ -46,7 +55,12 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
       },
     },
     refetchQueries:
-      selectedImage.length === 0 ? [{ query: GET_POI_QUERY }, 'getAllPoi'] : [],
+      selectedImage.length === 0
+        ? [
+            { query: GET_POI_QUERY_BY_CITY, variables: { cityId: city?.id } },
+            { query: GET_POI_QUERY },
+          ]
+        : [],
   });
 
   const [updatePoi] = useMutation(UPDATE_POI_MUTATION, {
@@ -55,7 +69,10 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
         authorization: `Bearer ${token}`,
       },
     },
-    refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
+    refetchQueries: [
+      { query: GET_POI_QUERY_BY_CITY, variables: { cityId: city?.id } },
+      { query: GET_POI_QUERY },
+    ],
   });
 
   let pictureUrlArray: string[] = [];
@@ -89,7 +106,6 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data);
       await updateBackendUrlImg(data);
 
       setSelectedImage(
@@ -120,19 +136,14 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
       setSelectedImage((selectedImage) => [...selectedImage, image]);
     }
   };
-
   const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
     const options = {
       method: 'GET',
       url: 'https://address-from-to-latitude-longitude.p.rapidapi.com/geolocationapi',
       params: {
         address:
-          getValues('address') && getValues('postal') && getValues('city')
-            ? getValues('address') +
-              ' ' +
-              getValues('postal') +
-              ' ' +
-              getValues('city')
+          getValues('address') && getValues('postal') && city
+            ? getValues('address') + ' ' + getValues('postal') + ' ' + city.name
             : '',
       },
       headers: {
@@ -173,7 +184,10 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
             coordinates: coordinatesGPS,
             websiteURL: formData.websiteURL,
             description: formData.description,
-            city: formData.city,
+            city: {
+              id: city.id,
+              name: city.name,
+            },
             openingHours: daysOpen,
           },
         },
@@ -237,6 +251,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
                 selectedImage={selectedImage}
                 dataImage={dataImage}
                 resetImage={resetImage}
+                city={city}
               />
             )}
           </form>

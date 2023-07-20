@@ -8,6 +8,7 @@ import { FavoriteButton } from './FavoriteButton';
 import { useQuery } from '@apollo/client';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
 import PictureVizualization from './PictureVizualization';
+import { defaultDays } from 'src/services/helpers/POIDefaultDays';
 
 interface POIInfoProps {
   poi: IPOIData;
@@ -29,12 +30,21 @@ export default function POIInfos(props: POIInfoProps) {
   } = props.poi;
   const { commentsCount } = props;
   const { user } = useContext(UserContext);
+  const [defaultOpeningHours, setDefaultOpeningHours] = useState<
+    OpeningHoursData[]
+  >([]);
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const { data } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
     variables: { userId: user?.id },
   });
+
+  useEffect(() => {
+    if (openingHours.length === 0) {
+      setDefaultOpeningHours(defaultDays);
+    }
+  }, [openingHours]);
 
   useEffect(() => {
     if (data) {
@@ -52,7 +62,7 @@ export default function POIInfos(props: POIInfoProps) {
           {name}
         </Typography>
         <Typography variant="h2">
-          {address}, {postal} {city}
+          {address}, {postal} {city.name}
         </Typography>
       </div>
       <div className="relative flex items-center">
@@ -114,25 +124,43 @@ export default function POIInfos(props: POIInfoProps) {
           <div className="w-full pt-5">
             <div className="flex justify-around pb-6">
               <ul>
-                {openingHours.map((day: OpeningHoursData) => (
-                  <li key={day.id} className="py-2">
-                    {day.name}
-                  </li>
-                ))}
+                {openingHours.length > 0
+                  ? openingHours.map((day: OpeningHoursData) => (
+                      <li key={day.id} className="py-2">
+                        {day.name}
+                      </li>
+                    ))
+                  : defaultOpeningHours.map((day: OpeningHoursData) => (
+                      <li key={day.id} className="py-2">
+                        {day.name}
+                      </li>
+                    ))}
               </ul>
               <div className="flex h-full">
                 <ul className="px-3">
-                  {openingHours.map((day: OpeningHoursData) => (
-                    <li key={day.id} className="py-2">
-                      {day.hoursOpen[0]}
-                      {day.hoursClose.length === 0
-                        ? ''
-                        : ` - ${day.hoursClose[0]}`}
-                      {day.hoursOpen.length === 2 &&
-                        day.hoursClose.length === 2 &&
-                        `, ${day.hoursOpen[1]} - ${day.hoursClose[1]}`}
-                    </li>
-                  ))}
+                  {openingHours.length > 0
+                    ? openingHours.map((day: OpeningHoursData) => (
+                        <li key={day.id} className="py-2">
+                          {day.hoursOpen[0]}
+                          {day.hoursClose.length === 0
+                            ? ''
+                            : ` - ${day.hoursClose[0]}`}
+                          {day.hoursOpen.length === 2 &&
+                            day.hoursClose.length === 2 &&
+                            `, ${day.hoursOpen[1]} - ${day.hoursClose[1]}`}
+                        </li>
+                      ))
+                    : defaultOpeningHours.map((day: OpeningHoursData) => (
+                        <li key={day.id} className="py-2">
+                          {day.hoursOpen[0]}
+                          {day.hoursClose.length === 0
+                            ? ''
+                            : ` - ${day.hoursClose[0]}`}
+                          {day.hoursOpen.length === 2 &&
+                            day.hoursClose.length === 2 &&
+                            `, ${day.hoursOpen[1]} - ${day.hoursClose[1]}`}
+                        </li>
+                      ))}
                 </ul>
               </div>
             </div>

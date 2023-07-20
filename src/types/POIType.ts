@@ -14,7 +14,10 @@ export interface IPOICard {
   name: string;
   address: string;
   postal: string;
-  city: string;
+  city: {
+    id: number;
+    name: string;
+  };
   pictureUrl: string[];
   description: string;
   type: string;
@@ -35,7 +38,10 @@ export type IFormInput = {
   pictureUrl: string[];
   websiteURL: string;
   description: string;
-  city: string;
+  city: {
+    id: number;
+    name: string;
+  };
   openingHours: OpeningHoursData[];
 };
 
@@ -63,7 +69,10 @@ export interface IPOIData {
   websiteURL: string;
   description: string;
   creationDate: string;
-  city: string;
+  city: {
+    id: number;
+    name: string;
+  };
   openingHours: OpeningHoursData[];
   averageRate?: number;
   comments: POICommentType[] | [];

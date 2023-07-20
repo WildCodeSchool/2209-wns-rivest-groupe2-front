@@ -1,10 +1,11 @@
 import {
-  HomeIcon,
   UserCircleIcon,
   TableCellsIcon,
+  BuildingOffice2Icon,
 } from '@heroicons/react/24/solid';
-import { Profile } from './pages/dashboard/profile';
-import { Tables } from './pages/dashboard/tables';
+import { Profile } from './pages/Dashboard/Profile';
+import { Tables } from './pages/Dashboard/Tables';
+import Cities from './pages/Dashboard/Cities';
 
 const icon = {
   className: 'w-5 h-5 text-inherit',
@@ -25,6 +26,12 @@ export const routes = [
         name: 'tables',
         path: '/tables',
         element: <Tables />,
+      },
+      {
+        icon: <BuildingOffice2Icon {...icon} />,
+        name: 'cities',
+        path: '/cities',
+        element: <Cities />,
       },
     ],
   },

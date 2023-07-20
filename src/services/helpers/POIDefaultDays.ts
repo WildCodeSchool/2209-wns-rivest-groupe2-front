@@ -7,7 +7,7 @@ export const defaultDays: DaysOpenProps[] = [
     name: 'Lundi',
     isOpen: false,
     selected: false,
-    hoursOpen: [],
+    hoursOpen: ['Fermé'],
     hoursClose: [],
   },
   {
@@ -16,7 +16,7 @@ export const defaultDays: DaysOpenProps[] = [
     name: 'Mardi',
     isOpen: false,
     selected: false,
-    hoursOpen: [],
+    hoursOpen: ['Fermé'],
     hoursClose: [],
   },
   {
@@ -25,7 +25,7 @@ export const defaultDays: DaysOpenProps[] = [
     name: 'Mercredi',
     isOpen: false,
     selected: false,
-    hoursOpen: [],
+    hoursOpen: ['Fermé'],
     hoursClose: [],
   },
   {
@@ -34,7 +34,7 @@ export const defaultDays: DaysOpenProps[] = [
     name: 'Jeudi',
     isOpen: false,
     selected: false,
-    hoursOpen: [],
+    hoursOpen: ['Fermé'],
     hoursClose: [],
   },
   {
@@ -43,7 +43,7 @@ export const defaultDays: DaysOpenProps[] = [
     name: 'Vendredi',
     isOpen: false,
     selected: false,
-    hoursOpen: [],
+    hoursOpen: ['Fermé'],
     hoursClose: [],
   },
   {
@@ -52,7 +52,7 @@ export const defaultDays: DaysOpenProps[] = [
     name: 'Samedi',
     isOpen: false,
     selected: false,
-    hoursOpen: [],
+    hoursOpen: ['Fermé'],
     hoursClose: [],
   },
   {
@@ -61,7 +61,7 @@ export const defaultDays: DaysOpenProps[] = [
     name: 'Dimanche',
     isOpen: false,
     selected: false,
-    hoursOpen: [],
+    hoursOpen: ['Fermé'],
     hoursClose: [],
   },
 ];

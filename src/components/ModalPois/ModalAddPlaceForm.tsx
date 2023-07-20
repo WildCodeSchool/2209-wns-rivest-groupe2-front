@@ -11,6 +11,10 @@ type ModalAddPlaceFormProps = {
   dataImage: string[] | [];
   resetImage: (id: number) => void;
   deleteImg?: (imgUrl: string) => Promise<void>;
+  city: {
+    id: number | undefined;
+    name: string | undefined;
+  };
 };
 
 const ModalAddPlaceForm = (props: ModalAddPlaceFormProps): ReactElement => {
@@ -21,6 +25,7 @@ const ModalAddPlaceForm = (props: ModalAddPlaceFormProps): ReactElement => {
     dataImage,
     resetImage,
     deleteImg,
+    city,
   } = props;
 
   const {
@@ -69,8 +74,8 @@ const ModalAddPlaceForm = (props: ModalAddPlaceFormProps): ReactElement => {
         })}
         className={
           errors.type
-            ? 'border-2 bg-transparent text-gray-400 rounded-xl h-[50px] px-[15px] py-[4px]'
-            : 'border-2 bg-transparent text-gray-400 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
+            ? 'border-2 bg-transparent text-gray-800 rounded-xl h-[50px] px-[15px] py-[4px]'
+            : 'border-2 bg-transparent text-gray-800 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
         }
       >
         <option value="">Catégorie (obligatoire)*</option>
@@ -157,55 +162,18 @@ const ModalAddPlaceForm = (props: ModalAddPlaceFormProps): ReactElement => {
         <ErrorMessage
           errors={errors}
           name="postal"
-          render={({ messages }) =>
-            messages &&
-            Object.entries(messages).map(([type, message]) => (
-              <p key={type} className="text-red-400 p-1 mb-4">
-                {message}
-              </p>
-            ))
-          }
+          render={({ message }) => (
+            <p className="text-red-400 p-1 mb-4">{message}</p>
+          )}
         />
       )}
-      <label
-        htmlFor="city"
-        className={
-          errors.city
-            ? 'border-2 rounded-xl h-[50px] px-[15px] py-[4px]'
-            : 'border-2 rounded-xl h-[50px] px-[15px] py-[4px] mb-4'
-        }
+      <select
+        defaultValue={city?.name}
+        disabled
+        className="border-2 bg-transparent text-gray-400 rounded-xl h-[50px] px-[15px] py-[4px] mb-4"
       >
-        <input
-          type="text"
-          {...register('city', {
-            pattern: {
-              value: /^[a-zA-Z\s]*$/,
-              message: 'Seuls des lettres et espace sont acceptés',
-            },
-            required: {
-              value: true,
-              message: 'La ville est obligatoire',
-            },
-          })}
-          id="city"
-          placeholder="Ville (obligatoire)*"
-          className="w-full h-full border-none focus:outline-none"
-        />
-      </label>
-      {errors.city && (
-        <ErrorMessage
-          errors={errors}
-          name="city"
-          render={({ messages }) =>
-            messages &&
-            Object.entries(messages).map(([type, message]) => (
-              <p key={type} className="text-red-400 p-1 mb-4">
-                {message}
-              </p>
-            ))
-          }
-        />
-      )}
+        <option value={city?.name}>{city?.name}</option>
+      </select>
       <label
         htmlFor="description"
         className="border-2 rounded-xl mb-4 px-[15px] py-[4px]"

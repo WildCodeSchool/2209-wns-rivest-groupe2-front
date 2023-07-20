@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import styles from '../../styles/popUpMap.module.css';
-import noImage from '../../asset/img/no-image-icon.png';
+import noImage from '../../asset/img/no-image-icon.jpeg';
 import { ModalRedirectionAccess } from '../ModalRedirectionAccess';
 import { UserContext } from 'src/contexts/userContext';
 import { useContext } from 'react';
+import { LatLngExpression } from 'leaflet';
 
 const image_url = process.env.REACT_APP_IMAGE_URL;
 
@@ -12,11 +13,18 @@ function PopUpMap({
   address,
   pictureUrl,
   id,
+  city,
 }: {
   name: string;
   address: string;
   pictureUrl: string[];
   id: number;
+  city: {
+    coordinates: LatLngExpression;
+    id: number;
+    name: string;
+    __typename: string;
+  };
 }) {
   const { user, setUser } = useContext(UserContext);
 
@@ -32,13 +40,17 @@ function PopUpMap({
       {user?.role ? (
         <Link
           key={id}
-          to={`/point-of-interest/${id}/${name}`}
+          to={`/point-of-interest/${city.id}/${city.name}/${id}/${name}`}
           style={{ cursor: 'pointer' }}
         >
           <p className={styles.poiShowDetails}>Voir plus de détails</p>
         </Link>
       ) : (
-          <ModalRedirectionAccess header={"Vous devez être connecté pour accéder au détail de cet établissement"} />
+        <ModalRedirectionAccess
+          header={
+            'Vous devez être connecté pour accéder au détail de cet établissement'
+          }
+        />
       )}
     </div>
   );

@@ -21,10 +21,14 @@ type ModalEditPlaceProps = {
   openModalEditPlace: boolean;
   setOpenModalEditPlace: React.Dispatch<React.SetStateAction<boolean>>;
   poi: IPOIData;
+  city: {
+    id: number | undefined;
+    name: string | undefined;
+  };
 };
 
 const ModalEditPlace = (props: ModalEditPlaceProps) => {
-  const { openModalEditPlace, setOpenModalEditPlace, poi } = props;
+  const { openModalEditPlace, setOpenModalEditPlace, poi, city } = props;
   const [openModalHours, setOpenModalHours] = useState(false);
   const [selectedDays, setSelectedDays] =
     useState<DaysOpenProps[]>(defaultDays);
@@ -46,24 +50,33 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
       coordinates: poi.coordinates,
       websiteURL: poi.websiteURL,
       description: poi.description,
-      city: poi.city,
     });
+    console.log('poi.openingHours', poi.openingHours);
+    if (poi.openingHours.length > 0) {
+      for (let i = 0; i < selectedDays.length; i++) {
+        const selectedDay = selectedDays[i];
+        const dataDay = poi.openingHours.find(
+          (day) => day.value === selectedDay.value
+        );
+        if (dataDay) {
+          selectedDay.hoursOpen = dataDay.hoursOpen;
+          selectedDay.hoursClose = dataDay.hoursClose;
+        }
+        if (selectedDay.hoursOpen[0] === 'Fermé') {
+          selectedDay.isOpen = false;
+        } else {
+          selectedDay.isOpen = true;
+        }
+      }
+    }
 
-    for (let i = 0; i < selectedDays.length; i++) {
-      const selectedDay = selectedDays[i];
-      const dataDay = poi.openingHours.find(
-        (day) => day.value === selectedDay.value
-      );
-      if (dataDay) {
-        selectedDay.hoursOpen = dataDay.hoursOpen;
-        selectedDay.hoursClose = dataDay.hoursClose;
-      }
-      if (selectedDay.hoursClose.length > 0) {
-        selectedDay.isOpen = true;
-      }
+    if (poi.openingHours.length === 0) {
+      setSelectedDays(defaultDays);
     }
     setDataImage(poi.pictureUrl);
   }, []);
+
+  console.log('selectedDays', selectedDays);
 
   const [updatePoi] = useMutation(UPDATE_POI_MUTATION, {
     context: {
@@ -107,7 +120,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
 
   const deleteBackendUrlImg = async (imgUrl: string) => {
     try {
-      console.log('imgUrl', imgUrl);
       const deletedPictureArray = dataImage.filter(
         (picture) => picture !== imgUrl
       );
@@ -145,7 +157,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(data);
       await updateBackendUrlImg(data);
 
       setSelectedImage(
@@ -242,7 +253,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
               poi.description !== formData.description
                 ? formData.description
                 : null,
-            city: poi.city !== formData.city ? formData.city : null,
             openingHours: openingHoursData,
           },
         },
@@ -297,6 +307,7 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
                 dataImage={dataImage}
                 resetImage={resetImage}
                 deleteImg={deleteImg}
+                city={city}
               />
             )}
           </form>
