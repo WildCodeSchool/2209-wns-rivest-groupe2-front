@@ -11,6 +11,8 @@ import {
 import { DELETE_POI_MUTATION } from 'src/services/mutations/POIMutations';
 import { useNavigate } from 'react-router-dom';
 import { LatLngExpression } from 'leaflet';
+import { useContext } from 'react';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 interface POICommentModalProps {
   poiId: number;
@@ -32,6 +34,8 @@ const ModalDeletePlace: React.FC<POICommentModalProps> = ({
 }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
+  const { setMessage } = useContext(NotificationContext);
+
   const [deletePoi] = useMutation(DELETE_POI_MUTATION, {
     context: {
       headers: {
@@ -45,12 +49,17 @@ const ModalDeletePlace: React.FC<POICommentModalProps> = ({
     try {
       await deletePoi({ variables: { deletePoiId: poiId } });
       handleDeleteDialogClose && handleDeleteDialogClose();
+      setMessage({
+        text: "Point d'intérêt supprimé avec succès",
+        type: 'success',
+      });
       navigate(`/point-of-interest/list/${city.id}/${city.name}`);
     } catch (error: any) {
       console.log(error);
-      alert(
-        `Erreur lors de la suppression du point d'intérêt: ${error.message}`
-      );
+      setMessage({
+        text: `Erreur lors de la suppression du point d'intérêt: ${error.message}`,
+        type: 'error',
+      });
     }
   }
 

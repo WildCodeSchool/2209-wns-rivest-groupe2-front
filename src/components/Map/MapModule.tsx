@@ -34,11 +34,11 @@ const MapModule = ({
     __typename: string;
   };
 }) => {
-  const zoom: number = 12;
   const mapRef = useRef(null);
   const markerRef = useRef(null);
 
   const position = city.coordinates;
+  const zoom: number = city.name === 'Paris' ? 12 : 13;
 
   useEffect(() => {
     if (zoomPoi) {
@@ -110,6 +110,8 @@ const MapModule = ({
                     pictureUrl={poi.pictureUrl}
                     id={poi.id}
                     city={city}
+                    type={poi.type}
+                    postal={poi.postal}
                   />
                 </Popup>
               </Marker>
@@ -122,6 +124,8 @@ const MapModule = ({
                     pictureUrl={poi.pictureUrl}
                     id={poi.id}
                     city={city}
+                    type={poi.type}
+                    postal={poi.postal}
                   />
                 </Popup>
               </Marker>

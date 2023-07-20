@@ -23,7 +23,7 @@ const ImageHandler = ({
   return (
     <div className="flex flex-col items-center gap-2">
       {images.length === 0 && (!dataImg || dataImg.length === 0) && (
-        <label className="flex justify-center w-full text-opalblue h-20 px-4 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer hover:border-info hover:text-info focus:outline-none">
+        <label className="flex justify-center w-full bg-white text-opalblue h-20 px-4 transition border-2 border-opalblue rounded-2xl appearance-none cursor-pointer hover:border-info hover:text-info focus:outline-none">
           <span className="flex items-center">
             <BsFillCameraFill />
             <div className="flex flex-col items-center pl-2">
@@ -84,7 +84,7 @@ const ImageHandler = ({
           {!dataImg ||
             (dataImg.length === 0 && (
               <div className="flex justify-center items-center">
-                <label className="flex justify-center items-center text-opalblue p-2 h-10 mr-2 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
+                <label className="flex justify-center items-center text-opalblue p-2 h-10 mr-2 transition bg-white border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
                   <BsFillCameraFill />
                   <span className="text-xl pl-2">+</span>
                   <input
@@ -130,7 +130,7 @@ const ImageHandler = ({
               </button>
             </div>
           ))}
-          <label className="flex justify-center items-center text-opalblue p-2 h-10 mx-2 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
+          <label className="flex justify-center items-center text-opalblue p-2 h-10 mx-2 transition bg-white border-2 border-opalblue rounded-2xl appearance-none cursor-pointer focus:outline-none">
             <BsFillCameraFill />
             <span className="text-xl pl-2">+</span>
             <input

@@ -1,6 +1,6 @@
 import {
   UserCircleIcon,
-  TableCellsIcon,
+  UsersIcon,
   BuildingOffice2Icon,
 } from '@heroicons/react/24/solid';
 import { Profile } from './pages/Dashboard/Profile';
@@ -17,19 +17,19 @@ export const routes = [
     pages: [
       {
         icon: <UserCircleIcon {...icon} />,
-        name: 'profile',
+        name: 'Mon profile',
         path: '/profile',
         element: <Profile />,
       },
       {
-        icon: <TableCellsIcon {...icon} />,
-        name: 'tables',
+        icon: <UsersIcon {...icon} />,
+        name: 'Utilisateurs et Rôles',
         path: '/tables',
         element: <Tables />,
       },
       {
         icon: <BuildingOffice2Icon {...icon} />,
-        name: 'cities',
+        name: 'Villes',
         path: '/cities',
         element: <Cities />,
       },

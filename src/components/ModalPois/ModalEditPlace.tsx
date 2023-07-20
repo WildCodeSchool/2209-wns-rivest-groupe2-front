@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import ModalHours from './ModalHours';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from '@mui/material';
 import ModalAddPlaceForm from './ModalAddPlaceForm';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 type ModalEditPlaceProps = {
   openModalEditPlace: boolean;
@@ -37,6 +38,7 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
   const [dataImage, setDataImage] = useState<string[] | []>([]);
   const token = localStorage.getItem('token');
   const image_url = process.env.REACT_APP_IMAGE_URL;
+  const { setMessage } = useContext(NotificationContext);
 
   const methods = useForm<IFormInput>();
   const { handleSubmit, reset, getValues } = methods;
@@ -76,8 +78,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
     setDataImage(poi.pictureUrl);
   }, []);
 
-  console.log('selectedDays', selectedDays);
-
   const [updatePoi] = useMutation(UPDATE_POI_MUTATION, {
     context: {
       headers: {
@@ -112,9 +112,16 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
           },
         },
       });
+      setMessage({
+        text: 'Image(s) ajoutée(s) avec succès',
+        type: 'success',
+      });
     } catch (error: any) {
       console.log(error);
-      alert(`Erreur lors de la modification de l'image: ${error.message}`);
+      setMessage({
+        text: `Erreur lors de la modification de l'image: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
@@ -132,9 +139,16 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
           },
         },
       });
+      setMessage({
+        text: 'Image supprimée avec succès',
+        type: 'success',
+      });
     } catch (error: any) {
-      console.log(error);
-      alert(`Erreur lors de la suppression de l'image: ${error.message}`);
+      console.error(error);
+      setMessage({
+        text: `Erreur lors de la suppression de l'image: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
@@ -259,12 +273,16 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
       });
       reset();
       setOpenModalEditPlace(false);
-      alert("Point d'intérêt modifié avec succès");
+      setMessage({
+        text: "Point d'intérêt modifié avec succès",
+        type: 'success',
+      });
     } catch (error: any) {
-      console.log(error);
-      alert(
-        `Erreur lors de la modification du point d'intérêt: ${error.message}`
-      );
+      console.error(error);
+      setMessage({
+        text: `Erreur lors de la modification du point d'intérêt: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 

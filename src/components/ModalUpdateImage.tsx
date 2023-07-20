@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from 'react';
 import { BsFillCameraFill } from 'react-icons/bs';
 import { UserContext } from 'src/contexts/userContext';
 import { UPDATE_USER } from 'src/services/mutations/userMutations';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 type ModalUpdateImageProps = {
   openModalUpdateImage: boolean;
@@ -32,6 +33,7 @@ const ModalUpdateImage = (props: ModalUpdateImageProps) => {
   });
   const [dataImg, setDataImg] = useState<string | null>(null);
   const { user, setUser } = useContext(UserContext);
+  const { setMessage } = useContext(NotificationContext);
 
   if (!user) return <div></div>;
 
@@ -80,9 +82,16 @@ const ModalUpdateImage = (props: ModalUpdateImageProps) => {
       });
       resetImage();
       setDataImg(null);
+      setMessage({
+        text: 'Photo de profil supprimée avec succès',
+        type: 'success',
+      });
     } catch (error: any) {
-      console.log(error);
-      alert(`Erreur lors de la suppression de l'image: ${error.message}`);
+      console.error(error);
+      setMessage({
+        text: `Erreur lors de la suppression de la photo de profil: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
@@ -114,10 +123,16 @@ const ModalUpdateImage = (props: ModalUpdateImageProps) => {
       });
       resetImage();
       setOpenModalUpdateImage(false);
-      alert('Photo de profil ajoutée avec succès');
+      setMessage({
+        text: 'Photo de profil ajoutée avec succès',
+        type: 'success',
+      });
     } catch (error: any) {
-      console.log(error);
-      alert(`Erreur lors de la modification de l'image: ${error.message}`);
+      console.error(error);
+      setMessage({
+        text: `Erreur lors de l'ajout de la photo de profil: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
@@ -172,7 +187,7 @@ const ModalUpdateImage = (props: ModalUpdateImageProps) => {
             </figure>
             <button
               type="button"
-              className="btn btn-secondary pt-5"
+              className="btn btn-secondary mt-5"
               onClick={() => {
                 deleteImg();
               }}
@@ -215,7 +230,7 @@ const ModalUpdateImage = (props: ModalUpdateImageProps) => {
           </figure>
         )}
         {!selectedImage.preview && !dataImg && (
-          <label className="flex justify-center w-full mx-auto my-5 text-opalblue h-20 px-4 transition bg-primary border-2 border-opalblue rounded-2xl appearance-none cursor-pointer hover:border-info hover:text-info focus:outline-none">
+          <label className="flex justify-center w-full mx-auto my-5 text-opalblue h-20 px-4 transition bg-white border-2 border-opalblue rounded-2xl appearance-none cursor-pointer hover:border-info hover:text-info focus:outline-none">
             <span className="flex items-center">
               <BsFillCameraFill />
               <div className="flex flex-col items-center pl-2">

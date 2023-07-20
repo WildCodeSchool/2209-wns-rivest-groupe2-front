@@ -31,9 +31,10 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
           (favorite: IFavorite) => favorite.pointOfInterest.id
         );
         setPois(
-          poiData.getAllPoi.filter(
-            (poi: IPOIData) => !userFavorites.includes(poi.id)
-          )
+          poiData.getAllPoi
+            .filter((poi: IPOIData) => !userFavorites.includes(poi.id))
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 9)
         );
         setUserFavoritePois(
           poiData.getAllPoi.filter((poi: IPOIData) =>
@@ -41,7 +42,7 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
           )
         );
       } else {
-        setPois(poiData.getAllPoi);
+        setPois(poiData.getAllPoi.sort(() => 0.5 - Math.random()).slice(0, 9));
       }
     }
   }, [poiData, favoriteData]);
@@ -53,7 +54,7 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
       ) : poiError ? (
         <div>Erreur lors de la récupération des points d'intérêts :(</div>
       ) : pois.length > 0 ? (
-        pois.map((poi) => (
+        pois.slice(0, 9).map((poi) => (
           <div
             className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
             key={poi.id}

@@ -14,6 +14,7 @@ import { MaterialTailwindControllerProvider } from './contexts/index.jsx';
 import { ThemeProvider } from '@material-tailwind/react';
 import { UserProvider } from 'src/contexts/userContext';
 import { FavoriteRateProvider } from './contexts/favoriteRateContext';
+import { NotificationProvider } from './contexts/NotificationsContext';
 
 // AUTHENTICATION APOLLO - HEADER
 // https://www.apollographql.com/docs/react/networking/authentication/
@@ -21,7 +22,12 @@ import { FavoriteRateProvider } from './contexts/favoriteRateContext';
 const api_url = process.env.REACT_APP_API_URL;
 
 const httpLink = createHttpLink({
-  uri: process.env.NODE_ENV === 'production' ? '/graphql' : (process.env.NODE_ENV === 'staging' ? '/graphql' : api_url),
+  uri:
+    process.env.NODE_ENV === 'production'
+      ? '/graphql'
+      : process.env.NODE_ENV === 'staging'
+      ? '/graphql'
+      : api_url,
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -47,17 +53,19 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
-        <MaterialTailwindControllerProvider>
-          <ApolloProvider client={client}>
-            <FavoriteRateProvider>
-              <UserProvider>
-                <App />
-              </UserProvider>
-            </FavoriteRateProvider>
-          </ApolloProvider>
-        </MaterialTailwindControllerProvider>
-      </ThemeProvider>
+      <NotificationProvider>
+        <ThemeProvider>
+          <MaterialTailwindControllerProvider>
+            <ApolloProvider client={client}>
+              <FavoriteRateProvider>
+                <UserProvider>
+                  <App />
+                </UserProvider>
+              </FavoriteRateProvider>
+            </ApolloProvider>
+          </MaterialTailwindControllerProvider>
+        </ThemeProvider>
+      </NotificationProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

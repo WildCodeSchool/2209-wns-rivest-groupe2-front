@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import ModalHours from './ModalHours';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
@@ -23,6 +23,7 @@ import {
 } from '@mui/material';
 import ModalAddPlaceForm from './ModalAddPlaceForm';
 import { LatLngExpression } from 'leaflet';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 type ModalAddPlaceProps = {
   openModalAddPlace: boolean;
@@ -44,6 +45,7 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
   const [dataImage, setDataImage] = useState<string[] | []>([]);
   const token = localStorage.getItem('token');
   const image_url = process.env.REACT_APP_IMAGE_URL;
+  const { setMessage } = useContext(NotificationContext);
 
   const methods = useForm<IFormInput>();
   const { handleSubmit, reset, getValues } = methods;
@@ -207,10 +209,16 @@ const ModalAddPlace = (props: ModalAddPlaceProps) => {
       }
       reset();
       setOpenModalAddPlace(false);
-      alert("Point d'intérêt créé avec succès");
+      setMessage({
+        text: "Point d'intérêt créé avec succès",
+        type: 'success',
+      });
     } catch (error: any) {
-      console.log(error);
-      alert(`Erreur lors de la création du point d'intérêt: ${error.message}`);
+      console.error(error);
+      setMessage({
+        text: `Erreur lors de la création du point d'intérêt: ${error.message}`,
+        type: 'error',
+      });
     }
   };
 
