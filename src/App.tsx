@@ -13,6 +13,7 @@ import Profile from './pages/Dashboard/Profile';
 import ConfirmUserPage from './pages/ConfirmPage';
 import EmailSentConfirmationPage from './pages/EmailSentConfirmationPage ';
 import Tables from './pages/Dashboard/Tables';
+import Cities from './pages/Dashboard/Cities';
 
 const App = () => {
   return (
@@ -54,6 +55,9 @@ const App = () => {
             element={<RequireAuth allowedRoles={['city_admin', 'admin']} />}
           >
             <Route path="/tables/" element={<Tables />} />
+          </Route>
+          <Route element={<RequireAuth allowedRoles={['admin']} />}>
+            <Route path="/cities/" element={<Cities />} />
           </Route>
         </Route>
       </Routes>

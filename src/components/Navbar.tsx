@@ -48,9 +48,10 @@ const Navbar = () => {
             id="cities"
             defaultValue="Ville"
             className="bg-white p-[4px] pl-[15px] mt-2 border-2 rounded-xl w-[300px]"
-            onChange={(e) =>
-              navigate(`/point-of-interest/list/${e.target.value}`)
-            }
+            onChange={(e) => {
+              navigate(`/point-of-interest/list/${e.target.value}`);
+              location.reload();
+            }}
           >
             <option value="Ville" disabled>
               Ville

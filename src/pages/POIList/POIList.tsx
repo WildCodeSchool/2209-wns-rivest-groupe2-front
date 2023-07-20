@@ -82,6 +82,10 @@ const POIList = () => {
   if (getPoiError || getCitiesError)
     return <p>{getPoiError?.message || getCitiesError?.message}</p>;
 
+  console.log('user', user);
+
+  /* const userPermission = user?.role.name !== 'free_user' || (user?.role.name === 'super_user' || user?.role.name === 'city_admin') && user?.city */
+
   return (
     city && (
       <>
@@ -101,7 +105,10 @@ const POIList = () => {
             <button
               className="px-[15px] py-[4px] mt-2 rounded-xl border-2 bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 font-secondary text-white text-[1rem] text-center font-semibold"
               onClick={() => setOpenModalAddPlace(!openModalAddPlace)}
-              style={{ visibility: user?.role ? 'initial' : 'hidden' }}
+              style={{
+                visibility:
+                  user && user.role.name !== 'free_user' ? 'initial' : 'hidden',
+              }}
             >
               {!openModalAddPlace ? 'Ajouter votre lieu' : "Annuler l'ajout"}
             </button>

@@ -9,7 +9,7 @@ export interface IUser {
   username: string;
   profilePicture?: string;
   role: IRole;
-  cities: ICity[];
+  city: ICity;
 }
 
 export type IFormUserInput = {

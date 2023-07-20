@@ -6,6 +6,14 @@ export const GET_ALL_CITIES = gql`
       id
       name
       coordinates
+      users {
+        id
+        email
+        role {
+          id
+          name
+        }
+      }
     }
   }
 `;

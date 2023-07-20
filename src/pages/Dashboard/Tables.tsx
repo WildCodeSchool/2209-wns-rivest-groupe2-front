@@ -17,8 +17,10 @@ import { ICity } from 'src/types/ICity';
 export function Tables() {
   const { loading, error, data } = useQuery(GET_USER_QUERY);
   const users = data && data.getAllUsers;
+  const image_url = process.env.REACT_APP_IMAGE_URL;
 
   const { user: contextUser } = useContext(UserContext);
+  console.log('user', contextUser, 'users', users);
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;
@@ -66,7 +68,12 @@ export function Tables() {
                       <td className={className}>
                         <div className="flex items-center gap-4">
                           <Avatar
-                            src={user.profilePicture}
+                            src={
+                              user.profilePicture &&
+                              user.profilePicture.length > 0
+                                ? `${image_url}${user.profilePicture}`
+                                : '/img/image-de-lutilisateur.png'
+                            }
                             alt={''}
                             size="sm"
                           />
@@ -76,10 +83,10 @@ export function Tables() {
                               color="blue-gray"
                               className="font-semibold"
                             >
-                              {user.email}
+                              {user.username}
                             </Typography>
                             <Typography className="text-xs font-normal text-blue-gray-500">
-                              {user.email}
+                              {user?.firstname} {user?.lastname}
                             </Typography>
                           </div>
                         </div>
@@ -95,14 +102,9 @@ export function Tables() {
                         </Typography>
                       </td>
                       <td className={className}>
-                        {user.cities.map((city: ICity, key: number) => (
-                          <Typography
-                            key={key}
-                            className="text-xs font-semibold text-blue-gray-600"
-                          >
-                            {city.name}
-                          </Typography>
-                        ))}
+                        <Typography className="text-xs font-semibold text-blue-gray-600">
+                          {user?.city?.name || ''}
+                        </Typography>
                       </td>
                       <td className={className}>
                         <Typography
@@ -113,9 +115,7 @@ export function Tables() {
                           <ModalRoleManager
                             userId={user.id}
                             userRole={user.role.name}
-                            userCities={user.cities.map(
-                              (city: ICity) => city.name
-                            )}
+                            userCity={user?.city?.name}
                             header={
                               "Vous pouvez modifier le rôle de l'utilisateur"
                             }

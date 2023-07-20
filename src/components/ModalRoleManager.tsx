@@ -21,20 +21,16 @@ export const ModalRoleManager = ({
   header,
   userId,
   userRole,
-  userCities,
+  userCity,
 }: IModalRole) => {
   const { loading, error, data } = useQuery(GET_ROLES_CITIES_QUERY);
-  const [
-    updateUserRole,
-    { data: mutationData, loading: mutationLoading, error: mutationError },
-  ] = useMutation(USER_ROLE_MUTATION, {
+  const [updateUserRole] = useMutation(USER_ROLE_MUTATION, {
     refetchQueries: [{ query: GET_ROLES_CITIES_QUERY }],
   });
   const [openModal, setOpenModal] = useState<string | undefined>();
   const props = { openModal, setOpenModal };
 
   const roles = data?.getAllRoles;
-  const cities = data?.getAllCities;
 
   // Soumission de formulaire
   const { register, handleSubmit, control } = useForm<IFormInput>({
@@ -49,7 +45,7 @@ export const ModalRoleManager = ({
         variables: {
           role: data.role,
           userId: data.userId,
-          cityName: cityName,
+          cityName: selectedCity,
         },
       });
     } catch (error) {
@@ -58,30 +54,26 @@ export const ModalRoleManager = ({
   };
 
   // Récupère les villes non assignées et on les tranforme en objet {value / label} pour le dropdown select via la query GET_ROLES_CITIES_QUERY
-  let availableCities = data?.getAllCities.filter((city: ICity) => !city.user);
+  let availableCities: ICity[] = data?.getAllCities;
   let selectCities = availableCities?.map((city: ICity) => ({
     value: city.name,
     label: city.name,
   }));
 
-  // Récupère les villes assignées à un user via les props + handleCityChange pour target le changement de ville via le dropdown select
-  const initialSelectedCity = userCities
-    ? userCities.map((city) => ({ value: city, label: city }))
-    : [];
+  const initialSelectedCity: {
+    value: string;
+    label: string;
+  } = userCity
+    ? { value: userCity, label: userCity }
+    : { value: '', label: '' };
 
-  const [selectedCity, setSelectedCity] = useState<
-    Array<{
-      value: string;
-      label: string;
-    } | null>
-  >(initialSelectedCity);
+  const [selectedCity, setSelectedCity] = useState<string>(
+    initialSelectedCity.value
+  );
 
-  const handleCityChange = (selectedCity: any) => {
-    setSelectedCity(selectedCity);
+  const handleCityChange = (newSelectedCity: string) => {
+    setSelectedCity(newSelectedCity);
   };
-
-  // Map selectedCity pour passer l'array dans le onSubmit
-  const cityName = selectedCity ? selectedCity.map((city) => city?.value) : [];
 
   // Récupère userRole via les props + handleChange pour target le changement de role via le dropdown select
   const [selectedRole, setSelectedRole] = useState<string | undefined>(
@@ -93,18 +85,18 @@ export const ModalRoleManager = ({
 
   if (loading) return <p>Chargement...</p>;
   if (error) return <p>{error.message}</p>;
+
   return (
     <div>
-      <Link
+      <div
         style={{ cursor: 'pointer' }}
         onClick={() => {
           props.setOpenModal('default');
           setSelectedRole(selectedRole);
         }}
-        to={''}
       >
-        <p className={styles.poiShowDetails}>Editer le role</p>
-      </Link>
+        <p className={styles.poiShowDetails}>Editer le rôle</p>
+      </div>
 
       <Modal
         show={props.openModal === 'default'}
@@ -119,56 +111,46 @@ export const ModalRoleManager = ({
                 <input {...register('userId')} value={userId} hidden />
                 <select
                   {...register('role')}
+                  defaultValue="select"
                   onChange={handleChange}
                   className="text-lg rounded bg-white border-blue-800 text-black bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none mb-4"
                 >
-                  <option value="" disabled selected>
-                    Selectionner un role
+                  <option value="select" disabled>
+                    Sélectionner un rôle
                   </option>
                   {roles &&
-                    roles.map((role: IRole, key: IRole) => (
+                    roles.map((role: IRole) => (
                       <option key={role.id} value={role.name}>
                         {role.name}
                       </option>
                     ))}
                 </select>
-                {selectedRole === 'city_admin' && (
-                  <Controller
-                    name="city"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        placeholder="Selectionner une ville"
-                        options={selectCities}
-                        value={selectedCity}
-                        onChange={(value) => {
-                          handleCityChange(value);
-                        }}
-                        isMulti
-                        styles={{
-                          control: (baseStyles, state) => ({
-                            ...baseStyles,
-                            borderColor: state.isFocused ? 'blue' : '#2c5282',
-                            color: 'black',
-                            fontSize: '1.125rem',
-                            borderRadius: '0.25rem',
-                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                            fontColor: '#000000',
-                            padding: '0.2rem',
-                            width: '100%',
-                            outline: 'none',
-                          }),
-                          placeholder: (defaultStyles) => {
-                            return {
-                              ...defaultStyles,
-                              color: 'black',
-                            };
-                          },
-                        }}
-                      />
-                    )}
-                  />
+                {(selectedRole === 'city_admin' ||
+                  selectedRole === 'super_user') && (
+                  <select
+                    {...register('city')}
+                    defaultValue={
+                      initialSelectedCity.value.length > 0
+                        ? initialSelectedCity.value
+                        : 'select'
+                    }
+                    onChange={(e) => {
+                      handleCityChange(e.target.value);
+                    }}
+                    className="text-lg rounded bg-white border-blue-800 text-black bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none mb-4"
+                  >
+                    <option value="select" disabled>
+                      Sélectionner une ville
+                    </option>
+                    {selectCities &&
+                      selectCities.map(
+                        (city: { value: string; label: string }, index) => (
+                          <option key={index} value={city.value}>
+                            {city.value}
+                          </option>
+                        )
+                      )}
+                  </select>
                 )}
               </div>
             </Modal.Body>

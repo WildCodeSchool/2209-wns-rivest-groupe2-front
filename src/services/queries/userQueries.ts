@@ -13,7 +13,7 @@ export const GET_USER_QUERY = gql`
         id
         name
       }
-      cities {
+      city {
         id
         name
       }
@@ -67,7 +67,7 @@ export const GET_USER_BY_ID = gql`
         id
         name
       }
-      cities {
+      city {
         id
         name
       }
