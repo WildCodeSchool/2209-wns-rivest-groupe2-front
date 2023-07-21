@@ -3,72 +3,82 @@ import {
   CardHeader,
   CardBody,
   Typography,
+  Tooltip,
 } from '@material-tailwind/react';
 import { useContext } from 'react';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { useMutation } from '@apollo/client';
-import gql from 'graphql-tag';
 import { UserContext } from 'src/contexts/userContext';
+import { IFormUserInput, UserDetailsProps } from 'src/types/UserType';
+import { UPDATE_USER } from 'src/services/mutations/userMutations';
+import { PencilIcon } from '@heroicons/react/24/solid';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 interface Props {
   title: string;
   description?: React.ReactNode;
-  details: any;
+  details: UserDetailsProps[];
   action?: React.ReactNode;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   isEditMode?: boolean;
   onSubmit?: (formData: any) => void;
+  setIsEditMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const defaultProps: Props = {
-  title: '',
-  action: null,
-  description: null,
-  details: {},
-  onChange: () => {},
-  isEditMode: false,
-  onSubmit: () => {},
-};
-
-export const ProfileInfoCard: React.FC<Props> = ({
+export const ProfileInfoCard = ({
   title,
-  description,
   details,
   action,
-  onChange,
   isEditMode,
-} = defaultProps) => {
+  setIsEditMode,
+}: Props) => {
   const { user, setUser } = useContext(UserContext);
-  const UPDATE_USER_MUTATION = gql`
-    mutation UpdateUser($data: UpdateUserInput!) {
-      updateUser(data: $data) {
-        id
-        email
-        username
-        type
-        firstname
-        lastname
-        hashedPassword
-        profilePicture
-      }
-    }
-  `;
+  const token = localStorage.getItem('token');
+  const { setMessage } = useContext(NotificationContext);
 
-  const { register, formState, /* {error}, */ handleSubmit } = useForm();
-  const [updateUserMutation, { data /* , updateError */ }] = useMutation(
-    UPDATE_USER_MUTATION,
-    {
-      variables: { data: {} },
-      onCompleted: (data) => {
-        setUser(data.updateUser);
-        localStorage.setItem('user', JSON.stringify(data.updateUser));
+  const { register, handleSubmit } = useForm<IFormUserInput>();
+
+  const [updateUserMutation] = useMutation(UPDATE_USER, {
+    context: {
+      headers: {
+        authorization: `Bearer ${token}`,
       },
-    }
-  );
+    },
+    onCompleted: (data) => {
+      setUser(data.updateUser);
+      localStorage.setItem('user', JSON.stringify(data.updateUser));
+    },
+  });
 
-  const onSubmit = (formData: {}) => {
+  const onSubmit: SubmitHandler<IFormUserInput> = async (formData) => {
     if (user && isEditMode) {
-      updateUserMutation({ variables: { data: { ...formData, id: user.id } } });
+      try {
+        await updateUserMutation({
+          variables: {
+            data: {
+              id: user.id,
+              username:
+                user.username !== formData.username ? formData.username : null,
+              firstname:
+                user.firstname !== formData.firstname
+                  ? formData.firstname
+                  : null,
+              lastname:
+                user.lastname !== formData.lastname ? formData.lastname : null,
+            },
+          },
+        });
+        setMessage({
+          text: 'Profil modifié avec succès',
+          type: 'success',
+        });
+      } catch (error: any) {
+        console.log(error);
+        setMessage({
+          text: `Erreur lors de la modification du profil: ${error.message}`,
+          type: 'error',
+        });
+      }
     }
   };
 
@@ -85,72 +95,88 @@ export const ProfileInfoCard: React.FC<Props> = ({
         </Typography>
         {action}
       </CardHeader>
-      <CardBody className="p-0">
-        {description && (
-          <Typography
-            variant="small"
-            className="font-normal text-blue-gray-500"
-          >
-            {description}
-          </Typography>
+      <CardBody className="p-0 relative">
+        {!isEditMode && (
+          <Tooltip content="Edit Profile">
+            <button
+              className="absolute right-0 top-0"
+              type="button"
+              onClick={() => setIsEditMode(!isEditMode)}
+            >
+              <PencilIcon className="h-4 w-4 cursor-pointer text-blue-gray-500" />
+            </button>
+          </Tooltip>
         )}
-        {description && details ? (
-          <hr className="my-8 border-blue-gray-50" />
-        ) : null}
-        {details && isEditMode === false ? (
+        {details && !isEditMode ? (
           <ul className="flex flex-col gap-4 p-0">
-            {Object.keys(details).map((el, key) => (
-              <li key={key} className="flex items-center gap-4">
+            {details.map((el) => (
+              <li key={el.name} className="flex items-center gap-4">
                 <Typography
                   variant="small"
                   color="blue-gray"
-                  className="font-semibold capitalize"
+                  className="font-semibold"
                 >
-                  {el}:
+                  {el.title}:
                 </Typography>
-                {typeof details[el] === 'string' ? (
+                {typeof el.value === 'string' ? (
                   <Typography
                     variant="small"
                     className="font-normal text-blue-gray-500"
                   >
-                    {details[el]}
+                    {el.value}
                   </Typography>
                 ) : (
-                  details[el]
+                  el.value
                 )}
               </li>
             ))}
           </ul>
         ) : (
-          <form id="userForm" onSubmit={handleSubmit(onSubmit)}>
-            <ul className="flex flex-col gap-4 p-0">
-              {Object.keys(details).map((el, key) => (
-                <li key={key} className="flex items-center gap-4">
-                  <Typography
-                    variant="small"
-                    color="blue-gray"
-                    className="font-semibold capitalize"
-                  >
-                    {el}:
-                  </Typography>
+          <>
+            <Tooltip content="Edit Profile">
+              <button
+                className="absolute right-0 top-0"
+                type="submit"
+                form="userForm"
+                value="Update"
+                onClick={() => {
+                  document.body.style.cursor = 'wait';
+                  setTimeout(() => {
+                    document.body.style.cursor = 'default';
+                    setIsEditMode(!isEditMode);
+                  }, 500);
+                }}
+              >
+                <div className="border-2 px-2 text-blue-gray-500">Save</div>
+              </button>
+            </Tooltip>
+            <form id="userForm" onSubmit={handleSubmit(onSubmit)}>
+              <ul className="flex flex-col gap-4 p-0">
+                {details.map((el) => (
+                  <li key={el.name} className="flex items-center gap-4">
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-semibold capitalize"
+                    >
+                      {el.name}:
+                    </Typography>
 
-                  <Typography
-                    variant="small"
-                    className="font-normal text-blue-gray-500"
-                  >
-                    <input
-                      {...register(el, { required: true })}
-                      className="w-full min-w-full border-2"
-                      defaultValue={details[el]}
-                      onChange={(e) => {
-                        e.target.value;
-                      }}
-                    />
-                  </Typography>
-                </li>
-              ))}
-            </ul>
-          </form>
+                    <Typography
+                      variant="small"
+                      className="font-normal text-blue-gray-500"
+                    >
+                      <input
+                        {...register(el.name)}
+                        className="w-full min-w-full border-2"
+                        defaultValue={el.value || ''}
+                      />
+                    </Typography>
+                  </li>
+                ))}
+              </ul>
+            </form>
+          </>
         )}
       </CardBody>
     </Card>

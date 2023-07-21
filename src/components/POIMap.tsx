@@ -1,78 +1,99 @@
 import { useContext, useEffect, useState } from 'react';
 import POICard from './POICard';
 import { useQuery } from '@apollo/client';
-import { IPOIData } from 'src/types/POIType';
-import { GET_USER_FAVORITES } from 'src/services/queries/userQueries';
+import { IFavorite, IPOIData } from 'src/types/POIType';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
-import { FavoriteRateContext } from 'src/contexts/favoriteRateContext';
+import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
+import { UserContext } from 'src/contexts/userContext';
 
-const POIMap = ({ userId }: { userId?: number }) => {
-  const { favorites, setFavorites } = useContext(FavoriteRateContext);
-
+const POIMap = ({ favorite }: { favorite: boolean }) => {
   const [pois, setPois] = useState<IPOIData[] | []>([]);
-  const { loading, error, data } = useQuery(GET_POI_QUERY);
+  const [userFavoritePois, setUserFavoritePois] = useState<IPOIData[] | []>([]);
+  const { user } = useContext(UserContext);
   const {
-    loading: userFavoritesLoading,
-    error: userFavoritesError,
-    data: userFavoritesData,
-  } = useQuery(GET_USER_FAVORITES, {
-    variables: { userId },
-    skip: !userId,
+    loading: poiLoading,
+    error: poiError,
+    data: poiData,
+  } = useQuery(GET_POI_QUERY);
+
+  const {
+    loading: favoriteLoading,
+    error: favoriteError,
+    data: favoriteData,
+  } = useQuery(GET_USER_FAVORITE_POI_QUERY, {
+    variables: { userId: user?.id },
   });
 
   useEffect(() => {
-    if (data?.getAllPoi) {
-      setPois(data.getAllPoi);
+    if (poiData?.getAllPoi) {
+      if (favoriteData?.getUserFavorites) {
+        const userFavorites = favoriteData.getUserFavorites.map(
+          (favorite: IFavorite) => favorite.pointOfInterest.id
+        );
+        setPois(
+          poiData.getAllPoi
+            .filter((poi: IPOIData) => !userFavorites.includes(poi.id))
+            .sort(() => 0.5 - Math.random())
+            .slice(0, 9)
+        );
+        setUserFavoritePois(
+          poiData.getAllPoi.filter((poi: IPOIData) =>
+            userFavorites.includes(poi.id)
+          )
+        );
+      } else {
+        setPois(poiData.getAllPoi.sort(() => 0.5 - Math.random()).slice(0, 9));
+      }
     }
-  }, [data]);
+  }, [poiData, favoriteData]);
 
-  useEffect(() => {
-    if (userFavoritesData?.getUserFavorites && userId !== undefined) {
-      const initialFavorites: { [poiId: number]: number } = {};
-      userFavoritesData.getUserFavorites.forEach(
-        (favorite: { id: number; pointOfInterest: { id: number } }) => {
-          initialFavorites[favorite.pointOfInterest.id] = favorite.id;
-        }
-      );
-      setFavorites(initialFavorites);
-      console.log('Initial favorites:', initialFavorites);
-    }
-  }, [userFavoritesData, userId]);
-
-  function handleAddFavorite(poiId: number, favoriteId: number) {
-    setFavorites((prevFavorites) => ({
-      ...prevFavorites,
-      [poiId]: favoriteId,
-    }));
-  }
-
-  function handleRemoveFavorite(poiId: number) {
-    setFavorites((prevFavorites) => {
-      const newFavorites = { ...prevFavorites };
-      delete newFavorites[poiId];
-      return newFavorites;
-    });
-  }
-
-  function toggleFavorite(poiId: number, favoriteId: number | null) {
-    if (favoriteId === null) {
-      handleRemoveFavorite(poiId);
-    } else {
-      handleAddFavorite(poiId, favoriteId);
-    }
-  }
-
-  return (
+  return !favorite ? (
     <>
-      {pois.map((poi) => (
-        <POICard
-          key={poi.id}
-          poi={poi}
-          isFavorite={favorites.hasOwnProperty(poi.id)}
-          favoriteId={favorites[poi.id] || null}
-          onToggleFavorite={toggleFavorite}
-        />
-      ))}
+      {poiLoading ? (
+        <div>Chargement...</div>
+      ) : poiError ? (
+        <div>Erreur lors de la récupération des points d'intérêts :(</div>
+      ) : pois.length > 0 ? (
+        pois.slice(0, 9).map((poi) => (
+          <div
+            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
+            key={poi.id}
+          >
+            <POICard poi={poi} />
+          </div>
+        ))
+      ) : pois.length === 0 && userFavoritePois.length === 0 ? (
+        <div>Aucun point d'intérêt enregistré dans notre base de données</div>
+      ) : (
+        pois.length === 0 &&
+        userFavoritePois.length > 0 && (
+          <div>
+            Aucun point d'intérêt enregistré dans notre base de données en plus
+            de vos favoris
+          </div>
+        )
+      )}
+    </>
+  ) : (
+    <>
+      {favoriteLoading ? (
+        <div>Chargement...</div>
+      ) : favoriteError ? (
+        <div>
+          Erreur lors de la récupération de vos points d'intérêts favoris :(
+        </div>
+      ) : userFavoritePois.length > 0 ? (
+        userFavoritePois.map((poi) => (
+          <div
+            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
+            key={poi.id}
+          >
+            <POICard poi={poi} />
+          </div>
+        ))
+      ) : (
+        <div>Aucun point d'intérêt enregistré dans vos favoris</div>
+      )}
     </>
   );
 };

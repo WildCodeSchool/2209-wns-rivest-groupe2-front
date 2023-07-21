@@ -2,50 +2,44 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
-import { gql, useMutation } from '@apollo/client';
-import { useState, useContext } from 'react';
+import { useMutation } from '@apollo/client';
+import { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { UserContext } from '../../contexts/userContext';
-import { ISignUp } from 'src/types/ISignUp';
+import { ISignUp, IDecodedToken } from 'src/types/ISignUp';
 import signup from '../../asset/img/bg-signup.jpg';
-
-// MUTATION APOLLO
-const CREATE_USER = gql`
-  mutation Mutation($email: String!, $password: String!) {
-    createUser(email: $email, password: $password) {
-      token
-      userFromDB {
-        id
-        email
-        username
-        firstname
-        lastname
-        profilePicture
-        type
-      }
-    }
-  }
-`;
+import { CREATE_USER } from 'src/services/mutations/userMutations';
 
 // YUP SCHEMA
-const schema = yup
-  .object({
-    email: yup
-      .string()
-      .email('Please enter a valid email.')
-      .required('Please enter an email.'),
-    password: yup
-      .string()
-      .required('Please enter a password.')
-      .matches(
-        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
-        'Should have one uppercase letter, one lowercase letter, one number. Should have min 8 and max 25 characters.'
-      ),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref('password'), null], 'Passwords do not match.'),
-  })
-  .required();
+const schema = yup.object({
+  username: yup
+    .string()
+    .required('Merci de renseigner un identifiant.')
+    .matches(
+      /^[aA-zZ\s]+$/,
+      `Veuillez n'utiliser que des lettres de l'alphabet.`
+    ),
+
+  email: yup
+    .string()
+    .email('Veuillez renseigner un email valide.')
+    .required('Veuillez renseigner un email valide.'),
+
+  password: yup
+    .string()
+    .required('Veuillez renseigner un mot de passe.')
+    .matches(
+      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w~@#$%^&*+=`|{}:;!.?\\"()\\[\]-]{8,25}$/,
+      'Doit contenir une majuscule, une minuscule, un nombre et au minimum et faire entre 8 et 25 caractères.'
+    ),
+
+  confirmPassword: yup
+    .string()
+    .oneOf(
+      [yup.ref('password'), null],
+      'Les mots de passe doivent être identiques.'
+    )
+    .required(),
+});
 
 const SignUp = () => {
   // SHOW - HIDE PASSWORD
@@ -58,17 +52,13 @@ const SignUp = () => {
     setPasswordConfirmShown(!passwordConfirmShown);
   };
 
-  // MUTATION - SUBMISSION
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
 
   const [signUp] = useMutation(CREATE_USER, {
-    // onCompleted(data: { createUser: string }) {
     onCompleted(data) {
       localStorage.setItem('token', data.createUser.token);
       localStorage.setItem('user', JSON.stringify(data.createUser.userFromDB));
-      setUser(data.createUser.userFromDB);
-      navigate('/point-of-interest/list');
+      navigate('/confirmation-email-sent');
     },
     onError(error: any) {
       console.log(error);
@@ -84,22 +74,18 @@ const SignUp = () => {
   });
 
   const onSubmit: SubmitHandler<ISignUp> = async (fields: {
+    username: string;
     email: string;
     password: string;
   }) => {
     signUp({
       variables: {
+        username: fields.username,
         email: fields.email,
         password: fields.password,
       },
     });
   };
-
-  // const onSubmit: SubmitHandler<ISignUp> = async (data: any) => {
-  //   signUp({
-  //     variables: data,
-  //   });
-  // };
 
   return (
     <>
@@ -113,14 +99,6 @@ const SignUp = () => {
           <div className="row-span-2 col-span-1 relative w-3/4 md:w-2/3 lg:w-1/3">
             <div className="bg-deep-blue rounded-lg px-6 py-6 mx-auto z-10 flex flex-col items-center lg:w-4/5 lg:mb-8 lg:px-12 lg:py-12">
               <span className="box-sizing:border-box;display:inline-block;overflow:hidden;width:initial;height:initial;background:none;opacity:1;border:0;margin:0;padding:0;position:relative;max-width:100%"></span>
-              {/* <p className="text-gray-300 text-center text-l my-2">
-                Sign up with
-              </p>
-              <div className="flex items-center my-4 space-x-8 w-full">
-                <hr className="grow w-full h-px bg-gray-500 border-none" />
-                <div className="text-gray-500 text-center text-xsm">or</div>
-                <hr className="grow w-full h-px bg-gray-500 border-none" />
-              </div> */}
               <div className="text-gray-300 font-luckiest tracking-widest text-center text-xl md:text-2xl lg:text-2xl mb-10 mt-6">
                 Create Account
               </div>
@@ -136,6 +114,20 @@ const SignUp = () => {
                   {errors.email && (
                     <span className="text-sm text-red-600">
                       {errors.email.message}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col mb-8 relative">
+                  <input
+                    type="text"
+                    id="username"
+                    {...register('username')}
+                    placeholder="Identifiant"
+                    className="text-lg rounded bg-white text-white bg-opacity-5 px-3 py-2 sm:mt-0 w-full focus:outline-none"
+                  />
+                  {errors.username && (
+                    <span className="text-sm text-red-600">
+                      {errors.username.message}
                     </span>
                   )}
                 </div>

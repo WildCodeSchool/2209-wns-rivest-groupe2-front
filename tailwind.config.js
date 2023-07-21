@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-/* eslint-disable @typescript-eslint/no-var-requires */
 const withMT = require('@material-tailwind/react/utils/withMT');
 /** @type {import('tailwindcss').Config} */
 
@@ -16,5 +15,23 @@ module.exports = withMT({
       },
     },
   },
-  plugins: [require('flowbite/plugin'), require('@tailwindcss/line-clamp')],
+  plugins: [
+    require('flowbite/plugin'),
+    require('@tailwindcss/line-clamp'),
+    require('daisyui'),
+  ],
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          primary: '#030C11',
+          'base-100': '#FFFFFF',
+          info: '#2B9EB3',
+          success: '#44AF69',
+          warning: '#FCAB10',
+          error: '#D81E5B',
+        },
+      },
+    ],
+  },
 });

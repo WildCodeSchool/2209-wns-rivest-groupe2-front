@@ -1,208 +1,232 @@
-import { useState, useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { IPOIData } from 'src/types/POIType';
 import POIInfo from 'src/components/POIInfos';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import POICard from 'src/components/POICard';
-import { Link } from 'react-router-dom';
-import POIComment from 'src/components/Comment';
-import { UserContext } from 'src/contexts/userContext';
+import POIComments from 'src/components/POIComments';
+import { Typography } from '@material-tailwind/react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import bgBar from 'src/asset/img/bg-bar.jpg';
+import bgChurch from 'src/asset/img/bg-church.jpg';
+import bgFastfood from 'src/asset/img/bg-fastfood.jpg';
+import bgHotel from 'src/asset/img/bg-hotel.jpg';
+import bgMuseum from 'src/asset/img/bg-museum.jpg';
+import bgRestaurant from 'src/asset/img/bg-restaurant.jpg';
+import MapModule from 'src/components/Map/MapModule';
+import { GET_COMMENTS_NUMBER_PER_POI } from 'src/services/queries/commentQueries';
+import ModalDeletePlace from 'src/components/ModalPois/ModalDeletePlace';
+import ModalEditPlace from 'src/components/ModalPois/ModalEditPlace';
+import { GET_ALL_CITIES } from 'src/services/queries/cityQueries';
+import { LatLngExpression } from 'leaflet';
+import { UserContext } from 'src/contexts/userContext';
 
 const POIDetails = () => {
-  const { loading, error, data } = useQuery(GET_POI_QUERY);
-  const { id } = useParams();
-  const thisPOI = data?.getAllPoi?.find(
-    (poi: { id: number }) => poi.id === Number(id)
-  );
-  const [favorites, setFavorites] = useState(new Map<number, number>());
   const { user } = useContext(UserContext);
+  const [commentsCount, setCommentsCount] = useState(0);
+  const [openModalEditPlace, setOpenModalEditPlace] = useState(false);
+  const [openModalDeletePlace, setOpenModalDeletePlace] = useState(false);
+  const params = useParams();
 
-  if (loading) return <p>Chargement...</p>;
-  if (error) return <p>Une erreur est survenue :(</p>;
+  const [cities, setCities] = useState<
+    {
+      coordinates: LatLngExpression;
+      id: number;
+      name: string;
+      __typename: string;
+    }[]
+  >([]);
 
-  if (!thisPOI) return <p>Pas de point d'interet</p>;
+  const {
+    loading: getCitiesLoading,
+    error: getCitiesError,
+    data: getCitiesData,
+  } = useQuery(GET_ALL_CITIES);
 
-  function handleAddFavorite(poiId: number, favoriteId: number) {
-    setFavorites((prevFavorites) =>
-      new Map(prevFavorites).set(poiId, favoriteId)
-    );
-  }
+  const { loading, error, data } = useQuery(GET_POI_QUERY);
+  const { poiId } = useParams();
+  const thisPOI: IPOIData = data?.getAllPoi?.find(
+    (poi: { id: number }) => poi.id === Number(poiId)
+  );
 
-  function handleRemoveFavorite(poiId: number) {
-    setFavorites((prevFavorites) => {
-      const newFavorites = new Map(prevFavorites);
-      newFavorites.delete(poiId);
-      return newFavorites;
-    });
-  }
+  const { data: countCommentData } = useQuery(GET_COMMENTS_NUMBER_PER_POI, {
+    variables: { poiId: Number(poiId) },
+  });
 
-  function toggleFavorite(poiId: number, favoriteId: number | null) {
-    if (favoriteId === null) {
-      handleRemoveFavorite(poiId);
-    } else {
-      handleAddFavorite(poiId, favoriteId);
+  useEffect(() => {
+    setCommentsCount(countCommentData?.getNumberOfCommentsPerPOI);
+    if (getCitiesData?.getAllCities) setCities(getCitiesData.getAllCities);
+  }, [countCommentData, getCitiesData]);
+
+  const city = cities?.filter((city) => city.id === Number(params.cityId))[0];
+
+  if (loading || getCitiesLoading) return <p>Chargement...</p>;
+  if (error || getCitiesError)
+    return <p>{error?.message || getCitiesError?.message}</p>;
+
+  if (!thisPOI) return <p>Pas de point d'intérêt renseigné avec ce nom</p>;
+
+  const otherPOIs = data?.getAllPoi
+    ?.filter((poi: { id: number }) => poi.id !== Number(poiId))
+    .slice(0, 4);
+
+  const categoryBackgroundStyle = {
+    backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    paddingLeft: '10em',
+    paddingRight: '10em',
+  };
+
+  function getCategoryBackgroundImage(type: any) {
+    switch (type) {
+      case 'restaurant':
+        return bgRestaurant;
+      case 'fast-food':
+        return bgFastfood;
+      case 'bar':
+        return bgBar;
+      case 'lieu de culte':
+        return bgChurch;
+      case 'hotel':
+        return bgHotel;
+      case 'musee':
+        return bgMuseum;
+      default:
+        return bgRestaurant;
     }
   }
 
   return (
-    <div className="bg-white mb-[100px]">
-      <div className="pt-6">
-        {/* Navigation */}
-        <nav aria-label="Breadcrumb">
-          <ol
-            role="list"
-            className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+    city && (
+      <div className="bg-white">
+        <div style={categoryBackgroundStyle}>
+          <Typography
+            variant="h1"
+            className="center py-4 text-white capitalize text-center"
           >
-            <li>
-              <div className="flex items-center">
-                <a href="#" className="mr-2 text-sm font-medium text-gray-900">
-                  {thisPOI.type}
-                </a>
-                <svg
-                  width="16"
-                  height="20"
-                  viewBox="0 0 16 20"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                  className="h-5 w-4 text-gray-300"
-                >
-                  <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                </svg>
+            {thisPOI.type}
+          </Typography>
+          <div className="mx-auto bg-white drop-shadow-2xl relative">
+            {user && user?.role?.name !== 'free_user' && (
+              <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
+                <Tooltip title="Editer le point d'intéret">
+                  <IconButton onClick={() => setOpenModalEditPlace(true)}>
+                    <BorderColorIcon sx={{ color: 'black' }} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Supprimer le point d'intéret">
+                  <IconButton onClick={() => setOpenModalDeletePlace(true)}>
+                    <DeleteIcon sx={{ color: 'black' }} />
+                  </IconButton>
+                </Tooltip>
               </div>
-            </li>
-            <li className="text-sm">
-              <a
-                href="#"
-                aria-current="page"
-                className="font-medium text-gray-500 hover:text-gray-600"
-              >
-                {thisPOI.name}
-              </a>
-            </li>
-          </ol>
-        </nav>
-        {/* Image gallery */}
-        {/* <Gallery */}
-        {/* {thisPOI.pictureUrl}
-        {/* /> */}
-        {/* POI Detail */}
-      </div>
-      <div className="product-detail-desc ">
-        <div className="mx-auto px-4 pt-10 pb-10">
-          <div>
-            <POIInfo
-              id={thisPOI.id}
-              name={thisPOI.name}
-              address={thisPOI.address}
-              postal={thisPOI.postal}
-              city={thisPOI.city}
-              pictureUrl={thisPOI.pictureUrl}
-              description={thisPOI.description}
-              type={thisPOI.type}
-              coordinates={thisPOI.coordinates}
-              websiteURL={thisPOI.websiteURL}
-              creationDate={thisPOI.creationDate}
-              priceRange={thisPOI.priceRange}
-              daysOpen={thisPOI.daysOpen}
-              hoursOpen={thisPOI.hoursOpen}
-              hoursClose={thisPOI.hoursClose}
+            )}
+            <ModalDeletePlace
+              poiId={thisPOI.id}
+              openDeleteDialog={openModalDeletePlace}
+              handleDeleteDialogClose={() => setOpenModalDeletePlace(false)}
+              city={city}
             />
-          </div>
-        </div>
-        <div className="mx-auto px-4 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24">
-          <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-            <h1 className="font-bold tracking-tight text-gray-900 ">
-              Information
-            </h1>
-          </div>
-          {/* <!-- Options --> */}
-          <div className="mt-4 lg:row-span-3 lg:mt-0">
-            <h2 className="sr-only">Reviews</h2>
-
-            {/* <!-- Reviews --> */}
-            <div className="mt-6">
-              <h3 className="sr-only">Reviews</h3>
-              <div className="flex items-center">
-                <div className="flex items-center">
-                  {/* <!-- Heroicon name: heart filled --> */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-6 h-6"
+            <nav aria-label="Breadcrumb" className="py-3 px-2">
+              <ol
+                role="list"
+                className="flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+              >
+                <li>
+                  <div className="flex items-center">
+                    <a
+                      href={`/point-of-interest/list/${thisPOI.city.id}/${thisPOI.city.name}`}
+                      className="mr-2 text-sm font-medium text-gray-900"
+                    >
+                      {thisPOI.city.name}
+                    </a>
+                    <svg
+                      width="16"
+                      height="20"
+                      viewBox="0 0 16 20"
+                      fill="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                      className="h-5 w-4 text-gray-300"
+                    >
+                      <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+                    </svg>
+                  </div>
+                </li>
+                <li className="text-sm">
+                  <a
+                    href=""
+                    aria-current="page"
+                    className="font-medium capitalize text-gray-500 hover:text-gray-600"
                   >
-                    <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
-                  </svg>
-                  {/* <!-- Heroicon name: heart empty --> */}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
-                    />
-                  </svg>
-                </div>
-                {user && <POIComment poiId={thisPOI.id} userId={user.id} />}
-              </div>
-            </div>
-          </div>
-
-          <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pb-16 lg:pr-8">
-            {/* <!-- Description and details -->  */}
+                    {thisPOI.name}
+                  </a>
+                </li>
+              </ol>
+            </nav>
             <div>
-              <div className="space-y-6">
-                <p className="text-base text-gray-900"></p>
+              <div className="px-10">
+                <POIInfo poi={thisPOI} commentsCount={commentsCount} />
+              </div>
+              <div className="mt-6 mx-auto px-10">
+                <POIComments
+                  averageRate={thisPOI?.averageRate || 0}
+                  commentsCount={commentsCount}
+                  comments={thisPOI.comments}
+                  poiId={thisPOI.id}
+                  type={thisPOI.type}
+                />
+              </div>
+              <div className="mt-6 px-10 mx-auto">
+                <div className="my-4 w-[80%] mx-auto pt-8">
+                  <Typography variant="h2">
+                    Où se trouve le {thisPOI.type}
+                  </Typography>
+                  <div className="h-[500px] w-[100%]">
+                    <MapModule poiData={[thisPOI]} city={city} />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="mt-1">
-              <h2 className="text-sm font-medium text-gray-900">
-                Description:
-              </h2>
-
-              <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{thisPOI.description}</p>
-              </div>
+            <div className="mt-6 mx-auto px-10">
+              {otherPOIs.length > 0 && (
+                <div className="my-4 w-[80%] mx-auto">
+                  <Typography variant="h2">
+                    Vous aimerez peut-être...
+                  </Typography>
+                  <ul
+                    id="poi-similar"
+                    className="flex justify-start py-4 my-3.5"
+                  >
+                    {otherPOIs.map((poi: IPOIData) => (
+                      <li
+                        key={poi.id}
+                        className="h-[400px] w-[250px] border-solid border rounded-xl mt-4 mb-12 mr-4"
+                      >
+                        <POICard key={poi.id} poi={poi} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           </div>
         </div>
-        <div className="products-similar py-4 w-4/5 my-3.5 mx-auto">
-          <h2 className="text-[#005356] font-bold">Autres lieux similaires</h2>
-          <div className="maylike-products-container flex flex-row items-stretch">
-            <ul
-              id="poi-similar"
-              className="flex justify-around py-4 w-4/5 my-3.5"
-            >
-              {data.getAllPoi.map((poi: IPOIData) => (
-                <Link
-                  key={poi.id}
-                  to={`/point-of-interest/${poi.id}/${poi.name}`}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <li className="h-[200px] w-[150px] border-solid border rounded-xl mb-12">
-                    <POICard
-                      key={poi.id}
-                      poi={poi}
-                      isFavorite={favorites.has(poi.id)}
-                      favoriteId={favorites.get(poi.id) || null}
-                      onToggleFavorite={toggleFavorite}
-                    />
-                  </li>
-                </Link>
-              ))}
-            </ul>
-          </div>
-        </div>
+        {openModalEditPlace && (
+          <ModalEditPlace
+            setOpenModalEditPlace={setOpenModalEditPlace}
+            openModalEditPlace={openModalEditPlace}
+            poi={thisPOI}
+            city={city}
+          />
+        )}
       </div>
-    </div>
+    )
   );
 };
 
