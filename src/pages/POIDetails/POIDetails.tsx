@@ -112,20 +112,22 @@ const POIDetails = () => {
             {thisPOI.type}
           </Typography>
           <div className="mx-auto bg-white drop-shadow-2xl relative">
-            {user && user?.role?.name !== 'free_user' && (
-              <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
-                <Tooltip title="Editer le point d'intéret">
-                  <IconButton onClick={() => setOpenModalEditPlace(true)}>
-                    <BorderColorIcon sx={{ color: 'black' }} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Supprimer le point d'intéret">
-                  <IconButton onClick={() => setOpenModalDeletePlace(true)}>
-                    <DeleteIcon sx={{ color: 'black' }} />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            )}
+            {user &&
+              user?.role?.name !== 'free_user' &&
+              user?.role?.name !== 'super_user' && (
+                <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
+                  <Tooltip title="Editer le point d'intéret">
+                    <IconButton onClick={() => setOpenModalEditPlace(true)}>
+                      <BorderColorIcon sx={{ color: 'black' }} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Supprimer le point d'intéret">
+                    <IconButton onClick={() => setOpenModalDeletePlace(true)}>
+                      <DeleteIcon sx={{ color: 'black' }} />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              )}
             <ModalDeletePlace
               poiId={thisPOI.id}
               openDeleteDialog={openModalDeletePlace}
