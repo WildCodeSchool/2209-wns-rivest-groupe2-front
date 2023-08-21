@@ -35,7 +35,10 @@ export function Sidenav({ brandImg, brandName, routes }) {
           sidenavType === 'dark' ? 'border-white/20' : 'border-blue-gray-50'
         }`}
       >
-        <Link to="/" className="flex items-center gap-4 py-6 px-8">
+        <Link
+          to="/point-of-interest/list/1/Paris"
+          className="flex items-center gap-4 py-6 px-8"
+        >
           <Avatar src={brandImg} size="sm" />
           <Typography
             variant="h6"
@@ -69,34 +72,96 @@ export function Sidenav({ brandImg, brandName, routes }) {
                 </Typography>
               </li>
             )}
-            {user && user?.role?.name !== 'free_user' && pages.map(({ icon, name, path }) => (
-              <li key={name}>
-                <NavLink to={`/${layout}${path}`}>
-                  {({ isActive }) => (
-                    <Button
-                      variant={isActive ? 'gradient' : 'text'}
-                      color={
-                        isActive
-                          ? sidenavColor
-                          : sidenavType === 'dark'
-                          ? 'white'
-                          : 'blue-gray'
-                      }
-                      className="flex items-center gap-4 px-4 capitalize"
-                      fullWidth
-                    >
-                      {icon}
-                      <Typography
-                        color="inherit"
-                        className="font-medium capitalize"
+            {user &&
+              (user?.role.name === 'free_user' ||
+                user?.role.name === 'super_user') && (
+                <li>
+                  <NavLink to={`/${layout}${pages[0].path}`}>
+                    {({ isActive }) => (
+                      <Button
+                        variant={isActive ? 'gradient' : 'text'}
+                        color={
+                          isActive
+                            ? sidenavColor
+                            : sidenavType === 'dark'
+                            ? 'white'
+                            : 'blue-gray'
+                        }
+                        className="flex items-center gap-4 px-4 capitalize"
+                        fullWidth
                       >
-                        {name}
-                      </Typography>
-                    </Button>
-                  )}
-                </NavLink>
-              </li>
-            ))}
+                        {pages[0].icon}
+                        <Typography
+                          color="inherit"
+                          className="font-medium capitalize"
+                        >
+                          {pages[0].name}
+                        </Typography>
+                      </Button>
+                    )}
+                  </NavLink>
+                </li>
+              )}
+            {user &&
+              user?.role?.name === 'city_admin' &&
+              pages.slice(0, -1).map(({ icon, name, path }) => (
+                <li key={name}>
+                  <NavLink to={`/${layout}${path}`}>
+                    {({ isActive }) => (
+                      <Button
+                        variant={isActive ? 'gradient' : 'text'}
+                        color={
+                          isActive
+                            ? sidenavColor
+                            : sidenavType === 'dark'
+                            ? 'white'
+                            : 'blue-gray'
+                        }
+                        className="flex items-center gap-4 px-4 capitalize"
+                        fullWidth
+                      >
+                        {icon}
+                        <Typography
+                          color="inherit"
+                          className="font-medium capitalize"
+                        >
+                          {name}
+                        </Typography>
+                      </Button>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
+            {user &&
+              user?.role?.name === 'admin' &&
+              pages.map(({ icon, name, path }) => (
+                <li key={name}>
+                  <NavLink to={`/${layout}${path}`}>
+                    {({ isActive }) => (
+                      <Button
+                        variant={isActive ? 'gradient' : 'text'}
+                        color={
+                          isActive
+                            ? sidenavColor
+                            : sidenavType === 'dark'
+                            ? 'white'
+                            : 'blue-gray'
+                        }
+                        className="flex items-center gap-4 px-4 capitalize"
+                        fullWidth
+                      >
+                        {icon}
+                        <Typography
+                          color="inherit"
+                          className="font-medium capitalize"
+                        >
+                          {name}
+                        </Typography>
+                      </Button>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
           </ul>
         ))}
       </div>

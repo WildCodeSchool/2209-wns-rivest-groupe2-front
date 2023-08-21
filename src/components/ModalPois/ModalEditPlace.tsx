@@ -53,7 +53,6 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
       websiteURL: poi.websiteURL,
       description: poi.description,
     });
-    console.log('poi.openingHours', poi.openingHours);
     if (poi.openingHours.length > 0) {
       for (let i = 0; i < selectedDays.length; i++) {
         const selectedDay = selectedDays[i];
@@ -75,7 +74,7 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
     if (poi.openingHours.length === 0) {
       setSelectedDays(defaultDays);
     }
-    setDataImage(poi.pictureUrl);
+    if (poi.pictureUrl) setDataImage(poi.pictureUrl);
   }, []);
 
   const [updatePoi] = useMutation(UPDATE_POI_MUTATION, {
@@ -104,6 +103,7 @@ const ModalEditPlace = (props: ModalEditPlaceProps) => {
         pictureUrlArray.push(element.filename);
       });
       setDataImage(pictureUrlArray);
+
       await updateCoverImg({
         variables: {
           data: {

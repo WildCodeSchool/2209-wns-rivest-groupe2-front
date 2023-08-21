@@ -82,8 +82,6 @@ export function Profile() {
     },
   ];
 
-  console.log('user', user);
-
   return (
     user && (
       <>

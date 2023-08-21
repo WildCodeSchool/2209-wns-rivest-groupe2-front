@@ -61,8 +61,6 @@ const POICard = (props: POICardProps) => {
   const [toggleHover, setToggleHover] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
-  console.log('type', type);
-
   const getDefaultBackgroundImage = (type: string) => {
     switch (type) {
       case 'restaurant':

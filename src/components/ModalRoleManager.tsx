@@ -1,5 +1,5 @@
 import { Button, Modal } from 'flowbite-react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { IModalRole } from 'src/types/IModal';
 import styles from '../styles/popUpMap.module.css';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -8,6 +8,7 @@ import { GET_ROLES_CITIES_QUERY } from '../services/queries/roleQueries';
 import { USER_ROLE_MUTATION } from '../services/mutations/userRoleMutation';
 import { ICity } from 'src/types/ICity';
 import { IRole } from 'src/types/IRole';
+import { NotificationContext } from 'src/contexts/NotificationsContext';
 
 interface IFormInput {
   role: string;
@@ -21,6 +22,7 @@ export const ModalRoleManager = ({
   userRole,
   userCity,
 }: IModalRole) => {
+  const { setMessage } = useContext(NotificationContext);
   const { loading, error, data } = useQuery(GET_ROLES_CITIES_QUERY);
   const [updateUserRole] = useMutation(USER_ROLE_MUTATION, {
     refetchQueries: [{ query: GET_ROLES_CITIES_QUERY }],
@@ -30,7 +32,7 @@ export const ModalRoleManager = ({
 
   const roles = data?.getAllRoles;
 
-  const { register, handleSubmit, control } = useForm<IFormInput>({
+  const { register, handleSubmit } = useForm<IFormInput>({
     defaultValues: {
       role: userRole,
     },
@@ -42,11 +44,19 @@ export const ModalRoleManager = ({
         variables: {
           role: data.role,
           userId: data.userId,
-          cityName: selectedCity,
+          cityName: data.role !== 'free_user' ? selectedCity : '',
         },
       });
-    } catch (error) {
+      setMessage({
+        text: 'Rôle et ville mise à jour avec succès',
+        type: 'success',
+      });
+    } catch (error: any) {
       console.error('Error updating user role', error);
+      setMessage({
+        text: error.message,
+        type: 'error',
+      });
     }
   };
 
