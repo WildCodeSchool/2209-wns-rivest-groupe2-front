@@ -8,7 +8,7 @@ import { FavoriteButton } from './FavoriteButton';
 import { useQuery } from '@apollo/client';
 import { GET_USER_FAVORITE_POI_QUERY } from 'src/services/queries/favoriteQueries';
 import PictureVizualization from './PictureVizualization';
-import { defaultDays } from 'src/services/helpers/POIDefaultDays';
+import { defaultDays, unknownHours } from 'src/services/helpers/POIDefaultDays';
 import { Link } from 'react-router-dom';
 
 interface POIInfoProps {
@@ -44,7 +44,7 @@ export default function POIInfos(props: POIInfoProps) {
 
   useEffect(() => {
     if (openingHours.length === 0) {
-      setDefaultOpeningHours(defaultDays);
+      setDefaultOpeningHours(unknownHours);
     }
   }, [openingHours]);
 

@@ -16,9 +16,3 @@ export const GET_COMMENTS_NUMBER_PER_POI = gql`
     getNumberOfCommentsPerPOI(poiId: $poiId)
   }
 `;
-
-export const DELETE_COMMENT = gql`
-  mutation Mutation($commentId: Float!, $userId: Float!) {
-    deleteCommentPOI(commentId: $commentId, userId: $userId)
-  }
-`;

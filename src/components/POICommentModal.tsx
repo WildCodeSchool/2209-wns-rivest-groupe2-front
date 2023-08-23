@@ -4,11 +4,11 @@ import { UserContext } from 'src/contexts/userContext';
 import {
   COMMENT_POI_MUTATION,
   UPDATE_COMMENT_POI_MUTATION,
+  DELETE_COMMENT,
 } from 'src/services/mutations/commentMutations';
 import {
   GET_COMMENTS_NUMBER_PER_POI,
   GET_USER_COMMENT_POI_QUERY,
-  DELETE_COMMENT,
 } from 'src/services/queries/commentQueries';
 import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
 import StarRating from './StarRating';
@@ -54,6 +54,7 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
   const [currentComment, setCurrentComment] = useState<string | undefined>('');
   const [currentRate, setcurrentRate] = useState<number>(0);
   const { setMessage } = useContext(NotificationContext);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     if (userComment) setCurrentComment(userComment);
@@ -81,21 +82,21 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
   const [commentPOI] = useMutation(COMMENT_POI_MUTATION, {
     context: {
       headers: {
-        authorization: `Bearer ${user?.id}`,
+        authorization: `Bearer ${token}`,
       },
     },
     refetchQueries: [
       { query: GET_POI_QUERY },
-      'getAllPoi',
       { query: GET_COMMENTS_NUMBER_PER_POI, variables: { poiId } },
-      'getNumberOfCommentsPerPOI',
     ],
   });
+
+  console.log('token', token);
 
   const [updateCommentPOI] = useMutation(UPDATE_COMMENT_POI_MUTATION, {
     context: {
       headers: {
-        authorization: `Bearer ${user?.id}`,
+        authorization: `Bearer ${token}`,
       },
     },
     refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
