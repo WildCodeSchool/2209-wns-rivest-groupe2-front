@@ -10,7 +10,7 @@ import POICommentModal from './POICommentModal';
 interface POICommentProps {
   comment: POICommentType;
   isUserComment: boolean;
-  poiId?: number;
+  poiId: number;
   userId?: number;
 }
 

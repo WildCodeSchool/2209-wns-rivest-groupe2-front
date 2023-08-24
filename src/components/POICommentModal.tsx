@@ -91,8 +91,6 @@ const POICommentModal: React.FC<POICommentModalProps> = ({
     ],
   });
 
-  console.log('token', token);
-
   const [updateCommentPOI] = useMutation(UPDATE_COMMENT_POI_MUTATION, {
     context: {
       headers: {

@@ -158,7 +158,11 @@ const POIComments: React.FC<POICommentsProps> = ({
           {otherComments &&
             otherComments.map((comment) => (
               <div key={comment.id}>
-                <POIComment comment={comment} isUserComment={false} />
+                <POIComment
+                  comment={comment}
+                  isUserComment={false}
+                  poiId={poiId}
+                />
               </div>
             ))}
         </div>
