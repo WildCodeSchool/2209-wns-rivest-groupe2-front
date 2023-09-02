@@ -5,7 +5,6 @@ import {
   CardFooter,
   Typography,
 } from '@material-tailwind/react';
-import noImage from '../asset/img/no-image-icon.jpeg';
 import { IPOICard } from 'src/types/POIType';
 import { UserContext } from 'src/contexts/userContext';
 import { useContext, useState } from 'react';
@@ -102,6 +101,9 @@ const POICard = (props: POICardProps) => {
       </CardHeader>
       <CardBody className="px-0 w-full flex flex-col justify-evenly items-center relative">
         <div className="relative w-full" style={{ overflow: 'hidden' }}>
+          <Typography className="text-blue-gray-500 text-center text-xl pb-2">
+            - {goodWrittenType(type)} -
+          </Typography>
           <div
             style={{
               backgroundPosition: 'center',
@@ -133,8 +135,8 @@ const POICard = (props: POICardProps) => {
               <AverageRatingStar averageRate={averageRate} />
             </div>
           )}
-          <Typography>
-            {user?.role ? (
+          {user?.role ? (
+            <Typography>
               <Link
                 key={id}
                 to={`/point-of-interest/${city.id}/${city.name}/${id}/${name}`}
@@ -144,14 +146,14 @@ const POICard = (props: POICardProps) => {
                   Voir plus de détails
                 </span>
               </Link>
-            ) : (
-              <ModalRedirectionAccess
-                header={
-                  'Vous devez être connecté pour accéder au détail de cet établissement'
-                }
-              />
-            )}
-          </Typography>
+            </Typography>
+          ) : (
+            <ModalRedirectionAccess
+              header={
+                'Vous devez être connecté pour accéder au détail de cet établissement'
+              }
+            />
+          )}
         </div>
       </CardBody>
       <CardFooter divider className="w-full h-20 absolute bottom-0 left-0">

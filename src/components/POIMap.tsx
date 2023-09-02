@@ -56,7 +56,7 @@ const POIMap = ({ favorite }: { favorite: boolean }) => {
       ) : pois.length > 0 ? (
         pois.slice(0, 9).map((poi) => (
           <div
-            className="h-[400px] w-[250px] border-solid border rounded-xl mb-12"
+            className="h-[450px] w-[250px] border-solid border rounded-xl mb-12"
             key={poi.id}
           >
             <POICard poi={poi} />

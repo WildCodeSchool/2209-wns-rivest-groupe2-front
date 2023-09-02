@@ -24,6 +24,7 @@ import ModalEditPlace from 'src/components/ModalPois/ModalEditPlace';
 import { GET_ALL_CITIES } from 'src/services/queries/cityQueries';
 import { LatLngExpression } from 'leaflet';
 import { UserContext } from 'src/contexts/userContext';
+import { getCurrentDimension } from 'src/components/Navbar';
 
 const POIDetails = () => {
   const { user } = useContext(UserContext);
@@ -31,6 +32,7 @@ const POIDetails = () => {
   const [openModalEditPlace, setOpenModalEditPlace] = useState(false);
   const [openModalDeletePlace, setOpenModalDeletePlace] = useState(false);
   const params = useParams();
+  const [screenSize, setScreenSize] = useState(getCurrentDimension());
 
   const [cities, setCities] = useState<
     {
@@ -62,6 +64,16 @@ const POIDetails = () => {
     if (getCitiesData?.getAllCities) setCities(getCitiesData.getAllCities);
   }, [countCommentData, getCitiesData]);
 
+  useEffect(() => {
+    const updateDimension = () => {
+      setScreenSize(getCurrentDimension());
+    };
+    window.addEventListener('resize', updateDimension);
+    return () => {
+      window.removeEventListener('resize', updateDimension);
+    };
+  }, [screenSize]);
+
   const city = cities?.filter((city) => city.id === Number(params.cityId))[0];
 
   if (loading || getCitiesLoading) return <p>Chargement...</p>;
@@ -78,9 +90,11 @@ const POIDetails = () => {
     backgroundImage: `url(${getCategoryBackgroundImage(thisPOI.type)})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    paddingLeft: '10em',
-    paddingRight: '10em',
+    paddingLeft: screenSize.width >= 700 ? '10em' : '3em',
+    paddingRight: screenSize.width >= 700 ? '10em' : '3em',
   };
+
+  console.log('screenSize', screenSize);
 
   function getCategoryBackgroundImage(type: any) {
     switch (type) {
@@ -113,7 +127,7 @@ const POIDetails = () => {
           </Typography>
           <div className="mx-auto bg-white drop-shadow-2xl relative">
             {user && user?.role?.name !== 'free_user' && (
-              <div className="absolute top-3 right-3 flex items-center p-3 bg-white border rounded-2xl">
+              <div className="absolute top-10 md:top-3 right-3 flex items-center p-1 md:p-3 bg-white border rounded-2xl">
                 <Tooltip title="Editer le point d'intéret">
                   <IconButton onClick={() => setOpenModalEditPlace(true)}>
                     <BorderColorIcon sx={{ color: 'black' }} />
@@ -170,10 +184,14 @@ const POIDetails = () => {
               </ol>
             </nav>
             <div>
-              <div className="px-10">
-                <POIInfo poi={thisPOI} commentsCount={commentsCount} />
+              <div className="px-3 md:px-10 pt-16 md:pt-0">
+                <POIInfo
+                  poi={thisPOI}
+                  commentsCount={commentsCount}
+                  screenSize={screenSize}
+                />
               </div>
-              <div className="mt-6 mx-auto px-10">
+              <div className="mt-6 mx-auto px-3 md:px-10">
                 <POIComments
                   averageRate={thisPOI?.averageRate || 0}
                   commentsCount={commentsCount}
@@ -182,9 +200,9 @@ const POIDetails = () => {
                   type={thisPOI.type}
                 />
               </div>
-              <div className="mt-6 px-10 mx-auto">
-                <div className="my-4 w-[80%] mx-auto pt-8">
-                  <Typography variant="h2">
+              <div className="mt-6 px-3 md:px-10 mx-auto">
+                <div className="my-4 w-[100%] md:w-[80%] mx-auto pt-8">
+                  <Typography variant="h2" className="text-xl md:text-4xl">
                     Où se trouve le {thisPOI.type}
                   </Typography>
                   <div className="h-[500px] w-[100%]">
@@ -193,28 +211,30 @@ const POIDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-6 mx-auto px-10">
-              {otherPOIs.length > 0 && (
-                <div className="my-4 w-[80%] mx-auto">
-                  <Typography variant="h2">
-                    Vous aimerez peut-être...
-                  </Typography>
-                  <ul
-                    id="poi-similar"
-                    className="flex justify-start py-4 my-3.5"
-                  >
-                    {otherPOIs.map((poi: IPOIData) => (
-                      <li
-                        key={poi.id}
-                        className="h-[400px] w-[250px] border-solid border rounded-xl mt-4 mb-12 mr-4"
-                      >
-                        <POICard key={poi.id} poi={poi} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
+            {screenSize.width >= 700 && (
+              <div className="mt-6 mx-auto px-3 md:px-10">
+                {otherPOIs.length > 0 && (
+                  <div className="my-4 w-[100%] md:w-[80%] md:mx-auto">
+                    <Typography variant="h2" className="text-xl md:text-4xl">
+                      Vous aimerez peut-être...
+                    </Typography>
+                    <ul
+                      id="poi-similar"
+                      className="flex justify-start py-4 my-3.5 overflow-auto shrink-0"
+                    >
+                      {otherPOIs.map((poi: IPOIData) => (
+                        <li
+                          key={poi.id}
+                          className="h-[450px] w-[250px] border-solid border rounded-xl mt-4 mb-12 mr-4"
+                        >
+                          <POICard key={poi.id} poi={poi} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         {openModalEditPlace && (

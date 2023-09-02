@@ -32,7 +32,7 @@ export const AverageRatingStar: React.FC<AverageRatingStarProps> = (
           <p
             className={`${
               textColor
-                ? textColor + ' font-bold text-4xl'
+                ? textColor + ' font-bold text-2xl md:text-4xl'
                 : 'text-gray-500 text-sm'
             } pr-1`}
           >
@@ -40,7 +40,9 @@ export const AverageRatingStar: React.FC<AverageRatingStarProps> = (
           </p>
           <p
             className={`${
-              textColor ? textColor + ' text-3xl' : 'text-gray-500 text-sm'
+              textColor
+                ? textColor + ' text-xl md:text-3xl'
+                : 'text-gray-500 text-sm'
             } pr-1`}
           >
             {' '}

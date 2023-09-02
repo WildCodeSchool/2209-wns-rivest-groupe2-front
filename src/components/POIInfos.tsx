@@ -14,6 +14,10 @@ import { Link } from 'react-router-dom';
 interface POIInfoProps {
   poi: IPOIData;
   commentsCount: number;
+  screenSize: {
+    width: number;
+    height: number;
+  };
 }
 
 export default function POIInfos(props: POIInfoProps) {
@@ -30,11 +34,12 @@ export default function POIInfos(props: POIInfoProps) {
     averageRate,
     websiteURL,
   } = props.poi;
-  const { commentsCount } = props;
+  const { commentsCount, screenSize } = props;
   const { user } = useContext(UserContext);
   const [defaultOpeningHours, setDefaultOpeningHours] = useState<
     OpeningHoursData[]
   >([]);
+  const image_url = process.env.REACT_APP_IMAGE_URL;
 
   const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
@@ -60,28 +65,31 @@ export default function POIInfos(props: POIInfoProps) {
   return (
     <>
       <div>
-        <Typography variant="h1" className="pr-3">
+        <Typography
+          variant="h1"
+          className="pr-3 text-2xl md:text-6xl text-center md:text-left"
+        >
           {name}
         </Typography>
-        <Typography variant="h2">
+        <Typography
+          variant="h2"
+          className="text-xl md:text-4xl text-center md:text-left"
+        >
           {address}, {postal} {city.name}
         </Typography>
         {websiteURL && (
-          <div className="flex">
-            <Typography className="pr-2">Site internet :</Typography>
-            <Typography>
-              <Link
-                to={websiteURL}
-                target="_blank"
-                className="text-blue-600 underline"
-              >
-                {websiteURL?.split('//')[1] || ''}
-              </Link>
-            </Typography>
-          </div>
+          <Typography className="text-center md:text-left">
+            <Link
+              to={websiteURL}
+              target="_blank"
+              className="text-blue-600 underline"
+            >
+              Site internet
+            </Link>
+          </Typography>
         )}
       </div>
-      <div className="relative flex items-center">
+      <div className="relative flex flex-col md:flex-row items-center">
         <AverageRatingStar
           averageRate={averageRate}
           className="flex justify-start pr-4"
@@ -95,7 +103,7 @@ export default function POIInfos(props: POIInfoProps) {
         <div>
           {user &&
             (!isFavorite ? (
-              <div className="absolute -top-8 right-1 flex items-center p-4 bg-white border rounded-2xl">
+              <div className="md:absolute md:-top-8 md:right-1 my-3 md:my-0 flex items-center p-4 bg-white border rounded-2xl">
                 <p>Ajouter à vos favoris</p>
                 <FavoriteButton
                   userId={user?.id}
@@ -108,7 +116,7 @@ export default function POIInfos(props: POIInfoProps) {
                 />
               </div>
             ) : (
-              <div className="absolute -top-8 right-1 flex items-center p-3 bg-white border rounded">
+              <div className="md:absolute md:-top-8 md:right-1 my-3 md:my-0 flex items-center p-3 bg-white border rounded">
                 <p>Dans vos favoris</p>
                 <FavoriteButton
                   userId={user?.id}
@@ -124,11 +132,32 @@ export default function POIInfos(props: POIInfoProps) {
         </div>
       </div>
       {pictureUrl?.length > 0 ? (
-        <PictureVizualization poiImages={pictureUrl} />
+        screenSize.width >= 700 ? (
+          <PictureVizualization poiImages={pictureUrl} />
+        ) : (
+          <div className="flex shrink-0 overflow-x-auto">
+            {pictureUrl.map((picture) => (
+              <div
+                style={{
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover',
+                  backgroundRepeat: 'no-repeat',
+                  width: '120px',
+                  minWidth: '120px',
+                  height: '120px',
+                  backgroundImage: `url(${image_url}${picture})`,
+                  margin: '0 10px',
+                }}
+              />
+            ))}
+          </div>
+        )
       ) : null}
       <div className="w-[80%] mx-auto mt-6">
         <div className="pt-8">
-          <Typography variant="h2">Description du lieu</Typography>
+          <Typography variant="h2" className="text-xl md:text-4xl">
+            Description du lieu
+          </Typography>
           <p className="pt-2">
             {description?.length > 0
               ? description
@@ -136,7 +165,9 @@ export default function POIInfos(props: POIInfoProps) {
           </p>
         </div>
         <div className="pt-8 mt-6">
-          <Typography variant="h2">Horaires d'ouverture</Typography>
+          <Typography variant="h2" className="text-xl md:text-4xl">
+            Horaires d'ouverture
+          </Typography>
           <div className="w-full pt-5">
             <div className="flex justify-around pb-6">
               <ul>

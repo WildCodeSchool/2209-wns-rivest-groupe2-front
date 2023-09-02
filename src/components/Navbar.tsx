@@ -12,9 +12,17 @@ const getActiveLinkStyle = ({ isActive }: { isActive: boolean }) => ({
   color: isActive ? 'grey' : 'black',
 });
 
+export function getCurrentDimension() {
+  return {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  };
+}
+
 const Navbar = () => {
   const { user } = useContext(UserContext);
   const [cities, setCities] = useState<ICityData[]>([]);
+  const [screenSize, setScreenSize] = useState(getCurrentDimension());
   const navigate = useNavigate();
 
   const {
@@ -27,17 +35,33 @@ const Navbar = () => {
     if (getCitiesData?.getAllCities) setCities(getCitiesData.getAllCities);
   }, [getCitiesData]);
 
+  useEffect(() => {
+    const updateDimension = () => {
+      setScreenSize(getCurrentDimension());
+    };
+    window.addEventListener('resize', updateDimension);
+    return () => {
+      window.removeEventListener('resize', updateDimension);
+    };
+  }, [screenSize]);
+
   return (
     <nav className="border-b-2">
       <ul className="flex flex-grow justify-between items-center m-5">
-        <div className="flex items-center">
+        {screenSize.width >= 700 ? (
+          <div className="flex items-center">
+            <NavLink to="/" style={getActiveLinkStyle}>
+              <img src={icon} alt="icon site1" className="h-20" />
+            </NavLink>
+            <NavLink to="/" style={getActiveLinkStyle} className="pl-2">
+              <img src={logo} alt="icon site2" />
+            </NavLink>
+          </div>
+        ) : (
           <NavLink to="/" style={getActiveLinkStyle}>
-            <img src={icon} alt="icon site1" className="h-20" />
+            <img src={icon} alt="icon site1" className="h-16" />
           </NavLink>
-          <NavLink to="/" style={getActiveLinkStyle} className="pl-2">
-            <img src={logo} alt="icon site2" />
-          </NavLink>
-        </div>
+        )}
         {getCitiesError ? (
           <div>Erreur lors de la récupération des villes :(</div>
         ) : getCitiesLoading ? (
@@ -47,7 +71,7 @@ const Navbar = () => {
             name="cities"
             id="cities"
             defaultValue="Ville"
-            className="bg-white p-[4px] pl-[15px] mt-2 border-2 rounded-xl w-[300px]"
+            className="bg-white p-[4px] pl-[15px] mt-2 border-2 rounded-xl md:w-[300px]"
             onChange={(e) => {
               navigate(`/point-of-interest/list/${e.target.value}`);
               location.reload();
@@ -69,7 +93,7 @@ const Navbar = () => {
           <li>
             <UserDropdown />
           </li>
-        ) : (
+        ) : screenSize.width >= 700 ? (
           <div className="flex items-center gap-2">
             <li>
               <NavLink to="/signin" style={getActiveLinkStyle}>
@@ -86,6 +110,12 @@ const Navbar = () => {
               </NavLink>
             </li>
           </div>
+        ) : (
+          <NavLink to="/signin" style={getActiveLinkStyle}>
+            <button className="bg-gradient-to-r from-opalblue to-opalblue hover:from-opalblue hover:to-blue-500 rounded-full py-2 px-6 w-full text-white text-[1rem] text-center font-semibold">
+              Connexion
+            </button>
+          </NavLink>
         )}
       </ul>
     </nav>

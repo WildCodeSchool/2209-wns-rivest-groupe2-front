@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { POICommentType } from 'src/types/POIType';
 import { Typography } from '@material-tailwind/react';
 import { AverageRatingStar } from './AverageRatingStar';
@@ -6,6 +6,7 @@ import { UserContext } from 'src/contexts/userContext';
 import { sortBy } from 'lodash';
 import POICommentModal from './POICommentModal';
 import POIComment from './POIComment';
+import { getCurrentDimension } from 'src/components/Navbar';
 
 interface POICommentsProps {
   className?: string;
@@ -27,6 +28,7 @@ const POIComments: React.FC<POICommentsProps> = ({
   const { user } = useContext(UserContext);
 
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [screenSize, setScreenSize] = useState(getCurrentDimension());
 
   const userComment = comments.filter(
     (comment) => comment?.user.id === user?.id
@@ -35,28 +37,48 @@ const POIComments: React.FC<POICommentsProps> = ({
     (comment) => comment?.user.id !== user?.id
   );
 
+  useEffect(() => {
+    const updateDimension = () => {
+      setScreenSize(getCurrentDimension());
+    };
+    window.addEventListener('resize', updateDimension);
+    return () => {
+      window.removeEventListener('resize', updateDimension);
+    };
+  }, [screenSize]);
+
   return (
-    <div className={className ? className : 'my-4 w-[80%] mx-auto pt-8'}>
-      <Typography variant="h2">Commentaires</Typography>
+    <div
+      className={className ? className : 'my-4 w-[95%] md:w-[80%] mx-auto pt-8'}
+    >
+      <Typography variant="h2" className="text-xl md:text-4xl">
+        Commentaires
+      </Typography>
       {comments.length === 0 ? (
         <div
-          className={user && user.id ? 'flex justify-between items-center' : ''}
+          className={
+            user && user.id
+              ? 'flex flex-col md:flex-row justify-between items-center'
+              : ''
+          }
         >
           <Typography className="mt-4 mb-6 justify-self-start">
             Pas de commentaires renseignés pour le moment
           </Typography>
           {user && user.id && (
             <>
-              <div
-                style={{
-                  width: 2,
-                  height: 150,
-                  /* margin: '20px auto', */
-                  backgroundColor: 'rgb(198, 198, 198)',
-                }}
-              />
-              <div className="flex flex-col justify-center text-center">
-                <Typography variant="h4" className="pb-2">
+              {screenSize.width >= 700 && (
+                <div
+                  style={{
+                    width: 2,
+                    height: 150,
+                    backgroundColor: 'rgb(198, 198, 198)',
+                  }}
+                />
+              )}
+
+              <div className="flex flex-col justify-center md:text-center">
+                <Typography variant="h4" className="pb-2 text-lg md:text-2xl">
                   Evaluer ce {type}
                 </Typography>
                 <Typography className="pb-4">
@@ -84,15 +106,18 @@ const POIComments: React.FC<POICommentsProps> = ({
         </div>
       ) : (
         <div className="pt-4">
-          <div className="flex justify-between items-center w-[80%] mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center w-[80%] mx-auto">
             <div className="flex flex-col my-6 justify-center items-center">
-              <Typography variant="h3" className="font-bold pb-3">
+              <Typography
+                variant="h3"
+                className="font-bold pb-3 text-xl md:text-3xl"
+              >
                 Note moyenne
               </Typography>
               <AverageRatingStar
                 averageRate={averageRate}
                 className="flex justify-start pr-1 pb-3"
-                starSize="text-5xl"
+                starSize="text-3xl md:text-5xl"
                 textColor="black"
               />
               <Typography className="font-semibold">
@@ -102,13 +127,15 @@ const POIComments: React.FC<POICommentsProps> = ({
             </div>
             {user && user.id && (
               <>
-                <div
-                  style={{
-                    width: 2,
-                    height: 150,
-                    backgroundColor: 'rgb(198, 198, 198)',
-                  }}
-                />
+                {screenSize.width >= 700 && (
+                  <div
+                    style={{
+                      width: 2,
+                      height: 150,
+                      backgroundColor: 'rgb(198, 198, 198)',
+                    }}
+                  />
+                )}
                 <div className="flex flex-col justify-center text-center">
                   <Typography variant="h4" className="pb-2">
                     Evaluer ce {type}
@@ -146,7 +173,7 @@ const POIComments: React.FC<POICommentsProps> = ({
             sortBy(userComment, (comment) => comment.createDate)
               .reverse()
               .map((comment) => (
-                <div key={comment.id}>
+                <div key={comment.id} className="my-2">
                   <POIComment
                     comment={comment}
                     isUserComment={true}
@@ -157,7 +184,7 @@ const POIComments: React.FC<POICommentsProps> = ({
               ))}
           {otherComments &&
             otherComments.map((comment) => (
-              <div key={comment.id}>
+              <div key={comment.id} className="my-2">
                 <POIComment
                   comment={comment}
                   isUserComment={false}
