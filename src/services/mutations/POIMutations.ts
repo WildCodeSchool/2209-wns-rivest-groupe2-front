@@ -54,8 +54,8 @@ export const UPDATE_POI_MUTATION = gql`
 `;
 
 export const DELETE_POI_MUTATION = gql`
-  mutation DeletePoi($deletePoiId: Float!) {
-    deletePoi(id: $deletePoiId)
+  mutation DeletePoi($deletePoiId: Float!, $city: String!) {
+    deletePoi(id: $deletePoiId, city: $city)
   }
 `;
 

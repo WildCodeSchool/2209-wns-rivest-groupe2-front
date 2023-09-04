@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { GET_POI_QUERY } from 'src/services/queries/POIqueries';
+import { GET_POI_QUERY_BY_CITY } from 'src/services/queries/POIqueries';
 import {
   Dialog,
   DialogActions,
@@ -42,12 +42,14 @@ const ModalDeletePlace: React.FC<POICommentModalProps> = ({
         authorization: `Bearer ${token}`,
       },
     },
-    refetchQueries: [{ query: GET_POI_QUERY }, 'getAllPoi'],
+    refetchQueries: [
+      { query: GET_POI_QUERY_BY_CITY, variables: { cityId: city.id } },
+    ],
   });
 
   async function onDeletePoi() {
     try {
-      await deletePoi({ variables: { deletePoiId: poiId } });
+      await deletePoi({ variables: { deletePoiId: poiId, city: city.name } });
       handleDeleteDialogClose && handleDeleteDialogClose();
       setMessage({
         text: "Point d'intérêt supprimé avec succès",
